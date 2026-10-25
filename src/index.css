@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #09090F;
+  color: #F5F3FF;
+  min-height: 100vh;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1E1E32;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8B5CF6;
+}
+
+/* Glassmorphism & Cyber Card Effects */
+.goblin-card {
+  background: #171725;
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 1rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.goblin-card:hover {
+  border-color: rgba(163, 230, 53, 0.35);
+  box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.25);
+  transform: translateY(-2px);
+}
+
+.goblin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  background: rgba(139, 92, 246, 0.12);
+  color: #C084FC;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+}
+
+.goblin-badge-green {
+  background: rgba(163, 230, 53, 0.12);
+  color: #A3E635;
+  border: 1px solid rgba(163, 230, 53, 0.28);
+}
+
+.goblin-btn-primary {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+  color: #FFFFFF;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1.25rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+}
+
+.goblin-btn-primary:hover {
+  background: linear-gradient(135deg, #A855F7 0%, #8B5CF6 100%);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+  transform: translateY(-1px);
+}
+
+.goblin-btn-green {
+  background: linear-gradient(135deg, #A3E635 0%, #84CC16 100%);
+  color: #09090F;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1.25rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(163, 230, 53, 0.35);
+}
+
+.goblin-btn-green:hover {
+  background: linear-gradient(135deg, #BEF264 0%, #A3E635 100%);
+  box-shadow: 0 6px 20px rgba(163, 230, 53, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Subtle glow pulse */
+@keyframes subtle-glow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.animate-glow {
+  animation: subtle-glow 6s infinite ease-in-out;
+}
