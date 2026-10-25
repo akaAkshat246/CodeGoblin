@@ -15,7 +15,9 @@ import {
   ShieldCheck,
   ChevronRight,
   Zap,
-  Globe
+  Globe,
+  BookOpen,
+  Megaphone
 } from 'lucide-react';
 import { useApp, NavigationPage } from '../context/AppContext';
 
@@ -34,23 +36,24 @@ interface NavItem {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile }) => {
-  const { activePage, navigateTo, currentUser, completedQuestIds, squads } = useApp();
+  const { activePage, navigateTo, currentUser, completedQuestIds, squads, announcements } = useApp();
 
   const navItems: NavItem[] = [
-    { id: 'dashboard', label: 'Goblin HQ', icon: LayoutDashboard },
-    { id: 'discover', label: 'Discover Hub', icon: Compass },
-    { id: 'discussions', label: 'The Goblin Den', icon: MessageSquare, badge: 'Active', badgeType: 'purple' },
-    { id: 'quests', label: 'Quests & Tracks', icon: Scroll, badge: `${completedQuestIds.length}/5`, badgeType: 'green' },
-    { id: 'projects', label: 'Project Forge', icon: Hammer },
-    { id: 'hackathons', label: 'Hackathons & Events', icon: Trophy, badge: 'Upcoming', badgeType: 'amber' },
-    { id: 'squads', label: 'Squads / Team Finder', icon: Users2, badge: `${squads.length}`, badgeType: 'purple' },
+    { id: 'dashboard', label: 'Home / Dashboard', icon: LayoutDashboard },
+    { id: 'discussions', label: 'Discussion Arena', icon: MessageSquare, badge: 'Active', badgeType: 'purple' },
+    { id: 'hackathons', label: 'Hackathons & Events', icon: Trophy, badge: 'Live', badgeType: 'amber' },
+    { id: 'projects', label: 'Projects Showcase', icon: Hammer },
+    { id: 'quests', label: 'Quests & Challenges', icon: Scroll, badge: `${completedQuestIds.length}/5`, badgeType: 'green' },
     { id: 'leaderboards', label: 'Leaderboards', icon: Crown },
-    { id: 'members', label: 'Members & Mentors', icon: UserCheck },
+    { id: 'squads', label: 'Teams & Collaboration', icon: Users2, badge: `${squads.length}`, badgeType: 'purple' },
+    { id: 'learning_hub', label: 'Learning Hub', icon: BookOpen, badge: 'Roadmaps', badgeType: 'green' },
+    { id: 'members', label: 'Goblin Directory', icon: UserCheck },
+    { id: 'announcements', label: 'Announcements', icon: Megaphone, badge: `${announcements.length}`, badgeType: 'purple' },
     { id: 'nine_goblins', label: 'The Nine Goblins', icon: Sparkles, badge: 'Roles', badgeType: 'green' },
   ];
 
   const bottomItems: NavItem[] = [
-    { id: 'profile', label: 'My Goblin Profile', icon: User },
+    { id: 'profile', label: 'Profile & Identity', icon: User },
     { id: 'settings', label: 'Settings', icon: Settings },
     { id: 'admin', label: 'Admin Dashboard', icon: ShieldCheck, requiresAdmin: true, badge: 'Shield', badgeType: 'amber' },
   ];

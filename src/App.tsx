@@ -22,6 +22,8 @@ import { SquadsPage } from './pages/SquadsPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { MembersPage } from './pages/MembersPage';
 import { NineGoblinsHubPage } from './pages/NineGoblinsHubPage';
+import { LearningHubPage } from './pages/LearningHubPage';
+import { AnnouncementsPage } from './pages/AnnouncementsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AdminPage } from './pages/AdminPage';
@@ -72,8 +74,10 @@ export const AppContent: React.FC = () => {
             {activePage === 'project_detail' && <ProjectDetailPage />}
             {activePage === 'hackathons' && <HackathonsPage />}
             {activePage === 'squads' && <SquadsPage />}
+            {activePage === 'learning_hub' && <LearningHubPage />}
             {activePage === 'leaderboards' && <LeaderboardPage />}
             {activePage === 'members' && <MembersPage />}
+            {activePage === 'announcements' && <AnnouncementsPage />}
             {activePage === 'nine_goblins' && <NineGoblinsHubPage />}
             {activePage === 'profile' && <ProfilePage />}
             {activePage === 'settings' && <SettingsPage />}

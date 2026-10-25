@@ -1,9 +1,21 @@
-export type UserRole = 'Member' | 'Moderator' | 'Event Organizer' | 'Mentor' | 'Administrator';
+export type UserRole = 'Guest' | 'Member' | 'Moderator' | 'Event Organizer' | 'Mentor' | 'Administrator';
+
+export type GoblinArchetype =
+  | 'Leader'
+  | 'Architect'
+  | 'Creator'
+  | 'Competitor'
+  | 'Strategist'
+  | 'Debugger'
+  | 'Builder'
+  | 'Explorer'
+  | 'Hacker';
 
 export interface GoblinCharacter {
   id: number;
   name: string;
   roleTitle: string;
+  archetype: GoblinArchetype;
   motto: string;
   quote: string;
   personality: string;
@@ -12,6 +24,7 @@ export interface GoblinCharacter {
   avatarImg: string;
   cardImg: string;
   badgeColor: string;
+  rpgPerks: string[];
 }
 
 export interface UserProfile {
@@ -20,12 +33,14 @@ export interface UserProfile {
   displayName: string;
   email: string;
   avatarGoblinId: number;
+  archetype: GoblinArchetype;
   role: UserRole;
   level: number;
   xp: number;
   xpToNextLevel: number;
   streakDays: number;
   longestStreak: number;
+  rankChange?: number; // e.g. +2, 0, -1
   lastActiveDate: string; // ISO date string
   college?: string;
   yearOfStudy?: string;
@@ -41,6 +56,8 @@ export interface UserProfile {
   reputationScore: number;
   savedPostIds: string[];
   savedProjectIds: string[];
+  completedLessonIds?: string[];
+  isAvailableForHireOrTeams?: boolean;
 }
 
 export interface Achievement {
@@ -51,6 +68,7 @@ export interface Achievement {
   category: 'onboarding' | 'coding' | 'community' | 'hackathon' | 'streak';
   xpReward: number;
   unlockedAt?: string;
+  rarity?: 'Common' | 'Rare' | 'Epic' | 'Legendary';
 }
 
 export interface Quest {
@@ -68,14 +86,23 @@ export interface Quest {
   isDailyQuest?: boolean;
 }
 
-export interface LearningTrack {
+export interface LearningStep {
+  title: string;
+  description: string;
+  resourceTitle?: string;
+  resourceUrl?: string;
+}
+
+export interface LearningRoadmap {
   id: string;
   title: string;
   description: string;
   goblinRoleId: number;
+  archetype: GoblinArchetype;
   icon: string;
-  level: string;
-  totalQuests: number;
+  level: 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels';
+  estimatedHours: string;
+  steps: LearningStep[];
   tags: string[];
 }
 
@@ -166,7 +193,17 @@ export interface SquadTask {
   id: string;
   title: string;
   status: 'todo' | 'in_progress' | 'done';
+  priority: 'High' | 'Medium' | 'Low';
+  deadline?: string;
   assigneeName?: string;
+}
+
+export interface SquadChatMessage {
+  id: string;
+  authorName: string;
+  authorGoblinId: number;
+  message: string;
+  timestamp: string;
 }
 
 export interface Squad {
@@ -182,14 +219,51 @@ export interface Squad {
   maxMembers: number;
   tags: string[];
   tasks: SquadTask[];
+  chatMessages: SquadChatMessage[];
   isOpen: boolean;
   createdAt: string;
+}
+
+export interface TeamRecruitmentListing {
+  id: string;
+  squadId: string;
+  squadName: string;
+  roleTitle: string;
+  requiredSkills: string[];
+  pitch: string;
+  urgency: 'High' | 'Normal';
+  targetEvent: string;
+  createdAt: string;
+}
+
+export interface AnnouncementItem {
+  id: string;
+  title: string;
+  summary: string;
+  content: string;
+  authorName: string;
+  authorTitle: string;
+  authorAvatarGoblinId: number;
+  isPinned: boolean;
+  createdAt: string;
+  category: 'Community' | 'Hackathon' | 'Feature' | 'Partnership';
+  badge: string;
+}
+
+export interface ActivityFeedItem {
+  id: string;
+  type: 'project' | 'quest' | 'squad' | 'achievement' | 'hackathon' | 'discussion';
+  actorName: string;
+  actorGoblinId: number;
+  actionText: string;
+  targetText: string;
+  timestamp: string;
 }
 
 export interface NotificationItem {
   id: string;
   userId: string;
-  type: 'quest' | 'achievement' | 'reply' | 'squad' | 'event' | 'admin';
+  type: 'quest' | 'achievement' | 'reply' | 'squad' | 'event' | 'admin' | 'announcement';
   title: string;
   message: string;
   timestamp: string;

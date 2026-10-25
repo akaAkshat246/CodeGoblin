@@ -10,7 +10,11 @@ import {
   Squad,
   NotificationItem,
   Quest,
-  Achievement
+  Achievement,
+  AnnouncementItem,
+  ActivityFeedItem,
+  TeamRecruitmentListing,
+  LearningRoadmap
 } from '../types';
 import {
   INITIAL_MEMBERS,
@@ -22,6 +26,10 @@ import {
   INITIAL_NOTIFICATIONS,
   INITIAL_QUESTS,
   INITIAL_ACHIEVEMENTS,
+  INITIAL_ANNOUNCEMENTS,
+  INITIAL_ACTIVITY_FEED,
+  INITIAL_RECRUITMENT_LISTINGS,
+  LEARNING_ROADMAPS,
   GOBLIN_CHARACTERS
 } from '../data/mockData';
 
@@ -37,7 +45,9 @@ export type NavigationPage =
   | 'hackathons'
   | 'squads'
   | 'leaderboards'
+  | 'learning_hub'
   | 'members'
+  | 'announcements'
   | 'nine_goblins'
   | 'profile'
   | 'settings'
@@ -59,6 +69,7 @@ interface AppContextType {
   selectedMemberId: string | null;
   toasts: ToastMessage[];
   completedQuestIds: string[];
+  completedLessonIds: string[];
   allUsers: UserProfile[];
   posts: DiscussionPost[];
   replies: DiscussionReply[];
@@ -66,6 +77,10 @@ interface AppContextType {
   hackathons: HackathonEvent[];
   squads: Squad[];
   notifications: NotificationItem[];
+  announcements: AnnouncementItem[];
+  activityFeed: ActivityFeedItem[];
+  recruitmentListings: TeamRecruitmentListing[];
+  roadmaps: LearningRoadmap[];
   quests: Quest[];
   achievements: Achievement[];
   isSearchModalOpen: boolean;
@@ -89,6 +104,7 @@ interface AppContextType {
   // Gamification & XP
   awardXP: (amount: number, reason: string) => void;
   completeQuest: (questId: string) => void;
+  toggleCompleteLesson: (lessonId: string, lessonTitle: string) => void;
 
   // Discussions
   createPost: (post: Omit<DiscussionPost, 'id' | 'createdAt' | 'upvotes' | 'upvotedUserIds' | 'repliesCount' | 'solved'>) => void;
@@ -105,11 +121,13 @@ interface AppContextType {
   // Hackathons
   registerForEvent: (eventId: string) => void;
 
-  // Squads
-  createSquad: (squad: Omit<Squad, 'id' | 'createdAt'>) => void;
+  // Squads & Teams
+  createSquad: (squad: Omit<Squad, 'id' | 'createdAt' | 'chatMessages'>) => void;
   joinSquad: (squadId: string) => void;
   updateSquadTaskStatus: (squadId: string, taskId: string, newStatus: 'todo' | 'in_progress' | 'done') => void;
-  addSquadTask: (squadId: string, title: string, assigneeName?: string) => void;
+  addSquadTask: (squadId: string, title: string, priority?: 'High' | 'Medium' | 'Low', deadline?: string, assigneeName?: string) => void;
+  sendSquadMessage: (squadId: string, message: string) => void;
+  applyToRecruitment: (listingId: string) => void;
 
   // Notifications
   markNotificationRead: (id: string) => void;
@@ -124,7 +142,6 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // LocalStorage helpers
   const loadStored = <T,>(key: string, fallback: T): T => {
     try {
       const item = localStorage.getItem(`codegoblins_${key}`);
@@ -142,7 +159,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  // State
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() =>
     loadStored<UserProfile | null>('currentUser', INITIAL_MEMBERS[0])
   );
@@ -172,8 +188,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [notifications, setNotifications] = useState<NotificationItem[]>(() =>
     loadStored<NotificationItem[]>('notifications', INITIAL_NOTIFICATIONS)
   );
+  const [announcements, setAnnouncements] = useState<AnnouncementItem[]>(() =>
+    loadStored<AnnouncementItem[]>('announcements', INITIAL_ANNOUNCEMENTS)
+  );
+  const [activityFeed, setActivityFeed] = useState<ActivityFeedItem[]>(() =>
+    loadStored<ActivityFeedItem[]>('activityFeed', INITIAL_ACTIVITY_FEED)
+  );
+  const [recruitmentListings, setRecruitmentListings] = useState<TeamRecruitmentListing[]>(() =>
+    loadStored<TeamRecruitmentListing[]>('recruitmentListings', INITIAL_RECRUITMENT_LISTINGS)
+  );
   const [completedQuestIds, setCompletedQuestIds] = useState<string[]>(() =>
     loadStored<string[]>('completedQuestIds', [])
+  );
+  const [completedLessonIds, setCompletedLessonIds] = useState<string[]>(() =>
+    loadStored<string[]>('completedLessonIds', ['step_1'])
   );
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -182,7 +210,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState(false);
   const [levelUpData, setLevelUpData] = useState<{ newLevel: number; oldLevel: number } | null>(null);
 
-  // Sync to storage
   useEffect(() => saveStored('currentUser', currentUser), [currentUser]);
   useEffect(() => saveStored('users', allUsers), [allUsers]);
   useEffect(() => saveStored('posts', posts), [posts]);
@@ -192,8 +219,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => saveStored('squads', squads), [squads]);
   useEffect(() => saveStored('notifications', notifications), [notifications]);
   useEffect(() => saveStored('completedQuestIds', completedQuestIds), [completedQuestIds]);
+  useEffect(() => saveStored('completedLessonIds', completedLessonIds), [completedLessonIds]);
 
-  // Toast Helper
   const addToast = (toast: Omit<ToastMessage, 'id'>) => {
     const id = Date.now().toString() + Math.random().toString(36).substring(2, 5);
     setToasts((prev) => [...prev, { ...toast, id }]);
@@ -202,7 +229,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }, 4500);
   };
 
-  // Navigation
   const navigateTo = (page: NavigationPage, itemId?: string) => {
     if (page === 'discussion_detail' && itemId) {
       setSelectedPostId(itemId);
@@ -217,9 +243,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // XP & Gamification Engine
   const calculateLevel = (xp: number) => {
-    // Level formula: level 1 is 0, level 2 is 300, level 3 is 700, etc.
     return Math.floor(Math.sqrt(xp / 60)) + 1;
   };
 
@@ -231,7 +255,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const newLevel = calculateLevel(newXP);
     const nextLevelXP = Math.pow(newLevel, 2) * 60;
 
-    // Check if new achievements unlocked
     const newAchievements = [...currentUser.achievements];
     if (newXP >= 500 && !newAchievements.includes('code_goblin')) {
       newAchievements.push('code_goblin');
@@ -255,31 +278,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       description: reason
     });
 
-    // Check for level up
     if (newLevel > oldLevel) {
       setLevelUpData({ newLevel, oldLevel });
       confetti({
-        particleCount: 120,
-        spread: 80,
+        particleCount: 130,
+        spread: 85,
         origin: { y: 0.6 }
       });
       addToast({
         type: 'achievement',
         title: `LEVEL UP! Level ${newLevel}`,
-        description: `You are now a Level ${newLevel} Goblin Builder! New perks unlocked.`
+        description: `You are now Level ${newLevel}! Stay Goblin.`
       });
     }
   };
 
   const closeLevelUpModal = () => setLevelUpData(null);
 
-  // Complete Quest
   const completeQuest = (questId: string) => {
     if (completedQuestIds.includes(questId)) {
       addToast({
         type: 'info',
         title: 'Already Completed',
-        description: 'You have already claimed the XP for this quest.'
+        description: 'You have already claimed XP for this quest.'
       });
       return;
     }
@@ -290,7 +311,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setCompletedQuestIds((prev) => [...prev, questId]);
     awardXP(targetQuest.xpReward, `Completed quest: ${targetQuest.title}`);
 
-    // Extend streak if not active today
+    // Update Activity Feed
+    setActivityFeed((prev) => [
+      {
+        id: `act_${Date.now()}`,
+        type: 'quest',
+        actorName: currentUser?.displayName || 'Cadet',
+        actorGoblinId: currentUser?.avatarGoblinId || 2,
+        actionText: 'completed daily quest',
+        targetText: `${targetQuest.title} (+${targetQuest.xpReward} XP)`,
+        timestamp: 'Just now'
+      },
+      ...prev
+    ]);
+
+    // Extend streak
     if (currentUser) {
       const todayStr = new Date().toISOString().split('T')[0];
       const lastActiveStr = currentUser.lastActiveDate ? currentUser.lastActiveDate.split('T')[0] : '';
@@ -313,7 +348,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  // Auth Operations
+  const toggleCompleteLesson = (lessonId: string, lessonTitle: string) => {
+    const isCompleted = completedLessonIds.includes(lessonId);
+    if (isCompleted) {
+      setCompletedLessonIds((prev) => prev.filter((id) => id !== lessonId));
+      addToast({
+        type: 'info',
+        title: 'Step Reset',
+        description: `Unmarked: ${lessonTitle}`
+      });
+    } else {
+      setCompletedLessonIds((prev) => [...prev, lessonId]);
+      awardXP(50, `Completed roadmap step: ${lessonTitle}`);
+      addToast({
+        type: 'success',
+        title: 'Step Completed! (+50 XP)',
+        description: lessonTitle
+      });
+    }
+  };
+
   const loginAs = (userId: string) => {
     const found = allUsers.find((u) => u.id === userId);
     if (found) {
@@ -356,16 +410,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       displayName: data.displayName || 'B.Tech Apprentice',
       email: data.email || 'apprentice@codegoblins.dev',
       avatarGoblinId: data.avatarGoblinId || 2,
+      archetype: (data.archetype as any) || 'Builder',
       role: 'Member',
       level: 1,
       xp: 150,
       xpToNextLevel: 300,
       streakDays: 1,
       longestStreak: 1,
+      rankChange: 0,
       lastActiveDate: new Date().toISOString(),
       college: data.college || 'Engineering College',
       yearOfStudy: data.yearOfStudy || '1st Year B.Tech',
-      bio: data.bio || 'New goblin ready to learn, form squads, and build real projects.',
+      bio: data.bio || 'New goblin ready to learn, form squads, and build real projects. Code hard. Level up. Stay goblin.',
       githubUrl: data.githubUrl || '',
       portfolioUrl: data.portfolioUrl || '',
       skills: data.skills && data.skills.length > 0 ? data.skills : ['JavaScript', 'HTML/CSS', 'Python'],
@@ -375,7 +431,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       isMentor: false,
       reputationScore: 50,
       savedPostIds: [],
-      savedProjectIds: []
+      savedProjectIds: [],
+      isAvailableForHireOrTeams: true
     };
 
     setCurrentUser(newUser);
@@ -383,21 +440,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setIsOnboardingModalOpen(false);
 
     confetti({
-      particleCount: 100,
-      spread: 70,
+      particleCount: 110,
+      spread: 75,
       origin: { y: 0.6 }
     });
 
     addToast({
       type: 'achievement',
       title: 'Achievement Unlocked: First Spawn! 🥚',
-      description: 'Welcome to CodeGoblins! Your journey begins now. +150 XP awarded.'
+      description: 'Welcome to Code Goblins! Your journey begins now. +150 XP awarded.'
     });
 
     navigateTo('dashboard');
   };
 
-  // Discussions Logic
   const createPost = (postData: Omit<DiscussionPost, 'id' | 'createdAt' | 'upvotes' | 'upvotedUserIds' | 'repliesCount' | 'solved'>) => {
     if (!currentUser) return;
     const newPost: DiscussionPost = {
@@ -411,11 +467,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     setPosts((prev) => [newPost, ...prev]);
-    awardXP(50, 'Published a thoughtful community post in The Goblin Den.');
+    awardXP(50, 'Published a thoughtful community post in Discussion Arena.');
     addToast({
       type: 'success',
       title: 'Post Published!',
-      description: 'Your discussion is now visible to the community.'
+      description: 'Your discussion is now visible to the clan.'
     });
   };
 
@@ -458,7 +514,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setPosts((prev) =>
       prev.map((p) => (p.id === postId ? { ...p, repliesCount: p.repliesCount + 1 } : p))
     );
-    awardXP(30, 'Shared a helpful answer in The Goblin Den.');
+    awardXP(30, 'Shared a helpful answer in Discussion Arena.');
     addToast({
       type: 'success',
       title: 'Reply Submitted!',
@@ -499,7 +555,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  // Projects Logic
   const createProject = (projectData: Omit<ProjectShowcase, 'id' | 'likes' | 'likedUserIds' | 'createdAt'>) => {
     if (!currentUser) return;
     const newProj: ProjectShowcase = {
@@ -510,7 +565,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       likedUserIds: [currentUser.id]
     };
     setProjects((prev) => [newProj, ...prev]);
-    awardXP(150, 'Forged and published a new project to Project Forge!');
+    awardXP(150, 'Forged and published a new project to Projects Showcase!');
+    
+    // Add to activity feed
+    setActivityFeed((prev) => [
+      {
+        id: `act_${Date.now()}`,
+        type: 'project',
+        actorName: currentUser.displayName,
+        actorGoblinId: currentUser.avatarGoblinId,
+        actionText: 'launched a new prototype in Project Forge:',
+        targetText: `${newProj.title} — ${newProj.tagline}`,
+        timestamp: 'Just now'
+      },
+      ...prev
+    ]);
+
     addToast({
       type: 'success',
       title: 'Project Forged!',
@@ -549,7 +619,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  // Hackathons
   const registerForEvent = (eventId: string) => {
     if (!currentUser) return;
     setHackathons((prev) =>
@@ -567,19 +636,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     addToast({
       type: 'success',
       title: 'Registration Confirmed! 🏆',
-      description: 'You are registered. Check Squads to form or join your team.'
+      description: 'You are registered. Check Teams & Collaboration to form your squad.'
     });
   };
 
-  // Squads
-  const createSquad = (squadData: Omit<Squad, 'id' | 'createdAt'>) => {
+  const createSquad = (squadData: Omit<Squad, 'id' | 'createdAt' | 'chatMessages'>) => {
     const newSquad: Squad = {
       ...squadData,
       id: `squad_${Date.now()}`,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      chatMessages: [
+        {
+          id: `m_${Date.now()}`,
+          authorName: squadData.leaderName,
+          authorGoblinId: squadData.leaderGoblinId,
+          message: `Squad ${squadData.name} initialized for ${squadData.targetEventOrProject}!`,
+          timestamp: 'Just now'
+        }
+      ]
     };
     setSquads((prev) => [newSquad, ...prev]);
-    awardXP(100, 'Created a collaboration squad in Team Finder!');
+    awardXP(100, 'Created a collaboration team in Teams & Collaboration!');
     addToast({
       type: 'success',
       title: 'Squad Created!',
@@ -628,7 +705,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
-  const addSquadTask = (squadId: string, title: string, assigneeName?: string) => {
+  const addSquadTask = (squadId: string, title: string, priority: 'High' | 'Medium' | 'Low' = 'Medium', deadline: string = 'Soon', assigneeName?: string) => {
     setSquads((prev) =>
       prev.map((s) => {
         if (s.id !== squadId) return s;
@@ -636,14 +713,43 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           ...s,
           tasks: [
             ...s.tasks,
-            { id: `task_${Date.now()}`, title, status: 'todo', assigneeName: assigneeName || 'Unassigned' }
+            { id: `task_${Date.now()}`, title, status: 'todo', priority, deadline, assigneeName: assigneeName || 'Unassigned' }
           ]
         };
       })
     );
   };
 
-  // Notifications
+  const sendSquadMessage = (squadId: string, message: string) => {
+    if (!currentUser || !message.trim()) return;
+    setSquads((prev) =>
+      prev.map((s) => {
+        if (s.id !== squadId) return s;
+        return {
+          ...s,
+          chatMessages: [
+            ...s.chatMessages,
+            {
+              id: `msg_${Date.now()}`,
+              authorName: currentUser.displayName,
+              authorGoblinId: currentUser.avatarGoblinId,
+              message: message.trim(),
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            }
+          ]
+        };
+      })
+    );
+  };
+
+  const applyToRecruitment = (listingId: string) => {
+    addToast({
+      type: 'success',
+      title: 'Application Dispatched! 🚀',
+      description: 'Your profile was forwarded to the squad leader.'
+    });
+  };
+
   const markNotificationRead = (id: string) => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
@@ -659,7 +765,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  // Admin capabilities
   const updateUserRole = (userId: string, newRole: UserRole) => {
     setAllUsers((prev) =>
       prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
@@ -705,6 +810,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         selectedMemberId,
         toasts,
         completedQuestIds,
+        completedLessonIds,
         allUsers,
         posts,
         replies,
@@ -712,6 +818,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         hackathons,
         squads,
         notifications,
+        announcements,
+        activityFeed,
+        recruitmentListings,
+        roadmaps: LEARNING_ROADMAPS,
         quests: INITIAL_QUESTS,
         achievements: INITIAL_ACHIEVEMENTS,
         isSearchModalOpen,
@@ -729,6 +839,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         completeOnboarding,
         awardXP,
         completeQuest,
+        toggleCompleteLesson,
         createPost,
         upvotePost,
         addReply,
@@ -742,6 +853,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         joinSquad,
         updateSquadTaskStatus,
         addSquadTask,
+        sendSquadMessage,
+        applyToRecruitment,
         markNotificationRead,
         markAllNotificationsRead,
         updateUserRole,

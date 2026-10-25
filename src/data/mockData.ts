@@ -2,21 +2,42 @@ import {
   GoblinCharacter,
   UserProfile,
   Achievement,
-  LearningTrack,
   Quest,
+  LearningRoadmap,
   DiscussionPost,
   DiscussionReply,
   ProjectShowcase,
   HackathonEvent,
   Squad,
+  TeamRecruitmentListing,
+  AnnouncementItem,
+  ActivityFeedItem,
   NotificationItem
 } from '../types';
+
+export const FOUNDERS = [
+  {
+    name: "Akshat Vats",
+    role: "Co-Founder & Technical Steward",
+    goblinId: 2,
+    archetype: "Architect",
+    bio: "Co-founded Code Goblins to build an ecosystem where college developers stop memorizing syllabus theory and start building high-impact software, mastering AI-assisted workflows, and dominating hackathons."
+  },
+  {
+    name: "Akshat Kumar",
+    role: "Co-Founder & Community Architect",
+    goblinId: 1,
+    archetype: "Leader",
+    bio: "Co-founded Code Goblins with the vision of uniting college builders under one banner. Committed to fostering peer collaboration, transparent student operations, and empowering 1st & 2nd-year developers."
+  }
+];
 
 export const GOBLIN_CHARACTERS: GoblinCharacter[] = [
   {
     id: 1,
     name: "Sparky Ops",
     roleTitle: "Community & Operations Lead",
+    archetype: "Leader",
     motto: "People first, progress together.",
     quote: "Building the strongest goblin clan through relentless organization and open doors.",
     personality: "Hyper-organized, empathetic, voice of the community, master of logistics and welcoming every new coder.",
@@ -35,12 +56,18 @@ export const GOBLIN_CHARACTERS: GoblinCharacter[] = [
     ],
     avatarImg: "/assets/goblins/goblin_1_avatar.jpg",
     cardImg: "/assets/goblins/role_1_card.jpg",
-    badgeColor: "purple"
+    badgeColor: "purple",
+    rpgPerks: [
+      "+15% XP bonus on squad leadership quests",
+      "Ability to broadcast priority announcements",
+      "Access to Clan Town Hall facilitation"
+    ]
   },
   {
     id: 2,
     name: "Byte Wizard",
     roleTitle: "Technical Lead",
+    archetype: "Architect",
     motto: "Builds the foundation for bigger ideas.",
     quote: "Talk is cheap. Show me the clean architecture, the robust API, and the test suite.",
     personality: "Analytical, deep systems thinker, nocturnal coder, loves refactoring and unblocking tricky bugs.",
@@ -59,12 +86,18 @@ export const GOBLIN_CHARACTERS: GoblinCharacter[] = [
     ],
     avatarImg: "/assets/goblins/goblin_2_avatar.jpg",
     cardImg: "/assets/goblins/role_2_card.jpg",
-    badgeColor: "green"
+    badgeColor: "green",
+    rpgPerks: [
+      "+20% XP bonus on backend and system design roadmaps",
+      "Code review priority status in The Goblin Den",
+      "Mastery tier in AI Agent Vibe Coding"
+    ]
   },
   {
     id: 3,
     name: "Pixel Pixie",
     roleTitle: "Design & Creative Lead",
+    archetype: "Creator",
     motto: "Turns ideas into beautiful experiences.",
     quote: "If the UX hurts the eyes, the backend doesn't matter. Good design is goblin sorcery.",
     personality: "Aesthetic perfectionist, typography nerd, passionate about micro-animations and dark neon palettes.",
@@ -83,12 +116,18 @@ export const GOBLIN_CHARACTERS: GoblinCharacter[] = [
     ],
     avatarImg: "/assets/goblins/goblin_3_avatar.jpg",
     cardImg: "/assets/goblins/role_3_card.jpg",
-    badgeColor: "purple"
+    badgeColor: "purple",
+    rpgPerks: [
+      "Custom dark cyberpunk theme customizations",
+      "+15% XP bonus on UI/UX assignments",
+      "Official pitch deck design certifier"
+    ]
   },
   {
     id: 4,
     name: "Blitz Victor",
     roleTitle: "Hackathon & Events Lead",
+    archetype: "Competitor",
     motto: "Brings people together through amazing events.",
     quote: "36 hours of energy, caffeine, and zero doubt. We don't just participate; we win podiums.",
     personality: "High-voltage hype generator, stage presence, strategist, helps students formulate winning pitch decks.",
@@ -107,12 +146,18 @@ export const GOBLIN_CHARACTERS: GoblinCharacter[] = [
     ],
     avatarImg: "/assets/goblins/goblin_4_avatar.jpg",
     cardImg: "/assets/goblins/role_4_card.jpg",
-    badgeColor: "green"
+    badgeColor: "green",
+    rpgPerks: [
+      "Fast-track verification for hackathon teams",
+      "+25% XP bonus upon completing eligible 48h hackathons",
+      "Priority judging clinic access"
+    ]
   },
   {
     id: 5,
     name: "Sterling Venture",
     roleTitle: "Business & Services Lead",
+    archetype: "Strategist",
     motto: "Turns opportunities into real impact.",
     quote: "A project without users is a playground. A project with impact changes lives and builds companies.",
     personality: "Shrewd, charismatic, strategic, connects engineering students with enterprise clients and startup grants.",
@@ -131,12 +176,18 @@ export const GOBLIN_CHARACTERS: GoblinCharacter[] = [
     ],
     avatarImg: "/assets/goblins/goblin_5_avatar.jpg",
     cardImg: "/assets/goblins/role_5_card.jpg",
-    badgeColor: "purple"
+    badgeColor: "purple",
+    rpgPerks: [
+      "Access to incubator and micro-grant network listings",
+      "+15% XP on product validation challenges",
+      "Client pitch deck review badge"
+    ]
   },
   {
     id: 6,
     name: "Ledger Gremlin",
     roleTitle: "Finance & Administration Lead",
+    archetype: "Debugger",
     motto: "Keeps the team running smoothly.",
     quote: "Transparent numbers make honest communities. Every rupee and cloud credit counts toward our mission.",
     personality: "Calculated, meticulous, spreadsheet virtuoso, ensures budgets and prize pools are 100% accountable.",
@@ -155,12 +206,18 @@ export const GOBLIN_CHARACTERS: GoblinCharacter[] = [
     ],
     avatarImg: "/assets/goblins/goblin_6_avatar.jpg",
     cardImg: "/assets/goblins/role_6_card.jpg",
-    badgeColor: "green"
+    badgeColor: "green",
+    rpgPerks: [
+      "Zero-cost cloud deployment playbook access",
+      "+15% XP on algorithmic optimization & debugging",
+      "Audit trail transparency verified badge"
+    ]
   },
   {
     id: 7,
     name: "Nova Builder",
     roleTitle: "Innovation & Project Lead",
+    archetype: "Builder",
     motto: "From idea to implementation.",
     quote: "Never let a brilliant idea rot in your notes app. Build the MVP this weekend.",
     personality: "Relentless experimenter, prototype fanatic, cross-functional bridge between designers and coders.",
@@ -179,12 +236,18 @@ export const GOBLIN_CHARACTERS: GoblinCharacter[] = [
     ],
     avatarImg: "/assets/goblins/goblin_7_avatar.jpg",
     cardImg: "/assets/goblins/role_7_card.jpg",
-    badgeColor: "purple"
+    badgeColor: "purple",
+    rpgPerks: [
+      "Featured Showcase spot for published projects",
+      "+20% XP bonus upon shipping real demo links",
+      "Early beta access to community tools"
+    ]
   },
   {
     id: 8,
     name: "Sage Mentor",
     roleTitle: "Community Engagement & Mentorship Lead",
+    archetype: "Explorer",
     motto: "Learn. Share. Grow. Together.",
     quote: "There are no stupid questions in the Goblin Den. What one learns today, they teach tomorrow.",
     personality: "Warm, encouraging, scholarly, passionate about unblocking beginners and organizing 1-on-1 mentorship.",
@@ -203,15 +266,21 @@ export const GOBLIN_CHARACTERS: GoblinCharacter[] = [
     ],
     avatarImg: "/assets/goblins/goblin_8_avatar.jpg",
     cardImg: "/assets/goblins/role_8_card.jpg",
-    badgeColor: "green"
+    badgeColor: "green",
+    rpgPerks: [
+      "Mentor verification checkmark on profile",
+      "+50 XP per accepted solution in Discussion Arena",
+      "Dedicated 1-on-1 office hours booking widget"
+    ]
   },
   {
     id: 9,
     name: "Echo Hype",
     roleTitle: "Marketing & Outreach Lead",
+    archetype: "Hacker",
     motto: "Tells our story to the world.",
     quote: "If you built something awesome and didn't post about it, did it even happen? Let's make it legendary.",
-    personality: "Social media maven, storytelling prodigy, camera-ready, captures the energy of student builders.",
+    personality: "Social media maven, storytelling prodigy, captures the energy of student builders and open-source releases.",
     responsibilities: [
       "Promotes community achievements and upcoming events",
       "Creates viral content for Instagram, LinkedIn, and X",
@@ -227,7 +296,12 @@ export const GOBLIN_CHARACTERS: GoblinCharacter[] = [
     ],
     avatarImg: "/assets/goblins/goblin_9_avatar.jpg",
     cardImg: "/assets/goblins/role_9_card.jpg",
-    badgeColor: "purple"
+    badgeColor: "purple",
+    rpgPerks: [
+      "Community spotlight feature eligibility",
+      "+15% XP bonus on open-source project sharing",
+      "Social media megaphone amplification"
+    ]
   }
 ];
 
@@ -235,10 +309,11 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
   {
     id: "first_spawn",
     title: "First Spawn",
-    description: "Completed onboarding and joined the Goblin Den.",
+    description: "Completed onboarding and joined the Goblin Realm.",
     icon: "🥚",
     category: "onboarding",
-    xpReward: 100
+    xpReward: 100,
+    rarity: "Common"
   },
   {
     id: "code_goblin",
@@ -246,7 +321,8 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     description: "Completed your first interactive programming quest.",
     icon: "⚡",
     category: "coding",
-    xpReward: 250
+    xpReward: 250,
+    rarity: "Common"
   },
   {
     id: "idea_gremlin",
@@ -254,7 +330,8 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     description: "Submitted your first project or feature idea to the Forge.",
     icon: "💡",
     category: "coding",
-    xpReward: 200
+    xpReward: 200,
+    rarity: "Common"
   },
   {
     id: "squad_builder",
@@ -262,7 +339,8 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     description: "Formed or joined a collaborative squad with peer builders.",
     icon: "🤝",
     category: "community",
-    xpReward: 300
+    xpReward: 300,
+    rarity: "Rare"
   },
   {
     id: "ship_it",
@@ -270,7 +348,8 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     description: "Published a live working project with demo URL & GitHub.",
     icon: "🚀",
     category: "coding",
-    xpReward: 500
+    xpReward: 500,
+    rarity: "Epic"
   },
   {
     id: "hackathon_hunter",
@@ -278,7 +357,8 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     description: "Registered for and formed a team for an official hackathon.",
     icon: "🏆",
     category: "hackathon",
-    xpReward: 400
+    xpReward: 400,
+    rarity: "Rare"
   },
   {
     id: "knowledge_keeper",
@@ -286,7 +366,8 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     description: "Authored a reply marked as the Accepted Solution in Discussions.",
     icon: "🧠",
     category: "community",
-    xpReward: 350
+    xpReward: 350,
+    rarity: "Epic"
   },
   {
     id: "streak_guardian",
@@ -294,7 +375,8 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     description: "Maintained a 7-day continuous learning & coding streak.",
     icon: "🔥",
     category: "streak",
-    xpReward: 450
+    xpReward: 450,
+    rarity: "Epic"
   },
   {
     id: "vibe_sorcerer",
@@ -302,92 +384,151 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     description: "Mastered AI-assisted vibe coding workflows to ship an MVP in under 24 hours.",
     icon: "✨",
     category: "coding",
-    xpReward: 600
+    xpReward: 600,
+    rarity: "Legendary"
   }
 ];
 
-export const LEARNING_TRACKS: LearningTrack[] = [
+export const LEARNING_ROADMAPS: LearningRoadmap[] = [
   {
     id: "vibe_coding",
-    title: "Vibe Coding & AI-Assisted Dev",
-    description: "Build full-stack applications at the speed of thought using AI code agents, prompt architectures, and rapid iteration.",
+    title: "Vibe Coding with AI Agents",
+    description: "Master prompt contracts, context grounding, AI debugging, and shipping full-stack apps at 10x velocity.",
     goblinRoleId: 2,
+    archetype: "Architect",
     icon: "Sparkles",
     level: "All Levels",
-    totalQuests: 6,
-    tags: ["LLM Agents", "Prompt Engineering", "Full-Stack MVP", "Rapid Shipping"]
+    estimatedHours: "18 Hours",
+    tags: ["LLM Agents", "Prompt Architecture", "Full-Stack MVP", "Iterative Dev"],
+    steps: [
+      {
+        title: "Prompt Architecture & API Contracts",
+        description: "Specify strict TypeScript interfaces, database schemas, and expected UI interactions before generating code.",
+        resourceTitle: "Structured Prompt Spec Guide",
+        resourceUrl: "https://docs.anthropic.com"
+      },
+      {
+        title: "Context Scaffolding & Terminal Sidecars",
+        description: "Run code execution tools and testing loops side-by-side with your LLM code assistant.",
+        resourceTitle: "Code Execution Sandbox Playbook",
+        resourceUrl: "https://codegoblins.dev/vibe"
+      },
+      {
+        title: "Debugging Hallucinated State Mutations",
+        description: "Diagnose race conditions, cache invalidation, and broken imports without losing conversation memory.",
+        resourceTitle: "Agent Debugging Best Practices",
+        resourceUrl: "https://codegoblins.dev/debugging"
+      },
+      {
+        title: "Deploying 24-Hour Hackathon MVPs",
+        description: "Push from scratch to live URL using Vercel/Vite/Supabase with production SSL in one sitting.",
+        resourceTitle: "Zero-Downtime Deployment Guide",
+        resourceUrl: "https://vite.dev"
+      }
+    ]
   },
   {
     id: "web_dev",
-    title: "Modern Web Development",
-    description: "Master modern React, TypeScript, Tailwind, state management, and production web deployment.",
+    title: "Modern Full-Stack Web Development",
+    description: "From React 19 fundamentals to server components, Tailwind CSS styling, and high-performance APIs.",
     goblinRoleId: 3,
+    archetype: "Creator",
     icon: "Layout",
-    level: "Beginner to Intermediate",
-    totalQuests: 8,
-    tags: ["React 19", "TypeScript", "Tailwind CSS", "API Design"]
-  },
-  {
-    id: "ai_ml",
-    title: "AI & Machine Learning",
-    description: "From Python data pipelines to fine-tuning LLMs, RAG architectures, and deploying ML microservices.",
-    goblinRoleId: 7,
-    icon: "Cpu",
     level: "Intermediate",
-    totalQuests: 7,
-    tags: ["Python", "RAG", "Embeddings", "FastAPI"]
-  },
-  {
-    id: "cloud_devops",
-    title: "Cloud & DevOps Sprints",
-    description: "Dockerize your apps, configure automated CI/CD pipelines, and deploy on modern cloud platforms.",
-    goblinRoleId: 2,
-    icon: "Cloud",
-    level: "Intermediate",
-    totalQuests: 5,
-    tags: ["Docker", "GitHub Actions", "Kubernetes", "Supabase"]
+    estimatedHours: "35 Hours",
+    tags: ["React 19", "TypeScript", "Tailwind CSS", "REST & GraphQL"],
+    steps: [
+      {
+        title: "Component Architecture & TypeScript Types",
+        description: "Build robust, reusable components with strict typing, props interfaces, and compound patterns.",
+        resourceTitle: "React 19 Official Documentation",
+        resourceUrl: "https://react.dev"
+      },
+      {
+        title: "Tailwind CSS & Glassmorphic Design Systems",
+        description: "Implement dark cyberpunk themes, subtle glows, and accessible contrast palettes.",
+        resourceTitle: "Tailwind CSS Master Reference",
+        resourceUrl: "https://tailwindcss.com"
+      },
+      {
+        title: "State Management & Optimistic UI Mutations",
+        description: "Manage client cache, local storage persistence, and immediate user feedback loops.",
+        resourceTitle: "TanStack Query Deep Dive",
+        resourceUrl: "https://tanstack.com"
+      },
+      {
+        title: "Full-Stack API Design & Database Relations",
+        description: "Design relational models, foreign keys, indexes, and authenticated endpoints.",
+        resourceTitle: "PostgreSQL & Prisma Guide",
+        resourceUrl: "https://prisma.io"
+      }
+    ]
   },
   {
     id: "dsa_cp",
-    title: "DSA & Competitive Programming",
-    description: "Crack coding interview patterns, dynamic programming, graphs, and conquer weekly algorithmic battles.",
+    title: "DSA & Algorithmic Combat",
+    description: "Conquer LeetCode interview patterns, dynamic programming, graphs, and 1v1 speed coding.",
     goblinRoleId: 2,
+    archetype: "Debugger",
     icon: "Binary",
     level: "All Levels",
-    totalQuests: 9,
-    tags: ["Arrays", "Graphs", "DP", "LeetCode Master"]
-  },
-  {
-    id: "open_source",
-    title: "Open Source Contributions",
-    description: "Learn Git workflows, locate good first issues, submit pull requests, and contribute to real-world repositories.",
-    goblinRoleId: 1,
-    icon: "GitPullRequest",
-    level: "Beginner",
-    totalQuests: 4,
-    tags: ["Git", "GitHub", "Code Reviews", "OSS Culture"]
-  },
-  {
-    id: "ui_ux",
-    title: "UI/UX & Product Design",
-    description: "Wireframing in Figma, design systems, visual hierarchy, micro-interactions, and accessibility standards.",
-    goblinRoleId: 3,
-    icon: "Palette",
-    level: "Beginner to Intermediate",
-    totalQuests: 5,
-    tags: ["Figma", "Design Tokens", "Accessibility", "Prototyping"]
+    estimatedHours: "45 Hours",
+    tags: ["Arrays", "Sliding Window", "Trees & Graphs", "Dynamic Programming"],
+    steps: [
+      {
+        title: "Two Pointers & Sliding Window Mastery",
+        description: "Optimize O(N^2) brute force scans down to linear O(N) execution for subarray problems.",
+        resourceTitle: "Sliding Window Cheat Sheet",
+        resourceUrl: "https://leetcode.com"
+      },
+      {
+        title: "Binary Trees & Graph Traversals (BFS/DFS)",
+        description: "Master shortest path algorithms, cycle detection, and topological sorting.",
+        resourceTitle: "Graph Algorithm Visualizer",
+        resourceUrl: "https://visualgo.net"
+      },
+      {
+        title: "Dynamic Programming Memoization & Tabulation",
+        description: "Deconstruct optimal substructure and overlapping subproblems in classic DP patterns.",
+        resourceTitle: "DP Patterns for Top Tech Interviews",
+        resourceUrl: "https://leetcode.com"
+      }
+    ]
   },
   {
     id: "hackathon_prep",
-    title: "Hackathon Champion Playbook",
-    description: "Turn problem statements into winning prototypes, master pitch decks, and build judges' favorite demos in 36 hours.",
+    title: "Hackathon Victory Playbook",
+    description: "How to draft problem statements, build impressive live demos, and pitch judges to win podiums.",
     goblinRoleId: 4,
+    archetype: "Competitor",
     icon: "Trophy",
     level: "All Levels",
-    totalQuests: 5,
-    tags: ["Pitch Decks", "Rapid Prototyping", "Demo Polish", "Team Dynamics"]
+    estimatedHours: "12 Hours",
+    tags: ["Pitch Craft", "Rapid Prototyping", "Live Demos", "Team Synergy"],
+    steps: [
+      {
+        title: "Finding High-Value Problem Statements",
+        description: "Target real pain points that judges understand within 10 seconds of listening.",
+        resourceTitle: "Winning Hackathon Case Studies",
+        resourceUrl: "https://devpost.com"
+      },
+      {
+        title: "The 3-Minute Winning Pitch Architecture",
+        description: "The golden formula: Hook -> Pain -> Live Demo -> Tech Moat -> Real Impact.",
+        resourceTitle: "Hackathon Pitch Template Slides",
+        resourceUrl: "https://codegoblins.dev/pitch"
+      },
+      {
+        title: "Failsafe Demo Day Preparation",
+        description: "Prepare offline fallback clips, seeded realistic datasets, and bulletproof deployment URLs.",
+        resourceTitle: "Demo Day Survival Checklist",
+        resourceUrl: "https://codegoblins.dev/checklist"
+      }
+    ]
   }
 ];
+
+export const LEARNING_TRACKS = LEARNING_ROADMAPS;
 
 export const INITIAL_QUESTS: Quest[] = [
   {
@@ -470,26 +611,314 @@ export const INITIAL_QUESTS: Quest[] = [
     ],
     assignmentPrompt: "Write a 3-sentence elevator pitch for an AI tool that assists first-year engineering students with campus labs.",
     isDailyQuest: false
+  }
+];
+
+export const INITIAL_ANNOUNCEMENTS: AnnouncementItem[] = [
+  {
+    id: "ann_1",
+    title: "Welcome to Code Goblins: Learn, Build, Compete, Level Up Together",
+    summary: "Official address from Co-Founders Akshat Vats and Akshat Kumar on our mission to redefine college engineering culture.",
+    content: "Welcome to the Goblin Realm! We created Code Goblins because traditional college syllabus alone doesn't build top-tier developers. The fastest way to grow is by teaming up, building ambitious projects on weekends, mastering AI vibe coding tools, and entering hackathons with fierce passion. We have launched the 9 Goblin archetypes, our quest engine, and squads finder. Dive in, grab your daily quest, and stay goblin!",
+    authorName: "Akshat Vats & Akshat Kumar",
+    authorTitle: "Co-Founders, Code Goblins",
+    authorAvatarGoblinId: 2,
+    isPinned: true,
+    createdAt: "2026-10-24T10:00:00Z",
+    category: "Community",
+    badge: "Official Broadcast"
   },
   {
-    id: "quest_oss_1",
-    trackId: "open_source",
-    title: "Fork, Branch, Commit & PR Mastery",
-    description: "Configure your local Git upstream remote, create a feature branch, and write a conventional commit message.",
-    level: "Beginner",
-    xpReward: 150,
-    estimatedMinutes: 25,
-    category: "Open Source",
-    objectives: [
-      "Sync fork with upstream main branch",
-      "Write semantic commits (feat, fix, docs, refactor)",
-      "Open a clean pull request with issue link references"
-    ],
-    resources: [
-      { title: "Conventional Commits Specification", url: "https://www.conventionalcommits.org" }
-    ],
-    assignmentPrompt: "Write out the 4 terminal git commands required to add an upstream remote and fetch its newest tags.",
-    isDailyQuest: false
+    id: "ann_2",
+    title: "GoblinHacks 2026 Announced: ₹1,50,000 Prize Pool & Cloud Grants",
+    summary: "Our flagship 48-hour student build marathon is now accepting squad registrations.",
+    content: "Registrations for GoblinHacks 2026 are officially open. Assemble your team of 2 to 4 goblins in the Squads Finder, draft your problem statement, and prepare to ship real impact. Tracks include AI & Intelligent Agents, Urban & Campus Productivity, and Web3/Open Infrastructure.",
+    authorName: "Blitz Victor",
+    authorTitle: "Hackathon & Events Lead",
+    authorAvatarGoblinId: 4,
+    isPinned: true,
+    createdAt: "2026-10-25T11:30:00Z",
+    category: "Hackathon",
+    badge: "Prize Track"
+  },
+  {
+    id: "ann_3",
+    title: "Learning Hub Roadmap 2.0 Live with Vibe Coding Specialization",
+    summary: "Step-by-step tracks curated for 1st & 2nd year B.Tech students now include prompt engineering and agent sandboxes.",
+    content: "Check out the newly updated Learning Hub. All 4 initial roadmaps include ordered milestone steps, curated resources, and practical mini-project prompts.",
+    authorName: "Sage Mentor",
+    authorTitle: "Community Engagement & Mentorship Lead",
+    authorAvatarGoblinId: 8,
+    isPinned: false,
+    createdAt: "2026-10-25T14:00:00Z",
+    category: "Feature",
+    badge: "Curriculum"
+  }
+];
+
+export const INITIAL_ACTIVITY_FEED: ActivityFeedItem[] = [
+  {
+    id: "act_1",
+    type: "squad",
+    actorName: "Arjun Verma",
+    actorGoblinId: 2,
+    actionText: "recruited a new teammate for",
+    targetText: "Terminal Titans squad",
+    timestamp: "10 mins ago"
+  },
+  {
+    id: "act_2",
+    type: "project",
+    actorName: "Rohan Das",
+    actorGoblinId: 4,
+    actionText: "launched a new prototype in Project Forge:",
+    targetText: "VibeDraft — AI Pitch Builder",
+    timestamp: "45 mins ago"
+  },
+  {
+    id: "act_3",
+    type: "quest",
+    actorName: "Priya Nair",
+    actorGoblinId: 8,
+    actionText: "completed daily quest",
+    targetText: "Vibe Coding 101 (+150 XP)",
+    timestamp: "2 hours ago"
+  },
+  {
+    id: "act_4",
+    type: "achievement",
+    actorName: "Cadet Builder",
+    actorGoblinId: 7,
+    actionText: "unlocked achievement badge:",
+    targetText: "Code Goblin (⚡ +250 XP)",
+    timestamp: "3 hours ago"
+  },
+  {
+    id: "act_5",
+    type: "discussion",
+    actorName: "Arjun Verma",
+    actorGoblinId: 2,
+    actionText: "marked accepted solution in",
+    targetText: "How I vibe coded my first hackathon MVP",
+    timestamp: "5 hours ago"
+  }
+];
+
+export const INITIAL_RECRUITMENT_LISTINGS: TeamRecruitmentListing[] = [
+  {
+    id: "rec_1",
+    squadId: "squad_1",
+    squadName: "Terminal Titans",
+    roleTitle: "Looking for a React Developer",
+    requiredSkills: ["React 19", "Tailwind CSS", "TypeScript", "WebSocket Pings"],
+    pitch: "We need a frontend developer who can wire up responsive glassmorphic cards and live agent streaming for our GoblinHacks project.",
+    urgency: "High",
+    targetEvent: "GoblinHacks 2026",
+    createdAt: "2026-10-24T18:00:00Z"
+  },
+  {
+    id: "rec_2",
+    squadId: "squad_1",
+    squadName: "Terminal Titans",
+    roleTitle: "Need an ML / FastAPI Teammate",
+    requiredSkills: ["Python", "FastAPI", "Gemini API", "RAG Pipelines"],
+    pitch: "Help us build the backend inference pipeline that processes PDF syllabus files into interactive study quests.",
+    urgency: "High",
+    targetEvent: "GoblinHacks 2026",
+    createdAt: "2026-10-24T18:30:00Z"
+  },
+  {
+    id: "rec_3",
+    squadId: "squad_2",
+    squadName: "Campus Crafters",
+    roleTitle: "Seeking UI/UX & Figma Designer",
+    requiredSkills: ["Figma", "UI/UX", "Micro-interactions", "Wireframing"],
+    pitch: "Design sleek dark screens and ticket passes for our campus event management platform.",
+    urgency: "Normal",
+    targetEvent: "College Event OS",
+    createdAt: "2026-10-25T09:00:00Z"
+  }
+];
+
+export const INITIAL_MEMBERS: UserProfile[] = [
+  {
+    id: "user_current",
+    username: "goblin_cadet",
+    displayName: "Cadet Builder",
+    email: "cadet@codegoblins.dev",
+    avatarGoblinId: 7,
+    archetype: "Builder",
+    role: "Member",
+    level: 3,
+    xp: 680,
+    xpToNextLevel: 1000,
+    streakDays: 4,
+    longestStreak: 9,
+    rankChange: 2,
+    lastActiveDate: "2026-10-25T15:00:00Z",
+    college: "PES University, Bengaluru",
+    yearOfStudy: "2nd Year B.Tech CSE",
+    bio: "Passionate about vibe coding, building hackathon MVPs, and turning rough ideas into working software. Code hard. Level up. Stay goblin.",
+    githubUrl: "https://github.com/goblin-cadet",
+    portfolioUrl: "https://cadet.dev",
+    skills: ["React", "TypeScript", "Tailwind CSS", "Node.js", "Vibe Coding"],
+    interests: ["Web Development", "AI/ML", "Hackathons", "Product Design"],
+    preferredRoles: ["Frontend Builder", "Innovation & Project Lead"],
+    achievements: ["first_spawn", "code_goblin"],
+    isMentor: false,
+    reputationScore: 140,
+    savedPostIds: ["post_1"],
+    savedProjectIds: ["proj_1"],
+    completedLessonIds: ["step_1", "step_2"],
+    isAvailableForHireOrTeams: true
+  },
+  {
+    id: "user_akshat_vats",
+    username: "akshat_vats",
+    displayName: "Akshat Vats",
+    email: "akshat.vats@codegoblins.dev",
+    avatarGoblinId: 2,
+    archetype: "Architect",
+    role: "Administrator",
+    level: 12,
+    xp: 8400,
+    xpToNextLevel: 10000,
+    streakDays: 42,
+    longestStreak: 56,
+    rankChange: 0,
+    lastActiveDate: "2026-10-25T15:20:00Z",
+    college: "Code Goblins Clan Core",
+    yearOfStudy: "Co-Founder",
+    bio: "Co-Founder at Code Goblins. Focused on systems architecture, hackathon dominance, and vibe coding pipelines.",
+    githubUrl: "https://github.com/akshat-vats",
+    portfolioUrl: "https://akshatvats.dev",
+    skills: ["System Design", "React 19", "AI Agents", "Python", "Distributed Systems"],
+    interests: ["Vibe Coding", "Hackathons", "Cloud & DevOps"],
+    preferredRoles: ["Technical Steward", "Co-Founder"],
+    achievements: ["first_spawn", "code_goblin", "idea_gremlin", "squad_builder", "ship_it", "hackathon_hunter", "streak_guardian", "vibe_sorcerer"],
+    isMentor: true,
+    mentorBio: "Guiding high-ambition student squads through hackathon architecture and tech stack choices.",
+    reputationScore: 2150,
+    savedPostIds: [],
+    savedProjectIds: [],
+    isAvailableForHireOrTeams: true
+  },
+  {
+    id: "user_akshat_kumar",
+    username: "akshat_kumar",
+    displayName: "Akshat Kumar",
+    email: "akshat.kumar@codegoblins.dev",
+    avatarGoblinId: 1,
+    archetype: "Leader",
+    role: "Administrator",
+    level: 11,
+    xp: 7900,
+    xpToNextLevel: 9000,
+    streakDays: 39,
+    longestStreak: 50,
+    rankChange: 1,
+    lastActiveDate: "2026-10-25T15:25:00Z",
+    college: "Code Goblins Clan Core",
+    yearOfStudy: "Co-Founder",
+    bio: "Co-Founder at Code Goblins. Building the ultimate ecosystem for engineering students to learn, build, and level up together.",
+    githubUrl: "https://github.com/akshat-kumar",
+    skills: ["Community Ops", "Product Strategy", "Full-Stack Dev", "Cloud Infrastructure"],
+    interests: ["Community Culture", "Hackathons", "Open Source"],
+    preferredRoles: ["Community Steward", "Co-Founder"],
+    achievements: ["first_spawn", "code_goblin", "idea_gremlin", "squad_builder", "ship_it", "knowledge_keeper", "streak_guardian"],
+    isMentor: true,
+    mentorBio: "Connecting passionate students with opportunities, internships, and high-impact build teams.",
+    reputationScore: 1980,
+    savedPostIds: [],
+    savedProjectIds: [],
+    isAvailableForHireOrTeams: true
+  },
+  {
+    id: "user_dev_1",
+    username: "arjun_codes",
+    displayName: "Arjun Verma",
+    email: "arjun@codegoblins.dev",
+    avatarGoblinId: 2,
+    archetype: "Architect",
+    role: "Mentor",
+    level: 8,
+    xp: 3850,
+    xpToNextLevel: 4500,
+    streakDays: 19,
+    longestStreak: 28,
+    rankChange: -1,
+    lastActiveDate: "2026-10-25T14:30:00Z",
+    college: "RV College of Engineering",
+    yearOfStudy: "3rd Year B.Tech",
+    bio: "Technical Lead goblin. Passionate about distributed systems, React 19, and building winning hackathon squads.",
+    githubUrl: "https://github.com/arjun-verma",
+    portfolioUrl: "https://arjunv.dev",
+    skills: ["System Design", "React", "TypeScript", "FastAPI", "Docker", "Algorithms"],
+    interests: ["Cloud & DevOps", "Vibe Coding", "Hackathons"],
+    preferredRoles: ["Technical Lead", "Architecture Mentor"],
+    achievements: ["first_spawn", "code_goblin", "idea_gremlin", "squad_builder", "ship_it", "hackathon_hunter", "streak_guardian"],
+    isMentor: true,
+    mentorBio: "Offering 1-on-1 weekly guidance on fullstack architecture, hackathon readiness, and unblocking tricky bugs.",
+    reputationScore: 890,
+    savedPostIds: [],
+    savedProjectIds: []
+  },
+  {
+    id: "user_member_3",
+    username: "tara_pix",
+    displayName: "Tara Menon",
+    email: "tara@codegoblins.dev",
+    avatarGoblinId: 3,
+    archetype: "Creator",
+    role: "Member",
+    level: 5,
+    xp: 1950,
+    xpToNextLevel: 2500,
+    streakDays: 8,
+    longestStreak: 14,
+    rankChange: 3,
+    lastActiveDate: "2026-10-25T11:00:00Z",
+    college: "MS Ramaiah Institute of Technology",
+    yearOfStudy: "2nd Year B.Tech",
+    bio: "Design & Creative Lead goblin. Obsessed with dark UI, Framer Motion, and micro-animations.",
+    githubUrl: "https://github.com/taramenon",
+    portfolioUrl: "https://tara.design",
+    skills: ["Figma", "UI/UX", "Tailwind CSS", "CSS Animations", "User Research"],
+    interests: ["UI/UX and Product Design", "Web Development", "Hackathons"],
+    preferredRoles: ["Design & Creative Lead"],
+    achievements: ["first_spawn", "code_goblin", "idea_gremlin", "ship_it"],
+    isMentor: true,
+    mentorBio: "Happy to review student portfolios, Figma wireframes, and give actionable design feedback.",
+    reputationScore: 420,
+    savedPostIds: [],
+    savedProjectIds: []
+  },
+  {
+    id: "user_newbie_1",
+    username: "priya_n",
+    displayName: "Priya Nair",
+    email: "priya@codegoblins.dev",
+    avatarGoblinId: 8,
+    archetype: "Explorer",
+    role: "Member",
+    level: 2,
+    xp: 320,
+    xpToNextLevel: 600,
+    streakDays: 2,
+    longestStreak: 3,
+    rankChange: 0,
+    lastActiveDate: "2026-10-25T10:15:00Z",
+    college: "Dayananda Sagar College",
+    yearOfStudy: "1st Year B.Tech",
+    bio: "First-year student learning web dev, Git, and getting ready for my first hackathon sprint!",
+    skills: ["HTML", "CSS", "Basic JavaScript", "Python"],
+    interests: ["Web Development", "Vibe Coding", "Open Source"],
+    preferredRoles: ["Learner", "Frontend Enthusiast"],
+    achievements: ["first_spawn"],
+    isMentor: false,
+    reputationScore: 75,
+    savedPostIds: [],
+    savedProjectIds: []
   }
 ];
 
@@ -540,9 +969,9 @@ interface AgentContext {
     id: "post_3",
     title: "Deploying Supabase + Docker on a student budget: Zero cost architecture",
     content: "Sharing our tested deployment strategy for student builders. You can run self-hosted Postgres, storage buckets, and auth with automated backups on free tiers or micro VPS without burning your cloud credits.",
-    authorId: "user_admin_1",
-    authorName: "Rohan Das",
-    authorAvatarGoblinId: 6,
+    authorId: "user_akshat_vats",
+    authorName: "Akshat Vats",
+    authorAvatarGoblinId: 2,
     authorRole: "Administrator",
     category: "Cloud & DevOps",
     tags: ["DevOps", "Docker", "Supabase", "ZeroCost"],
@@ -559,8 +988,8 @@ export const INITIAL_REPLIES: DiscussionReply[] = [
   {
     id: "rep_1_1",
     postId: "post_1",
-    authorId: "user_admin_1",
-    authorName: "Rohan Das",
+    authorId: "user_akshat_vats",
+    authorName: "Akshat Vats",
     authorAvatarGoblinId: 2,
     authorRole: "Administrator",
     content: "Great breakdown! The critical takeaway is specifying input/output data types before letting the AI write logic. That alone eliminates 80% of hallucinated interfaces.",
@@ -632,15 +1061,15 @@ export const INITIAL_PROJECTS: ProjectShowcase[] = [
     problemStatement: "Engineering teams with great tech often lose hackathons due to mediocre pitch decks and poor visual storytelling.",
     solution: "Integrated LLM agent pipeline that crafts structured 3-minute pitch decks with exportable Tailwind mockup cards.",
     coverImage: "/assets/goblins/team_roles_poster.jpg",
-    authorId: "user_admin_1",
-    authorName: "Rohan Das",
+    authorId: "user_akshat_kumar",
+    authorName: "Akshat Kumar",
     authorAvatarGoblinId: 4,
     techStack: ["React 19", "FastAPI", "Groq LLM", "Framer Motion", "Tailwind"],
     githubUrl: "https://github.com/codegoblins/vibedraft",
     liveDemoUrl: "https://vibedraft.demo.codegoblins.dev",
     category: "AI & Productivity",
     contributors: [
-      { name: "Rohan Das", role: "AI Pipeline Lead", goblinId: 4 },
+      { name: "Akshat Kumar", role: "Product & AI Lead", goblinId: 4 },
       { name: "Sneha Patel", role: "Frontend Architect", goblinId: 3 }
     ],
     status: "Looking for Teammates",
@@ -678,7 +1107,7 @@ export const INITIAL_HACKATHONS: HackathonEvent[] = [
   {
     id: "hack_1",
     title: "GoblinHacks 2026: Vibe & Build",
-    organizer: "CodeGoblins Community Core",
+    organizer: "Code Goblins Clan Core",
     type: "Hackathon",
     format: "Online",
     startDate: "2026-11-14T09:00:00Z",
@@ -689,9 +1118,9 @@ export const INITIAL_HACKATHONS: HackathonEvent[] = [
     requiredSkills: ["React / Next.js", "AI / LLMs", "UI/UX Design", "Pitch Craft"],
     status: "Upcoming",
     teamSize: "2 - 4 Members",
-    description: "The flagship CodeGoblins hackathon for student builders. Build an audacious real-world software solution in 48 hours using vibe coding tools, open APIs, and rapid prototyping.",
+    description: "The flagship Code Goblins hackathon for student builders. Build an audacious real-world software solution in 48 hours using vibe coding tools, open APIs, and rapid prototyping.",
     bannerImage: "/assets/goblins/chaos_hero_poster.jpg",
-    registeredUserIds: ["user_current", "user_dev_1", "user_admin_1"]
+    registeredUserIds: ["user_current", "user_dev_1", "user_akshat_vats"]
   },
   {
     id: "hack_2",
@@ -715,7 +1144,7 @@ export const INITIAL_HACKATHONS: HackathonEvent[] = [
   {
     id: "hack_3",
     title: "Open Goblin Jam #4: AI Agents",
-    organizer: "CodeGoblins Innovation Lab",
+    organizer: "Code Goblins Innovation Lab",
     type: "Code Jam",
     format: "Online",
     startDate: "2026-10-20T00:00:00Z",
@@ -749,10 +1178,14 @@ export const INITIAL_SQUADS: Squad[] = [
     maxMembers: 4,
     tags: ["GoblinHacks", "AI Companion", "FastAPI", "React"],
     tasks: [
-      { id: "task_1", title: "Finalize problem statement and target persona", status: "done", assigneeName: "Arjun" },
-      { id: "task_2", title: "Build UI wireframes in Figma with dark theme", status: "in_progress", assigneeName: "Designer Wanted" },
-      { id: "task_3", title: "Setup FastAPI repo and Gemini API keys", status: "in_progress", assigneeName: "Arjun" },
-      { id: "task_4", title: "Connect React frontend with WebSocket stream", status: "todo", assigneeName: "You" }
+      { id: "task_1", title: "Finalize problem statement and target persona", status: "done", priority: "High", deadline: "Oct 28", assigneeName: "Arjun" },
+      { id: "task_2", title: "Build UI wireframes in Figma with dark theme", status: "in_progress", priority: "High", deadline: "Oct 30", assigneeName: "Designer Wanted" },
+      { id: "task_3", title: "Setup FastAPI repo and Gemini API keys", status: "in_progress", priority: "Medium", deadline: "Nov 02", assigneeName: "Arjun" },
+      { id: "task_4", title: "Connect React frontend with WebSocket stream", status: "todo", priority: "High", deadline: "Nov 05", assigneeName: "You" }
+    ],
+    chatMessages: [
+      { id: "m_1", authorName: "Arjun Verma", authorGoblinId: 2, message: "Welcome to the squad! Let's lock in the schema this week.", timestamp: "10:30 AM" },
+      { id: "m_2", authorName: "Cadet Builder", authorGoblinId: 7, message: "Ready! I'll prep the Tailwind component library for our UI.", timestamp: "11:15 AM" }
     ],
     isOpen: true,
     createdAt: "2026-10-23T11:00:00Z"
@@ -761,162 +1194,27 @@ export const INITIAL_SQUADS: Squad[] = [
     id: "squad_2",
     name: "Campus Crafters",
     description: "Building production tools for college clubs and student fests. Looking for a passionate frontend developer and backend engineer.",
-    leaderId: "user_admin_1",
-    leaderName: "Rohan Das",
+    leaderId: "user_akshat_kumar",
+    leaderName: "Akshat Kumar",
     leaderGoblinId: 1,
     targetEventOrProject: "College Event OS",
     neededRoles: ["Frontend Dev (Tailwind)", "Cloud & DevOps"],
     members: [
-      { userId: "user_admin_1", name: "Rohan Das", role: "Ops & Product", goblinId: 1 },
+      { userId: "user_akshat_kumar", name: "Akshat Kumar", role: "Ops & Product", goblinId: 1 },
       { userId: "user_member_3", name: "Tara Menon", role: "Creative Lead", goblinId: 3 }
     ],
     maxMembers: 4,
     tags: ["OpenSource", "CollegeClub", "FullStack"],
     tasks: [
-      { id: "task_2_1", title: "Draft schema for QR badge ticket validation", status: "done", assigneeName: "Rohan" },
-      { id: "task_2_2", title: "Design mobile ticket scanner screen", status: "done", assigneeName: "Tara" },
-      { id: "task_2_3", title: "Implement offline sync with IndexedDB", status: "todo", assigneeName: "Open" }
+      { id: "task_2_1", title: "Draft schema for QR badge ticket validation", status: "done", priority: "High", deadline: "Oct 25", assigneeName: "Akshat K" },
+      { id: "task_2_2", title: "Design mobile ticket scanner screen", status: "done", priority: "Medium", deadline: "Oct 27", assigneeName: "Tara" },
+      { id: "task_2_3", title: "Implement offline sync with IndexedDB", status: "todo", priority: "High", deadline: "Nov 01", assigneeName: "Open" }
+    ],
+    chatMessages: [
+      { id: "m_2_1", authorName: "Akshat Kumar", authorGoblinId: 1, message: "Testing the QR scanner with 200 mock student badges tonight.", timestamp: "02:40 PM" }
     ],
     isOpen: true,
     createdAt: "2026-10-24T16:00:00Z"
-  }
-];
-
-export const INITIAL_MEMBERS: UserProfile[] = [
-  {
-    id: "user_current",
-    username: "goblin_cadet",
-    displayName: "Cadet Builder",
-    email: "cadet@codegoblins.dev",
-    avatarGoblinId: 7,
-    role: "Member",
-    level: 3,
-    xp: 680,
-    xpToNextLevel: 1000,
-    streakDays: 4,
-    longestStreak: 9,
-    lastActiveDate: "2026-10-25T15:00:00Z",
-    college: "PES University, Bengaluru",
-    yearOfStudy: "2nd Year B.Tech CSE",
-    bio: "Passionate about vibe coding, building hackathon MVPs, and turning rough ideas into working software.",
-    githubUrl: "https://github.com/goblin-cadet",
-    portfolioUrl: "https://cadet.dev",
-    skills: ["React", "TypeScript", "Tailwind CSS", "Node.js", "Vibe Coding"],
-    interests: ["Web Development", "AI/ML", "Hackathons", "Product Design"],
-    preferredRoles: ["Frontend Builder", "Innovation & Project Lead"],
-    achievements: ["first_spawn", "code_goblin"],
-    isMentor: false,
-    reputationScore: 140,
-    savedPostIds: ["post_1"],
-    savedProjectIds: ["proj_1"]
-  },
-  {
-    id: "user_dev_1",
-    username: "arjun_codes",
-    displayName: "Arjun Verma",
-    email: "arjun@codegoblins.dev",
-    avatarGoblinId: 2,
-    role: "Mentor",
-    level: 8,
-    xp: 3850,
-    xpToNextLevel: 4500,
-    streakDays: 19,
-    longestStreak: 28,
-    lastActiveDate: "2026-10-25T14:30:00Z",
-    college: "RV College of Engineering",
-    yearOfStudy: "3rd Year B.Tech",
-    bio: "Technical Lead at CodeGoblins. Passionate about distributed systems, React 19, and building winning hackathon squads.",
-    githubUrl: "https://github.com/arjun-verma",
-    portfolioUrl: "https://arjunv.dev",
-    skills: ["System Design", "React", "TypeScript", "FastAPI", "Docker", "Algorithms"],
-    interests: ["Cloud & DevOps", "Vibe Coding", "Hackathons"],
-    preferredRoles: ["Technical Lead", "Architecture Mentor"],
-    achievements: ["first_spawn", "code_goblin", "idea_gremlin", "squad_builder", "ship_it", "hackathon_hunter", "streak_guardian"],
-    isMentor: true,
-    mentorBio: "Offering 1-on-1 weekly guidance on fullstack architecture, hackathon readiness, and unblocking tricky bugs.",
-    reputationScore: 890,
-    savedPostIds: [],
-    savedProjectIds: []
-  },
-  {
-    id: "user_admin_1",
-    username: "rohan_lead",
-    displayName: "Rohan Das",
-    email: "rohan@codegoblins.dev",
-    avatarGoblinId: 1,
-    role: "Administrator",
-    level: 10,
-    xp: 5200,
-    xpToNextLevel: 6000,
-    streakDays: 34,
-    longestStreak: 45,
-    lastActiveDate: "2026-10-25T15:10:00Z",
-    college: "BMS College of Engineering",
-    yearOfStudy: "4th Year B.Tech",
-    bio: "Community & Operations Lead. Helping first-year students navigate dev careers beyond traditional college lectures.",
-    githubUrl: "https://github.com/rohandas",
-    skills: ["Community Ops", "Cloud Architecture", "Product Management", "PostgreSQL"],
-    interests: ["Open Source", "Career & Internships", "Business & Services"],
-    preferredRoles: ["Community & Operations Lead", "Administrator"],
-    achievements: ["first_spawn", "code_goblin", "idea_gremlin", "squad_builder", "ship_it", "knowledge_keeper", "streak_guardian", "vibe_sorcerer"],
-    isMentor: true,
-    mentorBio: "Mentoring students on internships, tech club leadership, and launching real products.",
-    reputationScore: 1240,
-    savedPostIds: [],
-    savedProjectIds: []
-  },
-  {
-    id: "user_member_3",
-    username: "tara_pix",
-    displayName: "Tara Menon",
-    email: "tara@codegoblins.dev",
-    avatarGoblinId: 3,
-    role: "Member",
-    level: 5,
-    xp: 1950,
-    xpToNextLevel: 2500,
-    streakDays: 8,
-    longestStreak: 14,
-    lastActiveDate: "2026-10-25T11:00:00Z",
-    college: "MS Ramaiah Institute of Technology",
-    yearOfStudy: "2nd Year B.Tech",
-    bio: "Design & Creative Lead goblin. Obsessed with dark UI, Framer Motion, and micro-animations.",
-    githubUrl: "https://github.com/taramenon",
-    portfolioUrl: "https://tara.design",
-    skills: ["Figma", "UI/UX", "Tailwind CSS", "CSS Animations", "User Research"],
-    interests: ["UI/UX and Product Design", "Web Development", "Hackathons"],
-    preferredRoles: ["Design & Creative Lead"],
-    achievements: ["first_spawn", "code_goblin", "idea_gremlin", "ship_it"],
-    isMentor: true,
-    mentorBio: "Happy to review student portfolios, Figma wireframes, and give actionable design feedback.",
-    reputationScore: 420,
-    savedPostIds: [],
-    savedProjectIds: []
-  },
-  {
-    id: "user_newbie_1",
-    username: "priya_n",
-    displayName: "Priya Nair",
-    email: "priya@codegoblins.dev",
-    avatarGoblinId: 8,
-    role: "Member",
-    level: 2,
-    xp: 320,
-    xpToNextLevel: 600,
-    streakDays: 2,
-    longestStreak: 3,
-    lastActiveDate: "2026-10-25T10:15:00Z",
-    college: "Dayananda Sagar College",
-    yearOfStudy: "1st Year B.Tech",
-    bio: "First-year student learning web dev, Git, and getting ready for my first hackathon sprint!",
-    skills: ["HTML", "CSS", "Basic JavaScript", "Python"],
-    interests: ["Web Development", "Vibe Coding", "Open Source"],
-    preferredRoles: ["Learner", "Frontend Enthusiast"],
-    achievements: ["first_spawn"],
-    isMentor: false,
-    reputationScore: 75,
-    savedPostIds: [],
-    savedProjectIds: []
   }
 ];
 

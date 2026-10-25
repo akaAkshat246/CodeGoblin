@@ -6,15 +6,17 @@ import {
   Zap,
   Sparkles,
   Medal,
-  ArrowUpRight,
+  ArrowUp,
+  ArrowDown,
   ShieldCheck,
-  CheckCircle2
+  User,
+  HelpCircle
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
 
 export const LeaderboardPage: React.FC = () => {
-  const { allUsers, navigateTo } = useApp();
+  const { allUsers, currentUser, navigateTo } = useApp();
   const [activeTab, setActiveTab] = useState<'weekly' | 'allTime' | 'streak' | 'helpful'>('weekly');
 
   const sortedUsers = [...allUsers].sort((a, b) => {
@@ -24,15 +26,11 @@ export const LeaderboardPage: React.FC = () => {
     if (activeTab === 'helpful') {
       return b.reputationScore - a.reputationScore || b.xp - a.xp;
     }
-    if (activeTab === 'weekly') {
-      // For weekly, prioritize active learners and current week momentum
-      return b.xp - a.xp;
-    }
     return b.xp - a.xp;
   });
 
   const top3 = sortedUsers.slice(0, 3);
-  const remainingUsers = sortedUsers.slice(3);
+  const userRankIndex = currentUser ? sortedUsers.findIndex((u) => u.id === currentUser.id) : -1;
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-300">
@@ -44,11 +42,11 @@ export const LeaderboardPage: React.FC = () => {
               <Crown className="w-5 h-5" />
             </span>
             <h1 className="text-2xl sm:text-3xl font-display font-black text-[#F5F3FF]">
-              Clan Leaderboards & Reputation
+              Esports Leaderboards & Reputation
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-[#A1A1B5] mt-1">
-            Celebrating consistent building, verified quest solutions, project shipping, and peer mentorship.
+            Real-time clan rankings based on verified quests, shipped projects, hackathon podiums, and helpful solutions.
           </p>
         </div>
 
@@ -68,7 +66,7 @@ export const LeaderboardPage: React.FC = () => {
               activeTab === 'allTime' ? 'bg-[#8B5CF6] text-white shadow-glow-purple' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
             }`}
           >
-            All-Time XP
+            All-Time
           </button>
           <button
             onClick={() => setActiveTab('streak')}
@@ -84,13 +82,53 @@ export const LeaderboardPage: React.FC = () => {
               activeTab === 'helpful' ? 'bg-[#8B5CF6] text-white shadow-glow-purple' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
             }`}
           >
-            Top Helpful
+            Helpful
           </button>
         </div>
       </div>
 
+      {/* STICKY "YOUR RANK" HIGHLIGHT PANEL */}
+      {currentUser && userRankIndex !== -1 && (
+        <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-[#1E1E32] via-[#171725] to-[#11111B] border border-[#A3E635]/40 shadow-glow-green flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <span className="w-10 h-10 rounded-2xl bg-[#A3E635]/20 text-[#A3E635] font-black text-lg flex items-center justify-center font-display border border-[#A3E635]/40">
+              #{userRankIndex + 1}
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-sm text-[#F5F3FF]">Your Standing: {currentUser.displayName}</span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#A3E635]/20 text-[#A3E635] flex items-center gap-0.5">
+                  <ArrowUp className="w-3 h-3" />
+                  <span>+{currentUser.rankChange || 2} this week</span>
+                </span>
+              </div>
+              <p className="text-xs text-[#A1A1B5]">
+                Level {currentUser.level} {currentUser.role} • {currentUser.streakDays}d streak • {currentUser.college}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6 font-mono text-xs">
+            <div>
+              <span className="text-[10px] text-[#A1A1B5] block uppercase">Reputation</span>
+              <span className="font-bold text-[#C084FC] text-sm">{currentUser.reputationScore}</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-[#A1A1B5] block uppercase">XP Score</span>
+              <span className="font-black text-[#A3E635] text-base">{currentUser.xp} XP</span>
+            </div>
+            <button
+              onClick={() => navigateTo('profile')}
+              className="goblin-btn-primary py-1.5 px-3.5 text-xs font-bold"
+            >
+              My Profile
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* TOP 3 PODIUM */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-6 pb-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4 pb-2">
         {/* 2nd Place (Silver) */}
         {top3[1] && (
           <div
@@ -135,7 +173,7 @@ export const LeaderboardPage: React.FC = () => {
           </div>
         )}
 
-        {/* 1st Place (Gold) - Elevated Center */}
+        {/* 1st Place (Gold) */}
         {top3[0] && (
           <div
             onClick={() => navigateTo('profile', top3[0].id)}
@@ -144,7 +182,7 @@ export const LeaderboardPage: React.FC = () => {
             <div className="w-full flex justify-between items-center text-xs mb-2 text-amber-400 font-black">
               <span className="flex items-center gap-1.5">
                 <Crown className="w-5 h-5 text-amber-400 animate-bounce" />
-                <span>#1 Champion</span>
+                <span>#1 Grand Champion</span>
               </span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300">
                 Lvl {top3[0].level}
@@ -227,11 +265,12 @@ export const LeaderboardPage: React.FC = () => {
         )}
       </div>
 
-      {/* REMAINING RANKINGS TABLE */}
+      {/* FULL LEADERBOARD TABLE WITH MOVEMENT DELTAS */}
       <div className="goblin-card overflow-hidden">
         <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between text-xs font-bold text-[#A1A1B5] uppercase tracking-wider">
           <span>Rank & Member</span>
           <div className="flex items-center gap-8">
+            <span className="hidden sm:inline">Movement</span>
             <span className="hidden sm:inline">Streak</span>
             <span>Reputation</span>
             <span>Total Score</span>
@@ -241,11 +280,14 @@ export const LeaderboardPage: React.FC = () => {
         <div className="divide-y divide-white/5">
           {sortedUsers.map((user, index) => {
             const goblin = GOBLIN_CHARACTERS.find((g) => g.id === user.avatarGoblinId) || GOBLIN_CHARACTERS[0];
+            const change = user.rankChange || 0;
             return (
               <div
                 key={user.id}
                 onClick={() => navigateTo('profile', user.id)}
-                className="px-6 py-3.5 flex items-center justify-between hover:bg-[#1E1E32] cursor-pointer transition text-xs"
+                className={`px-6 py-4 flex items-center justify-between hover:bg-[#1E1E32] cursor-pointer transition text-xs ${
+                  user.id === currentUser?.id ? 'bg-[#8B5CF6]/10' : ''
+                }`}
               >
                 <div className="flex items-center gap-3.5">
                   <span className="w-6 font-black text-center text-[#A1A1B5]">
@@ -268,6 +310,21 @@ export const LeaderboardPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-8 font-mono">
+                  <div className="hidden sm:flex items-center gap-1 text-[11px] font-bold">
+                    {change > 0 ? (
+                      <span className="text-[#A3E635] flex items-center gap-0.5">
+                        <ArrowUp className="w-3 h-3" />
+                        +{change}
+                      </span>
+                    ) : change < 0 ? (
+                      <span className="text-rose-400 flex items-center gap-0.5">
+                        <ArrowDown className="w-3 h-3" />
+                        {change}
+                      </span>
+                    ) : (
+                      <span className="text-white/20">• 0</span>
+                    )}
+                  </div>
                   <span className="hidden sm:inline text-amber-400 font-semibold">
                     {user.streakDays}d
                   </span>
@@ -284,11 +341,11 @@ export const LeaderboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Fairness & Anti-Cheat Note */}
+      {/* Rules of Engagement */}
       <div className="p-4 rounded-2xl bg-[#11111B] border border-white/5 text-xs text-[#A1A1B5] flex items-center gap-2">
         <ShieldCheck className="w-4 h-4 text-[#A3E635] shrink-0" />
         <span>
-          Leaderboards are updated deterministically in Asia/Kolkata timezone. Spam, self-awarded XP, and fraudulent activity are automatically filtered by clan moderation.
+          Points are verified by clan logic: +150-250 XP per quest, +150-500 XP per shipped project, +100 XP per accepted answer, +10-50 XP daily streak bonuses. Duplicate/spam activities are automatically disqualified.
         </span>
       </div>
     </div>

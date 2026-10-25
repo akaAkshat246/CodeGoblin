@@ -18,8 +18,8 @@ import {
   X
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { LEARNING_TRACKS, INITIAL_QUESTS } from '../data/mockData';
-import { Quest } from '../types';
+import { LEARNING_TRACKS } from '../data/mockData';
+import { Quest, LearningRoadmap } from '../types';
 
 export const QuestsPage: React.FC = () => {
   const { quests, completedQuestIds, completeQuest, currentUser } = useApp();
@@ -98,7 +98,7 @@ export const QuestsPage: React.FC = () => {
             <span className="text-[11px]">All Tracks</span>
           </button>
 
-          {LEARNING_TRACKS.map((track) => {
+          {LEARNING_TRACKS.map((track: LearningRoadmap) => {
             const Icon = getTrackIcon(track.icon);
             const active = selectedTrackId === track.id;
             return (
@@ -122,7 +122,7 @@ export const QuestsPage: React.FC = () => {
       {/* Selected Track Overview Banner */}
       {selectedTrackId !== 'all' && (
         (() => {
-          const track = LEARNING_TRACKS.find((t) => t.id === selectedTrackId);
+          const track = LEARNING_TRACKS.find((t: LearningRoadmap) => t.id === selectedTrackId);
           if (!track) return null;
           return (
             <div className="p-5 rounded-3xl bg-[#11111B] border border-[#8B5CF6]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -133,7 +133,7 @@ export const QuestsPage: React.FC = () => {
                 <h3 className="text-lg font-bold text-[#F5F3FF] mt-0.5">{track.title}</h3>
                 <p className="text-xs text-[#A1A1B5] mt-1 max-w-2xl">{track.description}</p>
                 <div className="mt-2.5 flex flex-wrap gap-1.5">
-                  {track.tags.map((tag, i) => (
+                  {track.tags.map((tag: string, i: number) => (
                     <span key={i} className="px-2 py-0.5 rounded text-[10px] bg-[#171725] border border-white/5 text-[#A1A1B5]">
                       {tag}
                     </span>
