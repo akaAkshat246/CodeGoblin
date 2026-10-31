@@ -27,6 +27,8 @@ import { AnnouncementsPage } from './pages/AnnouncementsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AdminPage } from './pages/AdminPage';
+import { ResourcesStorePage } from './pages/ResourcesStorePage';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 export const AppContent: React.FC = () => {
   const { activePage } = useApp();
@@ -43,12 +45,6 @@ export const AppContent: React.FC = () => {
       <OnboardingModal />
       <GlobalSearchModal />
 
-      {/* Main Navbar */}
-      <Navbar
-        onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-        isMobileSidebarOpen={isMobileSidebarOpen}
-      />
-
       {/* Landing Page (Full Width View) */}
       {isLanding ? (
         <main className="flex-1">
@@ -56,12 +52,18 @@ export const AppContent: React.FC = () => {
         </main>
       ) : (
         /* Authenticated & Community Layout (Sidebar + Main Area) */
-        <div className="flex-1 flex w-full">
-          {/* Desktop & Mobile Sidebar */}
-          <Sidebar
-            isMobileOpen={isMobileSidebarOpen}
-            onCloseMobile={() => setIsMobileSidebarOpen(false)}
+        <div className="flex-1 flex flex-col w-full">
+          {/* Main Den Navbar */}
+          <Navbar
+            onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+            isMobileSidebarOpen={isMobileSidebarOpen}
           />
+          <div className="flex-1 flex w-full">
+            {/* Desktop & Mobile Sidebar */}
+            <Sidebar
+              isMobileOpen={isMobileSidebarOpen}
+              onCloseMobile={() => setIsMobileSidebarOpen(false)}
+            />
 
           {/* Main Body with Left Margin for Fixed Desktop Sidebar */}
           <main className="flex-1 md:ml-64 min-h-[calc(100vh-4rem)] pb-12 overflow-x-hidden">
@@ -75,6 +77,7 @@ export const AppContent: React.FC = () => {
             {activePage === 'hackathons' && <HackathonsPage />}
             {activePage === 'squads' && <SquadsPage />}
             {activePage === 'learning_hub' && <LearningHubPage />}
+            {activePage === 'resources_store' && <ResourcesStorePage />}
             {activePage === 'leaderboards' && <LeaderboardPage />}
             {activePage === 'members' && <MembersPage />}
             {activePage === 'announcements' && <AnnouncementsPage />}
@@ -84,11 +87,16 @@ export const AppContent: React.FC = () => {
             {activePage === 'admin' && <AdminPage />}
           </main>
         </div>
+      </div>
       )}
     </div>
   );
 };
 
 export default function App() {
-  return <AppContent />;
+  return (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
+  );
 }

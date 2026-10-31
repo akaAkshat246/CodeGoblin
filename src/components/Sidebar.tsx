@@ -17,7 +17,8 @@ import {
   Zap,
   Globe,
   BookOpen,
-  Megaphone
+  Megaphone,
+  PackageOpen
 } from 'lucide-react';
 import { useApp, NavigationPage } from '../context/AppContext';
 
@@ -39,14 +40,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen, onCloseMobile })
   const { activePage, navigateTo, currentUser, completedQuestIds, squads, announcements } = useApp();
 
   const navItems: NavItem[] = [
+    { id: 'landing', label: '← Public Website', icon: Globe, badge: 'Home', badgeType: 'green' },
     { id: 'dashboard', label: 'Home / Dashboard', icon: LayoutDashboard },
-    { id: 'discussions', label: 'Discussion Arena', icon: MessageSquare, badge: 'Active', badgeType: 'purple' },
-    { id: 'hackathons', label: 'Hackathons & Events', icon: Trophy, badge: 'Live', badgeType: 'amber' },
-    { id: 'projects', label: 'Projects Showcase', icon: Hammer },
-    { id: 'quests', label: 'Quests & Challenges', icon: Scroll, badge: `${completedQuestIds.length}/5`, badgeType: 'green' },
-    { id: 'leaderboards', label: 'Leaderboards', icon: Crown },
-    { id: 'squads', label: 'Teams & Collaboration', icon: Users2, badge: `${squads.length}`, badgeType: 'purple' },
     { id: 'learning_hub', label: 'Learning Hub', icon: BookOpen, badge: 'Roadmaps', badgeType: 'green' },
+    { id: 'hackathons', label: 'Events & Workshops', icon: Trophy, badge: 'Live', badgeType: 'amber' },
+    { id: 'resources_store', label: 'Resources Store', icon: PackageOpen, badge: 'Blueprints', badgeType: 'green' },
+    { id: 'projects', label: 'Project Forge', icon: Hammer },
+    { id: 'squads', label: 'Teams & Collaboration', icon: Users2, badge: `${squads.length}`, badgeType: 'purple' },
+    { id: 'quests', label: 'Quests & Challenges', icon: Scroll, badge: `${completedQuestIds.length}/5`, badgeType: 'green' },
+    { id: 'discussions', label: 'The Goblin Den', icon: MessageSquare, badge: 'Active', badgeType: 'purple' },
+    { id: 'leaderboards', label: 'Leaderboards', icon: Crown },
     { id: 'members', label: 'Goblin Directory', icon: UserCheck },
     { id: 'announcements', label: 'Announcements', icon: Megaphone, badge: `${announcements.length}`, badgeType: 'purple' },
     { id: 'nine_goblins', label: 'The Nine Goblins', icon: Sparkles, badge: 'Roles', badgeType: 'green' },

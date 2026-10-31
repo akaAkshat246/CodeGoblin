@@ -2,15 +2,76 @@
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/jpeg" href="/assets/goblins/goblin_2_avatar.jpg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CodeGoblins — "Different strengths. Same passion. Turning ideas into real impact — together."</title>
-    <meta name="description" content="A gamified, immersive developer community platform for students and builders to learn vibe coding, form squads, conquer quests, win hackathons, and ship real impact." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#09090F" />
+    <link rel="icon" type="image/webp" href="/art/logo.webp" />
+    
+    <!-- Primary SEO Metadata -->
+    <title>CodeGoblins — EdTech & Student Developer Community Platform</title>
+    <meta name="title" content="CodeGoblins — EdTech & Student Developer Community Platform" />
+    <meta name="description" content="Level up your developer journey. Master vibe coding, dominate hackathons, build portfolio projects, collaborate in squads, and learn with an ambitious developer clan." />
+    <meta name="keywords" content="CodeGoblins, vibe coding, hackathons, developer community, college coders, student developer, edtech platform, web development, AI coding, prompt engineering, Bangalore developers" />
+    <meta name="author" content="CodeGoblins" />
+    <link rel="canonical" href="https://codegoblins.in/" />
+
+    <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://codegoblins.in/" />
+    <meta property="og:title" content="CodeGoblins — Build Beyond Code | EdTech & Developer Community" />
+    <meta property="og:description" content="A high-ambition clan for student developers. Structured roadmaps, vibe coding sprints, hackathon teams, and hands-on workshops." />
+    <meta property="og:image" content="https://codegoblins.in/art/og-preview.png" />
+    <meta property="og:site_name" content="CodeGoblins" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://codegoblins.in/" />
+    <meta name="twitter:title" content="CodeGoblins — Build Beyond Code" />
+    <meta name="twitter:description" content="Level up your developer journey with roadmaps, hackathon squads, vibe coding, and workshops." />
+    <meta name="twitter:image" content="https://codegoblins.in/art/og-preview.png" />
+
+    <!-- Fonts Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Schema.org JSON-LD Structured Data for Google Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "EducationalOrganization",
+          "@id": "https://codegoblins.in/#organization",
+          "name": "CodeGoblins",
+          "url": "https://codegoblins.in",
+          "logo": "https://codegoblins.in/art/logo.webp",
+          "description": "EdTech & student developer clan empowering builders to master vibe coding, dominate hackathons, and ship production software.",
+          "sameAs": [
+            "https://github.com/codegoblins",
+            "https://twitter.com/codegoblins_in",
+            "https://linkedin.com/company/codegoblins"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://codegoblins.in/#website",
+          "url": "https://codegoblins.in",
+          "name": "CodeGoblins",
+          "publisher": {
+            "@id": "https://codegoblins.in/#organization"
+          },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://codegoblins.in/learn?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    }
+    </script>
   </head>
-  <body class="bg-[#09090F] text-[#F5F3FF] antialiased selection:bg-[#8B5CF6]/30 selection:text-[#A3E635] overflow-x-hidden min-h-screen">
+  <body class="bg-[#09090F] text-[#F5F3FF] antialiased selection:bg-[#8B5CF6]/30 selection:text-[#A3E635]">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

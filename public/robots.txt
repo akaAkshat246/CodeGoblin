@@ -1,0 +1,23 @@
+# CodeGoblins Production Robots File
+# https://codegoblins.in
+
+User-agent: *
+Allow: /
+Allow: /learn/
+Allow: /projects/
+Allow: /hackathons/
+Allow: /events/
+Allow: /store/
+Allow: /squads/
+Allow: /about/
+
+# Disallow internal administrative and private member routes from search crawler indexing
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api/
+Disallow: /settings
+Disallow: /dashboard
+
+# Sitemaps
+Sitemap: https://codegoblins.in/sitemap.xml
+

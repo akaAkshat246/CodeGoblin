@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
+import { SEOHead } from '../components/SEOHead';
 
 export const ProjectsPage: React.FC = () => {
   const {
@@ -105,6 +106,13 @@ export const ProjectsPage: React.FC = () => {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 animate-in fade-in duration-300">
+      <SEOHead
+        title="Project Forge & Member Showcase"
+        description="Explore live software applications, AI agents, and hackathon prototypes built by CodeGoblins clan members. Inspect live demos and source code."
+        canonicalPath="/projects"
+        pageId="projects_showcase"
+      />
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

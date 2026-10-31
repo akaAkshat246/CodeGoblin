@@ -12,7 +12,9 @@ import {
   TeamRecruitmentListing,
   AnnouncementItem,
   ActivityFeedItem,
-  NotificationItem
+  NotificationItem,
+  DigitalResource,
+  AuditLogEntry
 } from '../types';
 
 export const FOUNDERS = [
@@ -523,6 +525,68 @@ export const LEARNING_ROADMAPS: LearningRoadmap[] = [
         description: "Prepare offline fallback clips, seeded realistic datasets, and bulletproof deployment URLs.",
         resourceTitle: "Demo Day Survival Checklist",
         resourceUrl: "https://codegoblins.dev/checklist"
+      }
+    ]
+  },
+  {
+    id: "git_github_flow",
+    title: "Git & GitHub Teamwork Playbook",
+    description: "Master feature branching, squash merges, resolving gnarly merge conflicts, and automated GitHub Actions workflows.",
+    goblinRoleId: 2,
+    archetype: "Architect",
+    icon: "GitBranch",
+    level: "Beginner",
+    estimatedHours: "8 Hours",
+    tags: ["Git", "GitHub Actions", "Pull Requests", "CI/CD"],
+    steps: [
+      {
+        title: "Trunk-Based vs Feature Branching",
+        description: "Learn how to branch without leaving your teammates behind during 36-hour hackathons.",
+        resourceTitle: "Git Branching Strategy Guide",
+        resourceUrl: "https://git-scm.com/book"
+      },
+      {
+        title: "Resolving Merge Conflicts Like a Pro",
+        description: "Diagnose 3-way merge diffs, keep HEAD clean, and use git stash effectively.",
+        resourceTitle: "Interactive Git Conflict Simulator",
+        resourceUrl: "https://learngitbranching.js.org"
+      },
+      {
+        title: "Setting Up GitHub Actions CI / Automated Linter",
+        description: "Catch broken TypeScript builds and lint failures on every pull request automatically.",
+        resourceTitle: "GitHub Actions Starter Workflow",
+        resourceUrl: "https://docs.github.com/actions"
+      }
+    ]
+  },
+  {
+    id: "cloud_deployment",
+    title: "Cloud & Edge Deployment Masterclass",
+    description: "Deploy production applications on Cloudflare, Vercel, and Supabase with SSL, custom domains, and edge caching.",
+    goblinRoleId: 2,
+    archetype: "Builder",
+    icon: "Cloud",
+    level: "Intermediate",
+    estimatedHours: "14 Hours",
+    tags: ["Cloudflare", "Vercel", "Supabase", "DNS & SSL"],
+    steps: [
+      {
+        title: "DNS, Apex Records & Cloudflare Caching",
+        description: "Configure nameservers, CNAME flattening, SSL termination, and DDoS shields.",
+        resourceTitle: "Cloudflare DNS Quickstart",
+        resourceUrl: "https://developers.cloudflare.com/dns"
+      },
+      {
+        title: "PostgreSQL Database Migration & RLS Security",
+        description: "Write immutable SQL migrations, enable Row-Level Security, and manage secrets in production.",
+        resourceTitle: "Supabase Production Security Checklist",
+        resourceUrl: "https://supabase.com/docs"
+      },
+      {
+        title: "Zero-Downtime Deployment & Instant Rollbacks",
+        description: "Automate staging previews on pull requests and deploy production builds with zero cold starts.",
+        resourceTitle: "Vercel Edge Network Architecture",
+        resourceUrl: "https://vercel.com/docs"
       }
     ]
   }
@@ -1158,6 +1222,50 @@ export const INITIAL_HACKATHONS: HackathonEvent[] = [
     description: "Build an autonomous developer tool or sidecar that simplifies daily coding tasks for college students.",
     bannerImage: "/assets/goblins/team_roles_poster.jpg",
     registeredUserIds: ["user_current"]
+  },
+  {
+    id: "work_1",
+    title: "Vibe Coding Masterclass: Shipping Full-Stack Apps in 90 Mins",
+    organizer: "Code Goblins Technical Clan",
+    type: "Workshop",
+    format: "Online",
+    startDate: "2026-11-08T18:00:00Z",
+    endDate: "2026-11-08T20:00:00Z",
+    registrationDeadline: "2026-11-07T23:59:59Z",
+    prizePool: "Live Certification + Starter Code",
+    officialUrl: "https://codegoblins.in/events/vibe-coding-masterclass",
+    requiredSkills: ["JavaScript Basics", "Cursor / VS Code", "Git"],
+    status: "Upcoming",
+    teamSize: "Individual / Squad",
+    description: "Hands-on live engineering workshop. We will architect, build, and deploy a production SaaS app from scratch using Next.js 15, Tailwind, Supabase, and Cursor agent rules.",
+    bannerImage: "/assets/goblins/chaos_hero_poster.jpg",
+    registeredUserIds: ["user_current"],
+    isWorkshop: true,
+    priceInr: 0,
+    instructorName: "Akshat Vats",
+    instructorRole: "Technical Steward & Full-Stack Architect"
+  },
+  {
+    id: "work_2",
+    title: "Hackathon Pitch Teardown & Winning Deck Clinic",
+    organizer: "Code Goblins Operations & Mentorship",
+    type: "Workshop",
+    format: "Online",
+    startDate: "2026-11-12T19:00:00Z",
+    endDate: "2026-11-12T21:00:00Z",
+    registrationDeadline: "2026-11-11T23:59:59Z",
+    prizePool: "Personal Deck Review + 10-Slide Template",
+    officialUrl: "https://codegoblins.in/events/pitch-teardown-clinic",
+    requiredSkills: ["Product Thinking", "Storytelling", "Slide Design"],
+    status: "Upcoming",
+    teamSize: "Individual",
+    description: "A fast-paced interactive clinic analyzing winning pitches versus disqualified decks. 10 teams will have their pitch teardown live with real-time judge feedback.",
+    bannerImage: "/assets/goblins/role_1_card.jpg",
+    registeredUserIds: [],
+    isWorkshop: true,
+    priceInr: 199,
+    instructorName: "Akshat Kumar",
+    instructorRole: "Community Architect & 5x Hackathon Finalist"
   }
 ];
 
@@ -1248,5 +1356,184 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     timestamp: "2026-10-23T16:00:00Z",
     read: true,
     actionUrl: "profile"
+  }
+];
+
+export const INITIAL_RESOURCES: DigitalResource[] = [
+  {
+    id: "res_starter_nextjs",
+    title: "GoblinStack Next.js 15 App Router Boilerplate",
+    description: "Production-ready hackathon foundation with Tailwind CSS, Lucide icons, Dark cyber theme tokens, Supabase Auth SSR helpers, and pre-configured SEO tags.",
+    category: "Starter Kits",
+    badge: "Official Kit",
+    fileFormat: "GitHub / ZIP",
+    fileSize: "1.4 MB",
+    downloadsCount: 382,
+    tags: ["Next.js", "TypeScript", "Tailwind", "Supabase", "Hackathons"],
+    priceInr: 0,
+    codeSnippet: `npx degit codegoblins/goblin-stack-nextjs my-hackathon-project
+cd my-hackathon-project
+npm install
+npm run dev`,
+    previewContent: `├── app/
+│   ├── (auth)/login/page.tsx
+│   ├── (dashboard)/layout.tsx
+│   ├── api/webhooks/route.ts
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── ui/ (Button, Modal, Toast)
+│   └── goblin/ (CyberBackground, RankBadge)
+├── lib/
+│   ├── supabase/client.ts
+│   └── seo.ts
+└── tailwind.config.ts`
+  },
+  {
+    id: "res_fastapi_ai",
+    title: "Autonomous AI Agent Backend (FastAPI + Groq / Gemini)",
+    description: "Streamlined Python backend with asynchronous streaming endpoints, structured JSON function calling, memory stores, and API rate-limiting.",
+    category: "Starter Kits",
+    badge: "AI Sprints",
+    fileFormat: "Python / Repo",
+    fileSize: "850 KB",
+    downloadsCount: 294,
+    tags: ["Python", "FastAPI", "Gemini API", "Groq", "Agents"],
+    priceInr: 0,
+    codeSnippet: `git clone https://github.com/codegoblins/goblin-ai-agent-fastapi
+cd goblin-ai-agent-fastapi
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload`,
+    previewContent: `@app.post("/api/v1/agent/stream")
+async def stream_agent(prompt: PromptRequest):
+    return StreamingResponse(
+        agent_runtime.execute_stream(prompt.message),
+        media_type="text/event-stream"
+    )`
+  },
+  {
+    id: "res_pitch_deck",
+    title: "The 10-Slide Winning Hackathon Pitch Deck",
+    description: "Battle-tested slide blueprint that won 5+ national hackathons. Includes precise talking points, time allocation, and visual hierarchy guidelines.",
+    category: "Pitch Decks",
+    badge: "Podium Proven",
+    fileFormat: "Keynote / PPTX / Figma",
+    fileSize: "18.2 MB",
+    downloadsCount: 615,
+    tags: ["Pitching", "Hackathons", "Figma", "Presentation"],
+    priceInr: 0,
+    slidesPreview: [
+      { slideNumber: 1, title: "The Hook & One-Line Thesis", bullets: ["Punchy statement of the problem", "Why current solutions fail miserably", "30-second judge engagement test"] },
+      { slideNumber: 2, title: "The Pain Point (Quantified)", bullets: ["Real numbers / hours wasted", "Target user persona photo & quote"] },
+      { slideNumber: 3, title: "Our Solution: The Goblin Moat", bullets: ["Architecture flow diagram", "What makes this uniquely 10x faster"] },
+      { slideNumber: 4, title: "The Live Demo (Anchor Slide)", bullets: ["Interactive screen recording link", "Core 'Aha!' moment trigger"] },
+      { slideNumber: 5, title: "Tech Stack & Engineering Depth", bullets: ["Edge computing, caching, latency < 200ms", "Zero-mock live API integration proof"] },
+      { slideNumber: 6, title: "Business Viability & Roadmap", bullets: ["Go-to-market plan", "Unit economics or adoption metric"] }
+    ]
+  },
+  {
+    id: "res_doc_template",
+    title: "Production README.md & Architecture RFC Blueprint",
+    description: "Standardized technical documentation kit with Mermaid sequence diagrams, quickstart badges, API endpoint tables, and deployment instructions.",
+    category: "Documentation",
+    badge: "Engineering Standard",
+    fileFormat: "Markdown (.md)",
+    fileSize: "45 KB",
+    downloadsCount: 421,
+    tags: ["Documentation", "Mermaid", "OpenSource", "GitHub"],
+    priceInr: 0,
+    codeSnippet: `# 👾 Project Name
+
+> High-level single sentence tagline explaining what the project achieves.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+
+## ⚡ Architecture Flow
+
+\`\`\`mermaid
+flowchart LR
+    Client --> API_Gateway --> Worker_Queue --> Database
+\`\`\`
+
+## 🛠️ Quickstart
+\`\`\`bash
+npm install && npm run dev
+\`\`\``
+  },
+  {
+    id: "res_prompt_vibe",
+    title: "Vibe Coding System Prompts & Cursor Rules Collection",
+    description: "Curated system prompts (.cursorrules / LLM directives) calibrated for generating strict TypeScript types, avoiding hallucinations, and enforcing clean code structure.",
+    category: "AI Prompts",
+    badge: "Vibe Coding",
+    fileFormat: "JSON / Plaintext",
+    fileSize: "32 KB",
+    downloadsCount: 550,
+    tags: ["AI Prompts", "Cursor", "TypeScript", "Vibe Coding"],
+    priceInr: 0,
+    codeSnippet: `You are an expert full-stack engineer building with Next.js 15, TypeScript, and Tailwind CSS.
+RULES:
+1. Always write fully typed TypeScript interfaces for all function params and API contracts.
+2. Maintain single-responsibility components and keep client components minimal ('use client').
+3. Never use 'any' or disable linter rules without justification.
+4. When writing UI, prioritize semantic HTML, ARIA labels, and WCAG AA contrast.`
+  },
+  {
+    id: "res_ebook_survival",
+    title: "The Goblin Hackathon Survival Field Guide (2026 Edition)",
+    description: "Comprehensive 40-page field manual covering team assembly, 36-hour sprint schedules, sleep rotations, judge psychology, and emergency bug triage.",
+    category: "Guides & E-books",
+    badge: "Clan Guide",
+    fileFormat: "PDF / ePub",
+    fileSize: "4.8 MB",
+    downloadsCount: 780,
+    tags: ["Hackathons", "E-Book", "Strategy", "Mentorship"],
+    priceInr: 0,
+    previewContent: `Chapter 1: Assembling the Trifecta (Architect, Designer, Pitcher)
+Chapter 2: The First 6 Hours — Architecture Freeze and Zero-Mock DB
+Chapter 3: Surviving the 3:00 AM Wall — Energy, Commits, and Scope Cut
+Chapter 4: The 4-Minute Judge Pitch — Hook, Demo, Moat, Close
+Chapter 5: Post-Hackathon — Turning Prototypes into Funded Startups`
+  }
+];
+
+export const INITIAL_AUDIT_LOGS: AuditLogEntry[] = [
+  {
+    id: "log_1",
+    actorName: "Rohan Das",
+    actorRole: "Administrator",
+    action: "PROJECT_FEATURED",
+    target: "CodeGoblins Interactive Hub (proj_1)",
+    timestamp: "2026-10-30T10:15:00Z",
+    status: "success"
+  },
+  {
+    id: "log_2",
+    actorName: "Akshat Vats",
+    actorRole: "Technical Steward",
+    action: "RESOURCE_PUBLISHED",
+    target: "GoblinStack Next.js 15 App Router Boilerplate",
+    timestamp: "2026-10-29T14:20:00Z",
+    status: "info"
+  },
+  {
+    id: "log_3",
+    actorName: "Akshat Kumar",
+    actorRole: "Community Architect",
+    action: "EVENT_SCHEDULED",
+    target: "Full-Stack Vibe Coding Sprint with Cursor & Gemini",
+    timestamp: "2026-10-28T18:00:00Z",
+    status: "success"
+  },
+  {
+    id: "log_4",
+    actorName: "Rohan Das",
+    actorRole: "Administrator",
+    action: "USER_ROLE_UPDATED",
+    target: "Arjun Verma -> Mentor",
+    timestamp: "2026-10-27T11:45:00Z",
+    status: "warning"
   }
 ];

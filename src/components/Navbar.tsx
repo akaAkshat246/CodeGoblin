@@ -58,25 +58,24 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar, isMobileS
             onClick={() => navigateTo(currentUser ? 'dashboard' : 'landing')}
             className="flex items-center gap-2.5 group text-left"
           >
-            <div className="relative w-9 h-9 rounded-xl overflow-hidden ring-2 ring-[#8B5CF6]/40 group-hover:ring-[#A3E635] transition duration-300">
+            <div className="relative w-9 h-9 rounded-full overflow-hidden border border-[#b5ed72]/40 group-hover:border-[#b5ed72] transition duration-300">
               <img
-                src={activeGoblin.avatarImg}
+                src="/art/logo.webp"
                 alt="CodeGoblins Mascot"
                 className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-display font-black text-lg tracking-wider bg-gradient-to-r from-[#A3E635] via-[#8B5CF6] to-[#A855F7] bg-clip-text text-transparent">
-                  CODEGOBLINS
+                <span className="font-display font-bold text-base tracking-wider text-[#f3f1ec]">
+                  CODE<span className="text-[#b5ed72]">GOBLINS</span>
                 </span>
-                <span className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-bold rounded bg-[#8B5CF6]/20 text-[#A855F7] border border-[#8B5CF6]/30">
-                  DEV
+                <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-[#b5ed72]/20 text-[#b5ed72] border border-[#b5ed72]/30">
+                  DEN HQ
                 </span>
               </div>
-              <p className="hidden md:block text-[10px] text-[#A1A1B5] tracking-tight">
-                Different strengths. Same passion.
+              <p className="hidden md:block text-[9px] text-[#8a8d99] tracking-tight">
+                BUILD BEYOND CODE.
               </p>
             </div>
           </button>
@@ -100,6 +99,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar, isMobileS
 
         {/* Right: Gamification Status & Auth controls */}
         <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Surface / Public Website button */}
+          <button
+            type="button"
+            onClick={() => {
+              navigateTo('landing');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-[#b5ed72]/10 border border-[#b5ed72]/30 text-[#b5ed72] hover:bg-[#b5ed72]/20 text-xs font-semibold transition cursor-pointer"
+            title="Return to public CodeGoblins website"
+          >
+            <span>← Website</span>
+          </button>
+
           {currentUser ? (
             <>
               {/* Daily Streak Indicator */}

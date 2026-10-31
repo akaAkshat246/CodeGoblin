@@ -163,6 +163,7 @@ export interface ProjectShowcase {
   category: string;
   contributors: { name: string; role: string; goblinId: number }[];
   status: 'In Progress' | 'Shipped' | 'Looking for Teammates';
+  moderationStatus?: 'pending' | 'approved' | 'rejected';
   likes: number;
   likedUserIds: string[];
   createdAt: string;
@@ -187,6 +188,11 @@ export interface HackathonEvent {
   description: string;
   bannerImage: string;
   registeredUserIds: string[];
+  priceInr?: number; // 0 = free, >0 = paid ticket
+  isWorkshop?: boolean;
+  instructorName?: string;
+  instructorRole?: string;
+  recordingUrl?: string;
 }
 
 export interface SquadTask {
@@ -269,4 +275,39 @@ export interface NotificationItem {
   timestamp: string;
   read: boolean;
   actionUrl?: string;
+}
+
+export type ResourceCategory =
+  | 'Starter Kits'
+  | 'Pitch Decks'
+  | 'Documentation'
+  | 'AI Prompts'
+  | 'Guides & E-books';
+
+export interface DigitalResource {
+  id: string;
+  title: string;
+  description: string;
+  category: ResourceCategory;
+  badge: string;
+  fileFormat: string;
+  fileSize: string;
+  downloadsCount: number;
+  tags: string[];
+  isPro?: boolean;
+  priceInr?: number; // 0 for free
+  previewContent?: string;
+  codeSnippet?: string;
+  slidesPreview?: { slideNumber: number; title: string; bullets: string[] }[];
+  downloadUrl?: string;
+}
+
+export interface AuditLogEntry {
+  id: string;
+  actorName: string;
+  actorRole: string;
+  action: string;
+  target: string;
+  timestamp: string;
+  status: 'success' | 'warning' | 'info';
 }

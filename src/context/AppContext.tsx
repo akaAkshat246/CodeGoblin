@@ -14,7 +14,9 @@ import {
   AnnouncementItem,
   ActivityFeedItem,
   TeamRecruitmentListing,
-  LearningRoadmap
+  LearningRoadmap,
+  DigitalResource,
+  AuditLogEntry
 } from '../types';
 import {
   INITIAL_MEMBERS,
@@ -30,7 +32,9 @@ import {
   INITIAL_ACTIVITY_FEED,
   INITIAL_RECRUITMENT_LISTINGS,
   LEARNING_ROADMAPS,
-  GOBLIN_CHARACTERS
+  GOBLIN_CHARACTERS,
+  INITIAL_RESOURCES,
+  INITIAL_AUDIT_LOGS
 } from '../data/mockData';
 
 export type NavigationPage =
@@ -46,6 +50,7 @@ export type NavigationPage =
   | 'squads'
   | 'leaderboards'
   | 'learning_hub'
+  | 'resources_store'
   | 'members'
   | 'announcements'
   | 'nine_goblins'
@@ -133,7 +138,20 @@ interface AppContextType {
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
 
-  // Admin
+  // Resources Store
+  resources: DigitalResource[];
+  downloadedResourceIds: string[];
+  downloadResource: (resourceId: string) => void;
+
+  // Workshops & Payments
+  registerForWorkshopWithPayment: (eventId: string, isPaid: boolean, amountInr?: number) => void;
+  createEvent: (event: Omit<HackathonEvent, 'id' | 'registeredUserIds'>) => void;
+
+  // Admin & Governance
+  auditLogs: AuditLogEntry[];
+  addAuditLog: (action: string, target: string, status?: 'success' | 'warning' | 'info') => void;
+  approveProject: (projectId: string) => void;
+  rejectProject: (projectId: string, reason?: string) => void;
   updateUserRole: (userId: string, newRole: UserRole) => void;
   deletePost: (postId: string) => void;
   toggleFeatureProject: (projectId: string) => void;
@@ -162,10 +180,37 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() =>
     loadStored<UserProfile | null>('currentUser', INITIAL_MEMBERS[0])
   );
-  const [activePage, setActivePage] = useState<NavigationPage>('dashboard');
+  const [activePage, setActivePage] = useState<NavigationPage>(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      const hash = window.location.hash;
+      if (path === '/hq' || hash === '#hq' || hash.startsWith('#hq')) {
+        return 'dashboard';
+      }
+    }
+    return 'landing';
+  });
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const path = window.location.pathname;
+      const hash = window.location.hash;
+      if (path === '/hq' || hash === '#hq' || hash.startsWith('#hq')) {
+        setActivePage('dashboard');
+      } else if (path === '/' && (!hash || hash === '#' || hash === '#spawn')) {
+        setActivePage('landing');
+      }
+    };
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+    };
+  }, []);
 
   const [allUsers, setAllUsers] = useState<UserProfile[]>(() =>
     loadStored<UserProfile[]>('users', INITIAL_MEMBERS)
@@ -204,6 +249,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     loadStored<string[]>('completedLessonIds', ['step_1'])
   );
 
+  const [resources, setResources] = useState<DigitalResource[]>(() =>
+    loadStored<DigitalResource[]>('resources', INITIAL_RESOURCES)
+  );
+  const [downloadedResourceIds, setDownloadedResourceIds] = useState<string[]>(() =>
+    loadStored<string[]>('downloadedResourceIds', [])
+  );
+  const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>(() =>
+    loadStored<AuditLogEntry[]>('auditLogs', INITIAL_AUDIT_LOGS)
+  );
+
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -218,6 +273,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => saveStored('hackathons', hackathons), [hackathons]);
   useEffect(() => saveStored('squads', squads), [squads]);
   useEffect(() => saveStored('notifications', notifications), [notifications]);
+  useEffect(() => saveStored('resources', resources), [resources]);
+  useEffect(() => saveStored('downloadedResourceIds', downloadedResourceIds), [downloadedResourceIds]);
+  useEffect(() => saveStored('auditLogs', auditLogs), [auditLogs]);
   useEffect(() => saveStored('completedQuestIds', completedQuestIds), [completedQuestIds]);
   useEffect(() => saveStored('completedLessonIds', completedLessonIds), [completedLessonIds]);
 
@@ -240,6 +298,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setSelectedMemberId(currentUser?.id || null);
     }
     setActivePage(page);
+    try {
+      if (page === 'landing') {
+        window.history.pushState(null, '', '/');
+      } else if (!window.location.hash.startsWith('#hq')) {
+        window.history.pushState(null, '', '/#hq');
+      }
+    } catch {
+      // ignore
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -799,6 +866,90 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
+  const addAuditLog = (action: string, target: string, status: 'success' | 'warning' | 'info' = 'info') => {
+    const newLog: AuditLogEntry = {
+      id: `log_${Date.now()}`,
+      actorName: currentUser?.displayName || 'Clan Admin',
+      actorRole: currentUser?.role || 'Administrator',
+      action,
+      target,
+      timestamp: new Date().toISOString(),
+      status
+    };
+    setAuditLogs((prev) => [newLog, ...prev]);
+  };
+
+  const downloadResource = (resourceId: string) => {
+    setResources((prev) =>
+      prev.map((r) => (r.id === resourceId ? { ...r, downloadsCount: r.downloadsCount + 1 } : r))
+    );
+    setDownloadedResourceIds((prev) => (prev.includes(resourceId) ? prev : [...prev, resourceId]));
+    awardXP(25, 'Downloaded starter kit / blueprint from Resources Store!');
+    addToast({
+      type: 'success',
+      title: 'Resource Unlocked & Saved!',
+      description: 'Blueprint ready. Added to your download history.'
+    });
+    addAuditLog('RESOURCE_DOWNLOADED', `Resource ID: ${resourceId}`, 'info');
+  };
+
+  const approveProject = (projectId: string) => {
+    setProjects((prev) =>
+      prev.map((p) => (p.id === projectId ? { ...p, moderationStatus: 'approved' } : p))
+    );
+    addToast({
+      type: 'achievement',
+      title: 'Project Approved for Showcase!',
+      description: 'The project is now publicly visible in Project Forge.'
+    });
+    addAuditLog('PROJECT_APPROVED', `Project ID: ${projectId}`, 'success');
+  };
+
+  const rejectProject = (projectId: string, reason?: string) => {
+    setProjects((prev) =>
+      prev.map((p) => (p.id === projectId ? { ...p, moderationStatus: 'rejected' } : p))
+    );
+    addToast({
+      type: 'info',
+      title: 'Submission Status Updated',
+      description: reason || 'Project marked for revision with feedback.'
+    });
+    addAuditLog('PROJECT_REJECTED', `Project ID: ${projectId}`, 'warning');
+  };
+
+  const createEvent = (eventData: Omit<HackathonEvent, 'id' | 'registeredUserIds'>) => {
+    const newEvent: HackathonEvent = {
+      ...eventData,
+      id: `event_${Date.now()}`,
+      registeredUserIds: currentUser ? [currentUser.id] : []
+    };
+    setHackathons((prev) => [newEvent, ...prev]);
+    addToast({
+      type: 'success',
+      title: 'New Event / Workshop Published!',
+      description: `${newEvent.title} is now live on the calendar.`
+    });
+    addAuditLog('EVENT_CREATED', `Event: ${newEvent.title}`, 'success');
+  };
+
+  const registerForWorkshopWithPayment = (eventId: string, isPaid: boolean, amountInr = 0) => {
+    if (!currentUser) return;
+    setHackathons((prev) =>
+      prev.map((h) => {
+        if (h.id !== eventId) return h;
+        if (h.registeredUserIds.includes(currentUser.id)) return h;
+        return { ...h, registeredUserIds: [...h.registeredUserIds, currentUser.id] };
+      })
+    );
+    awardXP(isPaid ? 150 : 75, isPaid ? 'Registered for Masterclass Workshop! 🚀' : 'Secured seat in Community Workshop!');
+    addToast({
+      type: 'achievement',
+      title: isPaid ? 'Payment Confirmed & Seat Locked! 🎟️' : 'Workshop Seat Reserved!',
+      description: `Order #CG-${Date.now().toString().slice(-6)} verified. Digital pass generated.`
+    });
+    addAuditLog('WORKSHOP_REGISTRATION', `User: ${currentUser.displayName} -> ${eventId} (${isPaid ? `₹${amountInr} Paid` : 'Free'})`, 'success');
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -857,6 +1008,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         applyToRecruitment,
         markNotificationRead,
         markAllNotificationsRead,
+        resources,
+        downloadedResourceIds,
+        downloadResource,
+        registerForWorkshopWithPayment,
+        createEvent,
+        auditLogs,
+        addAuditLog,
+        approveProject,
+        rejectProject,
         updateUserRole,
         deletePost,
         toggleFeatureProject
