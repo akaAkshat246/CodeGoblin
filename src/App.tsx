@@ -7,6 +7,7 @@ import { LevelUpModal } from './components/LevelUpModal';
 import { AuthModal } from './components/AuthModal';
 import { OnboardingModal } from './components/OnboardingModal';
 import { GlobalSearchModal } from './components/GlobalSearchModal';
+import { AndroidQuickDock } from './components/AndroidQuickDock';
 
 // Pages
 import { LandingPage } from './pages/LandingPage';
@@ -87,6 +88,9 @@ export const AppContent: React.FC = () => {
             {activePage === 'admin' && <AdminPage />}
           </main>
         </div>
+
+        {/* Android Floating Quick Navigation Dock */}
+        <AndroidQuickDock />
       </div>
       )}
     </div>

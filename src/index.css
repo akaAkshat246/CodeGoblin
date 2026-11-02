@@ -36,6 +36,96 @@ body {
 }
 
 /* Glassmorphism & Cyber Card Effects */
+.glass-panel {
+  background: rgba(17, 17, 27, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.42);
+}
+
+.glass-card {
+  background: rgba(23, 23, 37, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(139, 92, 246, 0.45);
+  box-shadow: 0 12px 32px -4px rgba(139, 92, 246, 0.25), inset 0 1px 2px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Android Styled Material You & Squircle Layout Elements */
+.android-squircle {
+  border-radius: 20px;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.android-squircle-lg {
+  border-radius: 26px;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.android-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.android-tile {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1.125rem;
+  border-radius: 22px;
+  background: rgba(23, 23, 37, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  cursor: pointer;
+  user-select: none;
+}
+
+.android-tile:hover {
+  background: rgba(30, 30, 48, 0.85);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.android-tile:active {
+  transform: scale(0.97);
+}
+
+.android-fab {
+  border-radius: 22px;
+  box-shadow: 0 8px 24px -4px rgba(139, 92, 246, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.android-fab:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 28px -4px rgba(139, 92, 246, 0.65);
+}
+
+.android-fab:active {
+  transform: scale(0.96);
+}
+
 .goblin-card {
   background: #171725;
   border: 1px solid rgba(139, 92, 246, 0.15);

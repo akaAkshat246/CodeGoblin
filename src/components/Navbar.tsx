@@ -11,10 +11,12 @@ import {
   Menu,
   X,
   CheckCircle2,
-  Trophy
+  Trophy,
+  ShieldCheck
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
+import { isAdminEmail } from '../utils/adminAuth';
 
 interface NavbarProps {
   onToggleMobileSidebar: () => void;
@@ -41,8 +43,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar, isMobileS
   const activeGoblin = GOBLIN_CHARACTERS.find((g) => g.id === currentUser?.avatarGoblinId) || GOBLIN_CHARACTERS[1];
   const unreadNotifs = notifications.filter((n) => !n.read);
 
+  const isUserAdmin = currentUser?.role === 'Administrator' || isAdminEmail(currentUser?.email);
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[#8B5CF6]/20 bg-[#09090F]/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#09090F]/75 backdrop-blur-2xl shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Left: Mobile Toggle & Brand Logo */}
         <div className="flex items-center gap-3">
@@ -114,6 +118,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar, isMobileS
 
           {currentUser ? (
             <>
+              {/* Admin Special Mail ID Clearance Badge */}
+              {isUserAdmin && (
+                <button
+                  type="button"
+                  onClick={() => navigateTo('admin')}
+                  title={`Admin Clearance Active (${currentUser.email || 'Core Admin'})`}
+                  className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-[12px] bg-amber-500/15 border border-amber-500/35 text-amber-300 text-xs font-bold transition hover:bg-amber-500/25 shadow-sm"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Admin VIP</span>
+                </button>
+              )}
+
               {/* Daily Streak Indicator */}
               <div
                 title={`${currentUser.streakDays} day activity streak in Asia/Kolkata timezone`}
