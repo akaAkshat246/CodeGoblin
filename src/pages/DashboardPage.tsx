@@ -1,27 +1,18 @@
 import React, { useState } from 'react';
 import {
-  Sparkles,
   Flame,
-  Trophy,
-  Scroll,
-  MessageSquare,
-  Users2,
-  Hammer,
-  ArrowRight,
-  CheckCircle2,
-  Calendar,
-  ExternalLink,
-  ChevronRight,
-  TrendingUp,
-  Zap,
-  Award,
-  Crown,
   Check,
-  Clock,
-  Filter,
+  ArrowRight,
+  Plus,
+  BookOpen,
+  Calendar,
+  MessageSquare,
+  Sparkles,
+  Trophy,
+  Crown,
   Layers,
-  ArrowUpRight,
-  Search
+  ChevronRight,
+  ExternalLink
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useApp } from '../context/AppContext';
@@ -37,25 +28,26 @@ export const DashboardPage: React.FC = () => {
     completeQuest,
     posts,
     hackathons,
-    squads,
     allUsers,
-    projects
+    roadmaps,
+    completedLessonIds
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'quests' | 'discussions' | 'events'>('overview');
-  const [questFilter, setQuestFilter] = useState<'all' | 'pending' | 'completed'>('all');
+  const [activeTab, setActiveTab] = useState<'tasks' | 'events' | 'discussions'>('tasks');
 
   if (!currentUser) return null;
 
   const activeGoblin = GOBLIN_CHARACTERS.find((g) => g.id === currentUser.avatarGoblinId) || GOBLIN_CHARACTERS[1];
   const dailyQuests = quests.filter((q) => q.isDailyQuest);
-  const trendingPosts = [...posts].sort((a, b) => b.upvotes - a.upvotes).slice(0, 4);
+  const pendingQuests = dailyQuests.filter((q) => !completedQuestIds.includes(q.id));
   const upcomingHackathon = hackathons.find((h) => h.status === 'Upcoming') || hackathons[0];
+  const trendingPosts = [...posts].sort((a, b) => b.upvotes - a.upvotes).slice(0, 3);
   const sortedMembers = [...allUsers].sort((a, b) => b.xp - a.xp);
+  const userRank = sortedMembers.findIndex((m) => m.id === currentUser.id) + 1;
 
-  // Time of day greeting
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  // Next roadmap step focus
+  const currentRoadmap = roadmaps[0];
+  const nextStep = currentRoadmap?.steps.find((s) => !completedLessonIds.includes(s.title)) || currentRoadmap?.steps[0];
 
   // XP & Level calculations
   const currentXP = currentUser.xp;
@@ -71,469 +63,249 @@ export const DashboardPage: React.FC = () => {
   const handleClaimQuest = (questId: string) => {
     completeQuest(questId);
     confetti({
-      particleCount: 40,
-      spread: 60,
+      particleCount: 35,
+      spread: 55,
       origin: { y: 0.8 },
       colors: ['#A3E635', '#8B5CF6']
     });
   };
 
-  const filteredQuests = quests.filter((q) => {
-    const isCompleted = completedQuestIds.includes(q.id);
-    if (questFilter === 'pending') return !isCompleted;
-    if (questFilter === 'completed') return isCompleted;
-    return true;
-  });
-
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 animate-in fade-in duration-200">
       <SEOHead
-        title="Command Dashboard"
-        description="Personal developer hub: manage learning quests, monitor clan streak, track XP level, and review upcoming sprints."
+        title="Dashboard"
+        description="Clean, focused overview of your developer journey, daily quests, and clan milestones."
         canonicalPath="/dashboard"
         pageId="dashboard"
       />
 
-      {/* 1. MODERN V2.1 CLEAN HEADER (DECLUTTERED) */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/5">
+      {/* 1. MINIMAL HEADER */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div className="flex items-center gap-3.5">
           <div className="relative shrink-0">
             <img
               src={activeGoblin.avatarImg}
               alt={currentUser.displayName}
-              className="w-12 h-12 rounded-xl object-cover ring-1 ring-white/10"
+              className="w-12 h-12 rounded-full object-cover ring-1 ring-white/10"
             />
-            <span className="absolute -bottom-1 -right-1 px-1.5 py-0.2 rounded-md bg-[#A3E635] text-[#09090F] font-black text-[10px] leading-tight">
+            <span className="absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded-full bg-[#A3E635] text-[#09090F] font-mono font-bold text-[9px] leading-none">
               L{currentLevel}
             </span>
           </div>
+
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-[#F5F3FF]">
-                {greeting}, {currentUser.displayName}
-              </h1>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#8B5CF6]/20 text-[#C084FC]">
-                {activeGoblin.roleTitle}
-              </span>
-            </div>
-            <p className="text-xs text-[#A1A1B5] mt-0.5">
-              {currentUser.college ? `${currentUser.college} • ` : ''}Clan Rank #{sortedMembers.findIndex(m => m.id === currentUser.id) + 1}
+            <h1 className="text-xl font-bold text-white tracking-tight">
+              {currentUser.displayName}
+            </h1>
+            <p className="text-xs text-zinc-400 mt-0.5 flex items-center gap-2">
+              <span className="text-[#A3E635] font-medium">{activeGoblin.roleTitle}</span>
+              <span>•</span>
+              <span>Rank #{userRank} of {allUsers.length}</span>
+              {currentUser.college && (
+                <>
+                  <span className="hidden md:inline">•</span>
+                  <span className="hidden md:inline text-zinc-500">{currentUser.college}</span>
+                </>
+              )}
             </p>
           </div>
         </div>
 
-        {/* Quick Action Pills */}
-        <div className="flex items-center gap-2 self-start md:self-auto">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigateTo('learning_hub')}
+            className="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-zinc-200 transition flex items-center gap-1.5"
+          >
+            <BookOpen className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Roadmaps</span>
+          </button>
           <button
             onClick={() => navigateTo('projects')}
-            className="px-3 py-1.5 rounded-lg bg-[#171725] border border-white/10 hover:border-white/20 text-xs font-semibold text-[#F5F3FF] transition flex items-center gap-1.5"
+            className="px-3.5 py-2 rounded-xl bg-[#A3E635] hover:bg-[#bef264] text-[#09090F] text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
           >
-            <Hammer className="w-3.5 h-3.5 text-amber-400" />
+            <Plus className="w-3.5 h-3.5" />
             <span>New Project</span>
-          </button>
-          <button
-            onClick={() => navigateTo('discussions')}
-            className="px-3 py-1.5 rounded-lg bg-[#171725] border border-white/10 hover:border-white/20 text-xs font-semibold text-[#F5F3FF] transition flex items-center gap-1.5"
-          >
-            <MessageSquare className="w-3.5 h-3.5 text-[#8B5CF6]" />
-            <span>Ask Clan</span>
-          </button>
-          <button
-            onClick={() => navigateTo('squads')}
-            className="goblin-btn-primary py-1.5 px-3 text-xs font-bold flex items-center gap-1.5"
-          >
-            <Users2 className="w-3.5 h-3.5" />
-            <span>Find Squad</span>
           </button>
         </div>
       </div>
 
-      {/* 2. V2.1 COMPACT KPI METRIC STRIP (4 CLEAN TILES) */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+      {/* 2. MINIMAL 4-STAT METRIC STRIP */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {/* Metric 1: Level Progress */}
-        <div className="p-4 rounded-2xl bg-[#11111B] border border-white/5 space-y-2 hover:border-white/10 transition">
-          <div className="flex items-center justify-between text-xs text-[#A1A1B5]">
-            <span>Level {currentLevel} Ascension</span>
-            <span className="text-[10px] font-mono text-[#A3E635] font-bold">
-              {levelProgressPercent}%
-            </span>
+        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] space-y-2">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
+            <span>Level {currentLevel}</span>
+            <span className="font-mono text-zinc-300 font-medium">{levelProgressPercent}%</span>
           </div>
-          <div className="text-xl font-bold font-mono text-[#F5F3FF]">
-            {currentXP} <span className="text-xs font-normal text-[#A1A1B5]">XP</span>
+          <div className="text-lg font-bold font-mono text-white">
+            {currentXP.toLocaleString()}{' '}
+            <span className="text-xs font-normal text-zinc-500">XP</span>
           </div>
-          <div className="w-full h-1.5 rounded-full bg-[#171725] overflow-hidden">
+          <div className="w-full h-1 rounded-full bg-white/[0.06] overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-[#8B5CF6] to-[#A3E635] transition-all duration-300"
+              className="h-full bg-[#A3E635] transition-all duration-300"
               style={{ width: `${levelProgressPercent}%` }}
             />
           </div>
         </div>
 
-        {/* Metric 2: Activity Streak */}
-        <div className="p-4 rounded-2xl bg-[#11111B] border border-white/5 space-y-1 hover:border-white/10 transition">
-          <div className="flex items-center justify-between text-xs text-[#A1A1B5]">
+        {/* Metric 2: Streak */}
+        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] space-y-2">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>Daily Streak</span>
-            <Flame className="w-4 h-4 text-amber-400" />
+            <Flame className="w-3.5 h-3.5 text-amber-400" />
           </div>
-          <div className="text-xl font-bold font-mono text-[#F5F3FF]">
-            {currentUser.streakDays} <span className="text-xs font-normal text-[#A1A1B5]">days</span>
+          <div className="text-lg font-bold font-mono text-white">
+            {currentUser.streakDays}{' '}
+            <span className="text-xs font-normal text-zinc-500">days</span>
           </div>
-          <p className="text-[11px] text-[#A1A1B5]">Personal record: {currentUser.longestStreak} days</p>
+          <p className="text-[11px] text-zinc-500">Best: {currentUser.longestStreak} days</p>
         </div>
 
-        {/* Metric 3: Quests Completed */}
-        <div className="p-4 rounded-2xl bg-[#11111B] border border-white/5 space-y-1 hover:border-white/10 transition">
-          <div className="flex items-center justify-between text-xs text-[#A1A1B5]">
-            <span>Completed Sprints</span>
-            <Scroll className="w-4 h-4 text-[#A3E635]" />
+        {/* Metric 3: Quests Pending */}
+        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] space-y-2">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
+            <span>Daily Quests</span>
+            <Check className="w-3.5 h-3.5 text-[#A3E635]" />
           </div>
-          <div className="text-xl font-bold font-mono text-[#F5F3FF]">
-            {completedQuestIds.length} <span className="text-xs font-normal text-[#A1A1B5]">/ {quests.length}</span>
+          <div className="text-lg font-bold font-mono text-white">
+            {dailyQuests.length - pendingQuests.length}{' '}
+            <span className="text-xs font-normal text-zinc-500">/ {dailyQuests.length}</span>
           </div>
-          <p className="text-[11px] text-emerald-400 font-semibold">
-            {quests.length - completedQuestIds.length} quests pending
+          <p className="text-[11px] text-zinc-500">
+            {pendingQuests.length > 0 ? `${pendingQuests.length} pending today` : 'All caught up! 🎉'}
           </p>
         </div>
 
-        {/* Metric 4: Active Squads & Teams */}
-        <div className="p-4 rounded-2xl bg-[#11111B] border border-white/5 space-y-1 hover:border-white/10 transition">
-          <div className="flex items-center justify-between text-xs text-[#A1A1B5]">
-            <span>Collaboration</span>
-            <Users2 className="w-4 h-4 text-[#8B5CF6]" />
+        {/* Metric 4: Clan Rank */}
+        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] space-y-2">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
+            <span>Clan Standing</span>
+            <Crown className="w-3.5 h-3.5 text-amber-400" />
           </div>
-          <div className="text-xl font-bold font-mono text-[#F5F3FF]">
-            {squads.length} <span className="text-xs font-normal text-[#A1A1B5]">squads</span>
+          <div className="text-lg font-bold font-mono text-white">
+            Rank #{userRank}
           </div>
-          <p className="text-[11px] text-[#A855F7] font-semibold">
-            {currentUser.reputationScore} Rep Score
-          </p>
+          <p className="text-[11px] text-zinc-500">Top {Math.round((userRank / allUsers.length) * 100)}% of builders</p>
         </div>
       </div>
 
-      {/* 3. SEGMENTED TAB NAVIGATION (DECLUTTERED) */}
-      <div className="flex items-center gap-1.5 border-b border-white/5 pb-2 text-xs font-semibold">
-        <button
-          onClick={() => setActiveTab('overview')}
-          className={`px-3.5 py-1.5 rounded-lg transition ${
-            activeTab === 'overview'
-              ? 'bg-[#171725] text-[#A3E635] border border-white/10 font-bold'
-              : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-          }`}
-        >
-          Overview
-        </button>
-        <button
-          onClick={() => setActiveTab('quests')}
-          className={`px-3.5 py-1.5 rounded-lg transition ${
-            activeTab === 'quests'
-              ? 'bg-[#171725] text-[#A3E635] border border-white/10 font-bold'
-              : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-          }`}
-        >
-          Sprint Quests ({quests.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('discussions')}
-          className={`px-3.5 py-1.5 rounded-lg transition ${
-            activeTab === 'discussions'
-              ? 'bg-[#171725] text-[#A3E635] border border-white/10 font-bold'
-              : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-          }`}
-        >
-          Community Discussions ({posts.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('events')}
-          className={`px-3.5 py-1.5 rounded-lg transition ${
-            activeTab === 'events'
-              ? 'bg-[#171725] text-[#A3E635] border border-white/10 font-bold'
-              : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-          }`}
-        >
-          Upcoming Sprints ({hackathons.length})
-        </button>
-      </div>
-
-      {/* 4. TAB CONTENT: OVERVIEW (CLEAN 2-COLUMN SPLIT) */}
-      {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left 2 Cols: Priority Focus & Daily Sprints */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Daily Quests Card */}
-            <div className="p-5 rounded-2xl bg-[#11111B] border border-white/5 space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-bold text-[#F5F3FF] flex items-center gap-2">
-                    <Scroll className="w-4 h-4 text-[#A3E635]" />
-                    <span>Today's Learning Sprints</span>
-                  </h3>
-                  <p className="text-[11px] text-[#A1A1B5] mt-0.5">
-                    Complete daily milestones to maintain your streak and earn Clan XP.
-                  </p>
-                </div>
-                <button
-                  onClick={() => setActiveTab('quests')}
-                  className="text-xs text-[#A855F7] hover:text-[#A3E635] font-semibold transition"
-                >
-                  View All →
-                </button>
-              </div>
-
-              <div className="space-y-2.5">
-                {dailyQuests.map((quest) => {
-                  const isDone = completedQuestIds.includes(quest.id);
-                  return (
-                    <div
-                      key={quest.id}
-                      className={`p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 ${
-                        isDone
-                          ? 'bg-[#171725]/40 border-white/5 text-[#A1A1B5]'
-                          : 'bg-[#171725] border-white/5 hover:border-[#8B5CF6]/30 text-[#F5F3FF]'
-                      }`}
-                    >
-                      <div className="space-y-0.5 flex-1 pr-2">
-                        <div className="flex items-center gap-2 text-[10px]">
-                          <span className="font-mono text-[#A855F7] font-semibold">[{quest.category}]</span>
-                          <span className="text-[#A1A1B5]">~{quest.estimatedMinutes}m</span>
-                        </div>
-                        <h4 className="text-xs font-bold text-[#F5F3FF]">{quest.title}</h4>
-                      </div>
-
-                      <div className="flex items-center gap-2.5 shrink-0">
-                        <span className="text-xs font-mono font-bold text-[#A3E635]">
-                          +{quest.xpReward} XP
-                        </span>
-                        {isDone ? (
-                          <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-semibold flex items-center gap-1">
-                            <Check className="w-3.5 h-3.5" />
-                            <span>Done</span>
-                          </span>
-                        ) : (
-                          <button
-                            onClick={() => handleClaimQuest(quest.id)}
-                            className="goblin-btn-green py-1 px-3 text-xs font-bold"
-                          >
-                            Complete
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+      {/* 3. CURRENT FOCUS BANNER (Direct, Action-oriented) */}
+      {currentRoadmap && nextStep && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#171725] to-[#111118] border border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#8B5CF6]/20 text-[#C084FC]">
+                Current Roadmap
+              </span>
+              <span className="text-xs text-zinc-400 font-medium">
+                {currentRoadmap.title}
+              </span>
             </div>
-
-            {/* Trending Discussions */}
-            <div className="p-5 rounded-2xl bg-[#11111B] border border-white/5 space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-bold text-[#F5F3FF] flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4 text-[#8B5CF6]" />
-                    <span>Trending in The Goblin Den</span>
-                  </h3>
-                  <p className="text-[11px] text-[#A1A1B5] mt-0.5">
-                    Active technical discussions, solved bugs, and architecture reviews.
-                  </p>
-                </div>
-                <button
-                  onClick={() => navigateTo('discussions')}
-                  className="text-xs text-[#A855F7] hover:text-[#A3E635] font-semibold transition"
-                >
-                  Join Den →
-                </button>
-              </div>
-
-              <div className="divide-y divide-white/5">
-                {trendingPosts.map((post) => (
-                  <div
-                    key={post.id}
-                    onClick={() => navigateTo('discussion_detail', post.id)}
-                    className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4 cursor-pointer hover:bg-white/[0.02] transition px-2 rounded-lg group"
-                  >
-                    <div className="overflow-hidden">
-                      <div className="flex items-center gap-2 text-[10px] text-[#A1A1B5]">
-                        <span className="text-[#A3E635] font-semibold">{post.category}</span>
-                        <span>•</span>
-                        <span>By {post.authorName}</span>
-                        {post.solved && (
-                          <span className="text-emerald-400 font-bold">✓ Solved</span>
-                        )}
-                      </div>
-                      <h4 className="text-xs font-bold text-[#F5F3FF] group-hover:text-[#A855F7] transition truncate mt-0.5">
-                        {post.title}
-                      </h4>
-                    </div>
-
-                    <div className="flex items-center gap-3 shrink-0 text-xs font-mono text-[#A1A1B5]">
-                      <span>{post.upvotes} ▲</span>
-                      <span>{post.repliesCount} 💬</span>
-                      <ChevronRight className="w-4 h-4 text-[#8B5CF6]" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <h2 className="text-sm sm:text-base font-bold text-white">
+              Next Up: {nextStep.title}
+            </h2>
+            <p className="text-xs text-zinc-400 line-clamp-1">
+              {nextStep.description}
+            </p>
           </div>
 
-          {/* Right Col: Hackathon Spotlight & Clan Leaderboard Widget */}
-          <div className="space-y-6">
-            {/* Spotlight Hackathon */}
-            <div className="p-5 rounded-2xl bg-[#11111B] border border-white/5 space-y-3.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold flex items-center gap-1">
-                  <Trophy className="w-3.5 h-3.5" /> Next Event
-                </span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400">
-                  {upcomingHackathon.status}
-                </span>
-              </div>
-
-              <div className="h-28 rounded-xl overflow-hidden relative">
-                <img
-                  src={upcomingHackathon.bannerImage}
-                  alt={upcomingHackathon.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <span className="absolute bottom-2 left-2 text-xs font-bold text-[#F5F3FF]">
-                  {upcomingHackathon.title}
-                </span>
-              </div>
-
-              <p className="text-xs text-[#A1A1B5] line-clamp-2 leading-relaxed">
-                {upcomingHackathon.description}
-              </p>
-
-              <div className="flex items-center justify-between text-xs font-mono text-[#A3E635] pt-1 border-t border-white/5">
-                <span>{upcomingHackathon.prizePool}</span>
-                <span className="text-[#A1A1B5]">{upcomingHackathon.teamSize}</span>
-              </div>
-
-              <button
-                onClick={() => navigateTo('hackathons')}
-                className="w-full goblin-btn-primary py-2 text-xs font-bold flex items-center justify-center gap-1.5"
-              >
-                <span>View Details & Squads</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* Leaderboard Podium Preview */}
-            <div className="p-5 rounded-2xl bg-[#11111B] border border-white/5 space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-[#F5F3FF] flex items-center gap-1.5">
-                  <Crown className="w-4 h-4 text-amber-400" />
-                  <span>Clan Leaderboard</span>
-                </h4>
-                <button
-                  onClick={() => navigateTo('leaderboards')}
-                  className="text-[11px] text-[#A855F7] hover:text-[#A3E635]"
-                >
-                  View All →
-                </button>
-              </div>
-
-              <div className="space-y-2">
-                {sortedMembers.slice(0, 3).map((member, idx) => {
-                  const goblin = GOBLIN_CHARACTERS.find((g) => g.id === member.avatarGoblinId) || GOBLIN_CHARACTERS[0];
-                  return (
-                    <div
-                      key={member.id}
-                      onClick={() => navigateTo('profile', member.id)}
-                      className="p-2.5 rounded-xl bg-[#171725] border border-white/5 hover:border-white/10 cursor-pointer flex items-center justify-between transition"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <span
-                          className={`w-4 text-center font-bold text-xs ${
-                            idx === 0 ? 'text-amber-400' : idx === 1 ? 'text-slate-300' : 'text-amber-600'
-                          }`}
-                        >
-                          #{idx + 1}
-                        </span>
-                        <img
-                          src={goblin.avatarImg}
-                          alt={member.displayName}
-                          className="w-7 h-7 rounded-lg object-cover"
-                        />
-                        <div className="overflow-hidden">
-                          <p className="text-xs font-bold text-[#F5F3FF] truncate">{member.displayName}</p>
-                          <p className="text-[10px] text-[#A1A1B5]">Lvl {member.level} • {member.streakDays}d</p>
-                        </div>
-                      </div>
-                      <span className="text-xs font-mono font-bold text-[#A3E635]">
-                        {member.xp} XP
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+          <button
+            onClick={() => navigateTo('learning_hub')}
+            className="px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.1] text-xs font-semibold text-white transition flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
+          >
+            <span>Continue Learning</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
       )}
 
-      {/* 5. TAB CONTENT: QUESTS */}
-      {activeTab === 'quests' && (
-        <div className="p-5 rounded-2xl bg-[#11111B] border border-white/5 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
-            <div>
-              <h3 className="text-sm font-bold text-[#F5F3FF]">Sprint Quests Roster</h3>
-              <p className="text-xs text-[#A1A1B5]">Filter and complete learning challenges to unlock perks.</p>
-            </div>
-            <div className="flex items-center gap-1.5 text-xs font-semibold">
-              {(['all', 'pending', 'completed'] as const).map((f) => (
-                <button
-                  key={f}
-                  onClick={() => setQuestFilter(f)}
-                  className={`px-3 py-1 rounded-lg capitalize transition ${
-                    questFilter === f
-                      ? 'bg-[#171725] text-[#A3E635] border border-white/10'
-                      : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-                  }`}
-                >
-                  {f}
-                </button>
-              ))}
-            </div>
-          </div>
+      {/* 4. CLEAN TABS FOR MAIN CONTENT */}
+      <div className="space-y-4 pt-2">
+        <div className="flex items-center gap-2 border-b border-white/[0.06] pb-2 text-xs font-medium">
+          <button
+            onClick={() => setActiveTab('tasks')}
+            className={`px-3 py-1.5 rounded-lg transition ${
+              activeTab === 'tasks'
+                ? 'bg-white/[0.08] text-white font-semibold'
+                : 'text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            Daily Tasks ({dailyQuests.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('events')}
+            className={`px-3 py-1.5 rounded-lg transition ${
+              activeTab === 'events'
+                ? 'bg-white/[0.08] text-white font-semibold'
+                : 'text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            Upcoming Events ({hackathons.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('discussions')}
+            className={`px-3 py-1.5 rounded-lg transition ${
+              activeTab === 'discussions'
+                ? 'bg-white/[0.08] text-white font-semibold'
+                : 'text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            Discussions ({posts.length})
+          </button>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {filteredQuests.map((quest) => {
+        {/* TAB 1: DAILY TASKS (MINIMAL CHECKLIST) */}
+        {activeTab === 'tasks' && (
+          <div className="space-y-2.5">
+            {dailyQuests.map((quest) => {
               const isDone = completedQuestIds.includes(quest.id);
+
               return (
                 <div
                   key={quest.id}
-                  className={`p-4 rounded-xl border transition flex flex-col justify-between ${
+                  className={`p-3.5 rounded-xl border transition flex items-center justify-between gap-4 ${
                     isDone
-                      ? 'bg-[#171725]/50 border-white/5'
-                      : 'bg-[#171725] border-white/5 hover:border-[#8B5CF6]/30'
+                      ? 'bg-white/[0.01] border-white/[0.04] text-zinc-500'
+                      : 'bg-[#111118] border-white/[0.06] hover:border-white/[0.12] text-zinc-200'
                   }`}
                 >
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#8B5CF6]/20 text-[#C084FC]">
-                        {quest.category}
-                      </span>
-                      <span className="text-xs font-mono font-bold text-[#A3E635]">
-                        +{quest.xpReward} XP
-                      </span>
+                  <div className="flex items-center gap-3 overflow-hidden">
+                    <div
+                      className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
+                        isDone
+                          ? 'bg-emerald-500/10 text-emerald-400'
+                          : 'bg-white/[0.04] text-zinc-500 border border-white/[0.06]'
+                      }`}
+                    >
+                      {isDone ? <Check className="w-3.5 h-3.5" /> : <div className="w-1.5 h-1.5 rounded-full bg-zinc-600" />}
                     </div>
-                    <h4 className="text-sm font-bold text-[#F5F3FF]">{quest.title}</h4>
-                    <p className="text-xs text-[#A1A1B5] line-clamp-2">{quest.description}</p>
+
+                    <div className="overflow-hidden">
+                      <h3 className={`text-xs sm:text-sm font-semibold truncate ${isDone ? 'line-through text-zinc-500' : 'text-white'}`}>
+                        {quest.title}
+                      </h3>
+                      <p className="text-[11px] text-zinc-500 truncate mt-0.5">
+                        {quest.category} • ~{quest.estimatedMinutes} mins
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs">
-                    <span className="text-[11px] text-[#A1A1B5]">~{quest.estimatedMinutes} mins</span>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="text-xs font-mono font-medium text-[#A3E635]">
+                      +{quest.xpReward} XP
+                    </span>
+
                     {isDone ? (
-                      <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                        <Check className="w-3.5 h-3.5" /> Completed
+                      <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium">
+                        Done
                       </span>
                     ) : (
                       <button
                         onClick={() => handleClaimQuest(quest.id)}
-                        className="goblin-btn-green py-1 px-3 text-xs font-bold"
+                        className="px-3 py-1 rounded-lg bg-white/[0.08] hover:bg-[#A3E635] hover:text-[#09090F] text-xs font-medium text-white transition"
                       >
-                        Claim XP
+                        Complete
                       </button>
                     )}
                   </div>
@@ -541,107 +313,84 @@ export const DashboardPage: React.FC = () => {
               );
             })}
           </div>
-        </div>
-      )}
+        )}
 
-      {/* 6. TAB CONTENT: DISCUSSIONS */}
-      {activeTab === 'discussions' && (
-        <div className="p-5 rounded-2xl bg-[#11111B] border border-white/5 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-white/5">
-            <div>
-              <h3 className="text-sm font-bold text-[#F5F3FF]">Recent Den Conversations</h3>
-              <p className="text-xs text-[#A1A1B5]">Peer problem-solving and open discussions.</p>
-            </div>
-            <button
-              onClick={() => navigateTo('discussions')}
-              className="goblin-btn-primary py-1.5 px-3 text-xs font-bold"
-            >
-              Open Goblin Den
-            </button>
-          </div>
-
-          <div className="divide-y divide-white/5">
-            {posts.map((post) => (
-              <div
-                key={post.id}
-                onClick={() => navigateTo('discussion_detail', post.id)}
-                className="py-3.5 first:pt-0 last:pb-0 flex items-center justify-between gap-4 cursor-pointer hover:bg-white/[0.02] transition px-2 rounded-xl group"
-              >
-                <div>
-                  <div className="flex items-center gap-2 text-xs text-[#A1A1B5] mb-1">
-                    <span className="text-[#A3E635] font-semibold">[{post.category}]</span>
-                    <span>By {post.authorName}</span>
-                    {post.solved && (
-                      <span className="text-emerald-400 font-bold">✓ Solved</span>
-                    )}
-                  </div>
-                  <h4 className="text-sm font-bold text-[#F5F3FF] group-hover:text-[#A855F7] transition">
-                    {post.title}
-                  </h4>
-                  <p className="text-xs text-[#A1A1B5] line-clamp-1 mt-0.5">{post.content}</p>
-                </div>
-
-                <div className="flex items-center gap-4 text-xs font-mono text-[#A1A1B5] shrink-0">
-                  <span>{post.upvotes} ▲</span>
-                  <span>{post.repliesCount} 💬</span>
-                  <ChevronRight className="w-4 h-4 text-[#8B5CF6]" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* 7. TAB CONTENT: EVENTS */}
-      {activeTab === 'events' && (
-        <div className="p-5 rounded-2xl bg-[#11111B] border border-white/5 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-white/5">
-            <div>
-              <h3 className="text-sm font-bold text-[#F5F3FF]">Events & Sprints Calendar</h3>
-              <p className="text-xs text-[#A1A1B5]">Official hackathons and hands-on workshops.</p>
-            </div>
-            <button
-              onClick={() => navigateTo('hackathons')}
-              className="goblin-btn-primary py-1.5 px-3 text-xs font-bold"
-            >
-              Browse All Events
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* TAB 2: UPCOMING EVENTS (MINIMAL CARDS) */}
+        {activeTab === 'events' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {hackathons.map((evt) => (
               <div
                 key={evt.id}
-                className="p-4 rounded-xl bg-[#171725] border border-white/5 space-y-3 flex flex-col justify-between"
+                className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] transition space-y-3 flex flex-col justify-between"
               >
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#8B5CF6]/20 text-[#C084FC]">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] text-zinc-300">
                       {evt.type}
                     </span>
-                    <span className="text-amber-400 font-mono font-bold">{evt.prizePool}</span>
+                    <span className="font-mono text-amber-400 font-medium">
+                      {evt.prizePool}
+                    </span>
                   </div>
-                  <h4 className="text-sm font-bold text-[#F5F3FF]">{evt.title}</h4>
-                  <p className="text-xs text-[#A1A1B5] line-clamp-2">{evt.description}</p>
+                  <h3 className="text-sm font-bold text-white">{evt.title}</h3>
+                  <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                    {evt.description}
+                  </p>
                 </div>
 
-                <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs">
-                  <span className="text-[#A1A1B5] font-mono">
-                    {new Date(evt.startDate).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                <div className="pt-3 border-t border-white/[0.04] flex items-center justify-between text-xs text-zinc-400">
+                  <span>
+                    {new Date(evt.startDate).toLocaleDateString([], {
+                      month: 'short',
+                      day: 'numeric'
+                    })}
                   </span>
                   <button
                     onClick={() => navigateTo('hackathons')}
-                    className="text-[#A3E635] hover:underline font-semibold flex items-center gap-1"
+                    className="text-[#A3E635] hover:underline font-medium flex items-center gap-1"
                   >
                     <span>Inspect</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
+        )}
+
+        {/* TAB 3: DISCUSSIONS (MINIMAL LIST) */}
+        {activeTab === 'discussions' && (
+          <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] divide-y divide-white/[0.04]">
+            {trendingPosts.map((post) => (
+              <div
+                key={post.id}
+                onClick={() => navigateTo('discussion_detail', post.id)}
+                className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-4 cursor-pointer hover:bg-white/[0.02] transition px-2 rounded-lg group"
+              >
+                <div className="overflow-hidden">
+                  <div className="flex items-center gap-2 text-[11px] text-zinc-400">
+                    <span className="text-[#A3E635] font-medium">{post.category}</span>
+                    <span>•</span>
+                    <span>{post.authorName}</span>
+                    {post.solved && (
+                      <span className="text-emerald-400 font-medium">✓ Solved</span>
+                    )}
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-semibold text-white group-hover:text-[#A855F7] transition truncate mt-0.5">
+                    {post.title}
+                  </h4>
+                </div>
+
+                <div className="flex items-center gap-3 shrink-0 text-xs font-mono text-zinc-500">
+                  <span>{post.upvotes} ▲</span>
+                  <span>{post.repliesCount} 💬</span>
+                  <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-300" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
