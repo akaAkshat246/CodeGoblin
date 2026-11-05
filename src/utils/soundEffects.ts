@@ -129,3 +129,4 @@ export const playLevelUpFanfare = (): void => {
     osc.stop(noteStart + 0.4);
   });
 };
+

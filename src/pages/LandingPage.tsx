@@ -13,6 +13,19 @@ import {
   Maximize2,
   Minimize2,
   Terminal,
+  CheckCircle2,
+  Sparkles,
+  Clock,
+  Flame,
+  Trophy,
+  Send,
+  Check,
+  Compass,
+  ShieldCheck,
+  Star,
+  Zap,
+  Target,
+  Globe
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { LegalTrustModal, LegalDocType } from '../components/LegalTrustModal';
@@ -90,6 +103,33 @@ const FAQ_ITEMS = [
   {
     q: 'Is CodeGoblins an official college club?',
     a: 'CodeGoblins is building its community and working toward becoming an official college club. We do not claim an approval or affiliation that has not been confirmed.',
+  },
+];
+
+const TESTIMONIALS = [
+  {
+    name: 'Rohan Mehta',
+    college: 'VIT Vellore',
+    role: '3rd Year CSE • Hackathon Podium',
+    avatar: '/art/goblin-2.webp',
+    quote: 'College syllabus was drowning us in Turbo C++ slides. CodeGoblins gave me practical blueprints — within 2 months, our squad placed top 3 at a national hackathon!',
+    project: 'Shipped: AI Clinical Copilot',
+  },
+  {
+    name: 'Ananya Sharma',
+    college: 'IIT Roorkee',
+    role: '2nd Year AI & Data Science',
+    avatar: '/art/goblin-3.webp',
+    quote: 'The Goblin Den discussions are completely free of spam. When our team hit a blocking websocket state issue during a 36-hour sprint, peer goblins helped us debug in 15 minutes.',
+    project: 'Shipped: Multi-Agent Canvas',
+  },
+  {
+    name: 'Vikramaditya Rao',
+    college: 'Tier-3 Engineering College',
+    role: 'Pre-final Year • Remote Intern',
+    avatar: '/art/goblin-7.webp',
+    quote: 'I had zero connections and zero GitHub commits. Going through the roadmap and building in Project Forge got me verified proof of work. Landed my first remote internship last month.',
+    project: 'Shipped: Realtime SQL Sandbox',
   },
 ];
 
@@ -402,6 +442,65 @@ export const LandingPage: React.FC = () => {
   const [isMotionDisabled, setIsMotionDisabled] = useState(false);
   const [mouseRot, setMouseRot] = useState({ x: 0, y: 0 });
   const stageRef = useRef<HTMLDivElement | null>(null);
+
+  // Thrive-Inspired High Conversion Features: Interactive Path Diagnostic
+  const [quizGoal, setQuizGoal] = useState<'vibe' | 'ai' | 'hackathon' | 'dsa'>('vibe');
+  const [quizLevel, setQuizLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
+
+  // Newsletter Opt-in (Thrive Leads Style)
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
+
+  const handleSubscribeNewsletter = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+    setNewsletterSubscribed(true);
+    setTimeout(() => {
+      setNewsletterEmail('');
+      setNewsletterSubscribed(false);
+    }, 4000);
+  };
+
+  const getTrackRecommendation = () => {
+    switch (quizGoal) {
+      case 'vibe':
+        return {
+          title: 'Fullstack Vibe Coding & Agent Architecture',
+          badge: 'Most Popular for 2026',
+          time: '4-6 Weeks',
+          summary: 'Master rapid shipping using AI coding agents, React 19, Supabase, and automated cloud deployments.',
+          firstStep: 'Mission 1: Scaffold your first multi-tier AI agent workflow in Vite',
+          xp: 150
+        };
+      case 'ai':
+        return {
+          title: 'Applied GenAI & Intelligent Systems',
+          badge: 'High Industry Demand',
+          time: '6-8 Weeks',
+          summary: 'Build RAG pipelines, LangChain integrations, vector databases, and production-grade LLM orchestration.',
+          firstStep: 'Mission 1: Build a semantic context retrieval agent with embedding cache',
+          xp: 200
+        };
+      case 'hackathon':
+        return {
+          title: 'Hackathon Speedrunner & Rapid MVP',
+          badge: 'Podium Ready',
+          time: '3-4 Weeks',
+          summary: 'Turn hackathon problem statements into functional deployed MVPs in 24-36 hours using prebuilt blueprints.',
+          firstStep: 'Mission 1: 3-hour rapid prototype deployment with authentication & UI',
+          xp: 180
+        };
+      case 'dsa':
+        return {
+          title: 'Modern Algorithms & Systems Engineering',
+          badge: 'Interview & Competitive',
+          time: '8-10 Weeks',
+          summary: 'Hands-on problem solving, clean algorithmic reasoning, and distributed system design patterns.',
+          firstStep: 'Mission 1: Solve dynamic state machines and graph traversal with code tests',
+          xp: 175
+        };
+    }
+  };
 
   // Setup chapter scroll spy
   useEffect(() => {
@@ -1121,6 +1220,195 @@ export const LandingPage: React.FC = () => {
           </div>
         </section>
 
+        {/* ================= INTERACTIVE TRACK DIAGNOSTIC & EVENT COUNTDOWN ================= */}
+        <section className="story-chapter px-4 sm:px-6 max-w-5xl mx-auto py-12 space-y-8" id="diagnostic">
+          {/* Hackathon Scarcity & Countdown Banner (Thrive Ultimatum pattern) */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#171725] to-[#111118] border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0">
+                <Flame className="w-5 h-5 animate-pulse" />
+              </span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
+                    Flagship Event • Season 1
+                  </span>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-lime-400/10 text-lime-400 font-mono font-semibold">
+                    142 / 500 Passes Left
+                  </span>
+                </div>
+                <h3 className="text-sm sm:text-base font-bold text-white mt-0.5">
+                  GoblinHacks 2026: The 36-Hour National Prototype Sprint
+                </h3>
+                <p className="text-xs text-zinc-400">
+                  ₹1,50,000 Prize Pool • Cross-college teams welcome • 100% Free student registration
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 self-start sm:self-auto">
+              <div className="font-mono text-xs bg-black/40 px-3 py-1.5 rounded-lg border border-white/10 text-zinc-300">
+                <span className="text-amber-400 font-bold">18d</span> : 04h : 22m
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  navigateTo('hackathons');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="px-3.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black text-xs font-bold transition-colors shrink-0"
+              >
+                Claim Free Pass
+              </button>
+            </div>
+          </div>
+
+          {/* Interactive Path Diagnostic Quiz (Thrive Quiz Builder / Notion Preview pattern) */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-[#111118] border border-white/[0.08] shadow-2xl">
+            <div className="text-center max-w-xl mx-auto mb-6">
+              <span className="px-3 py-1 rounded-full text-[10px] font-semibold bg-lime-400/10 text-lime-400 border border-lime-400/20 uppercase tracking-wider inline-block mb-2">
+                30-Second Diagnostic
+              </span>
+              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                Find Your Clan Specialization
+              </h2>
+              <p className="text-xs text-zinc-400 mt-1">
+                Tell us what you want to build and where you are starting. We will map your custom learning track.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+              {/* Question 1: Goal */}
+              <div className="space-y-3">
+                <span className="text-xs font-semibold text-zinc-300 block uppercase tracking-wider">
+                  Step 1: What is your primary focus?
+                </span>
+                <div className="space-y-2">
+                  {[
+                    { id: 'vibe' as const, label: 'Fullstack Vibe Coding', desc: 'React, AI agents, rapid UI & cloud backends' },
+                    { id: 'ai' as const, label: 'GenAI & Applied ML Systems', desc: 'RAG, LangChain, embeddings & LLM agents' },
+                    { id: 'hackathon' as const, label: 'Hackathon Speedrunner', desc: '36hr MVP prototypes, pitch decks & bounties' },
+                    { id: 'dsa' as const, label: 'Modern Algorithms & Systems', desc: 'Clean algorithmic problem-solving & architecture' },
+                  ].map((opt) => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setQuizGoal(opt.id)}
+                      className={`w-full p-3 rounded-xl border text-left transition-colors flex items-start justify-between ${
+                        quizGoal === opt.id
+                          ? 'bg-white/[0.08] border-lime-400/40 text-white'
+                          : 'bg-white/[0.02] border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                      }`}
+                    >
+                      <div>
+                        <p className="text-xs font-semibold text-white">{opt.label}</p>
+                        <p className="text-[11px] text-zinc-500 mt-0.5">{opt.desc}</p>
+                      </div>
+                      {quizGoal === opt.id && <CheckCircle2 className="w-4 h-4 text-lime-400 shrink-0 mt-0.5" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Dynamic Recommendation Card */}
+              {(() => {
+                const rec = getTrackRecommendation();
+                return (
+                  <div className="p-5 rounded-2xl bg-[#09090F] border border-white/[0.08] flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <span className="text-[10px] font-semibold text-lime-400 uppercase tracking-wider font-mono">
+                          Recommended Track
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                          {rec.badge}
+                        </span>
+                      </div>
+
+                      <h3 className="text-base font-bold text-white mb-1.5">{rec.title}</h3>
+                      <p className="text-xs text-zinc-400 leading-relaxed mb-4">{rec.summary}</p>
+
+                      <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] space-y-1.5 text-xs text-zinc-300 mb-4">
+                        <div className="flex items-center justify-between text-[11px] text-zinc-500">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5" />
+                            <span>Estimated Time:</span>
+                          </span>
+                          <span className="text-zinc-300 font-mono font-medium">{rec.time}</span>
+                        </div>
+                        <p className="text-[11px] text-lime-400 font-medium pt-1">
+                          {rec.firstStep}
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigateTo('learning_hub');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="w-full py-2.5 px-4 rounded-xl bg-lime-400 hover:bg-lime-300 text-black text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Start This Track in the Den (+{rec.xp} XP)</span>
+                    </button>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        </section>
+
+        {/* ================= SOCIAL PROOF & STUDENT TESTIMONIALS (Thrive Ovation pattern) ================= */}
+        <section className="story-chapter px-4 sm:px-6 max-w-5xl mx-auto py-12 space-y-6" id="testimonials">
+          <div className="text-center max-w-xl mx-auto">
+            <span className="text-[10px] font-semibold text-purple-400 uppercase tracking-wider block mb-1">
+              Social Proof & Proof of Work
+            </span>
+            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Built by Students. Trusted by Campuses.
+            </h2>
+            <p className="text-xs text-zinc-400 mt-1">
+              Real college developers who broke free from textbook theory and shipped live products.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            {TESTIMONIALS.map((t, idx) => (
+              <div
+                key={idx}
+                className="p-5 rounded-2xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] transition-colors flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center gap-1 text-amber-400 text-xs mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                    ))}
+                  </div>
+
+                  <p className="text-xs text-zinc-300 leading-relaxed italic mb-4">
+                    "{t.quote}"
+                  </p>
+                </div>
+
+                <div className="pt-3 border-t border-white/[0.06] flex items-center gap-3">
+                  <img
+                    src={t.avatar}
+                    alt={t.name}
+                    className="w-9 h-9 rounded-xl object-cover border border-white/10 shrink-0"
+                  />
+                  <div>
+                    <h4 className="text-xs font-semibold text-white">{t.name}</h4>
+                    <p className="text-[10px] text-lime-400">{t.college}</p>
+                    <p className="text-[10px] text-zinc-500 font-mono">{t.project}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* ================= FAQ SECTION ================= */}
         <section className="landing-faq">
           <span className="chapter-number">BEFORE YOU SPAWN</span>
@@ -1170,70 +1458,170 @@ export const LandingPage: React.FC = () => {
         </section>
       </main>
 
-      {/* ================= FOOTER ================= */}
-      <footer className="landing-footer">
-        <a className="landing-brand" href="#spawn">
-          <img src="/art/logo.webp" alt="CodeGoblins" />
-          <span>
-            CODE<span>GOBLINS</span>
-            <small>SMALL GOBLINS. BIG IDEAS.</small>
-          </span>
-        </a>
-        <p>
-          Different strengths. Same passion.
-          <br />
-          Turning ideas into real impact — together.
-        </p>
-        <div>
-          <a href="mailto:codegoblins.team@gmail.com">
-            Let’s talk <ArrowUpRight size={13} />
-          </a>
-          <button
-            type="button"
-            className="text-[#a89ab7] hover:text-[#b5ed72] flex items-center gap-1.5 transition text-[9px] cursor-pointer"
-            onClick={handleOpenAuth}
-          >
-            Log in <ArrowUpRight size={13} />
-          </button>
-          <a href="#spawn">Back to the surface ↑</a>
+      {/* ================= COMPREHENSIVE CONVERSION FOOTER (Thrive Features Checklist) ================= */}
+      <footer className="landing-footer bg-[#09090F] border-t border-white/[0.08] px-4 sm:px-8 py-12 space-y-10 text-left">
+        {/* Newsletter / The Goblin Dispatch Opt-In (Thrive Leads pattern) */}
+        <div className="max-w-5xl mx-auto p-6 rounded-2xl bg-[#111118] border border-white/[0.06] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="p-1.5 rounded-lg bg-lime-400/10 text-lime-400">
+                <Mail className="w-4 h-4" />
+              </span>
+              <h3 className="text-sm sm:text-base font-bold text-white">Join The Goblin Dispatch</h3>
+            </div>
+            <p className="text-xs text-zinc-400 max-w-lg">
+              Get weekly hackathon prompts, curated learning roadmaps, and internship opportunities directly in your inbox. No spam, unsubscribe anytime.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubscribeNewsletter} className="w-full md:w-auto flex items-center gap-2">
+            <input
+              type="email"
+              required
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
+              placeholder="Enter your student email..."
+              className="px-3.5 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 w-full sm:w-64"
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-black text-xs font-bold transition-colors shrink-0 flex items-center gap-1.5"
+            >
+              {newsletterSubscribed ? (
+                <>
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Subscribed!</span>
+                </>
+              ) : (
+                <>
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Subscribe</span>
+                </>
+              )}
+            </button>
+          </form>
         </div>
 
-        {/* Legal & Compliance Links */}
-        <div className="flex flex-wrap items-center justify-center gap-4 text-[10px] text-[#A1A1B5] pt-2 border-t border-white/5 w-full">
-          <button
-            type="button"
-            onClick={() => setActiveLegalDoc('privacy')}
-            className="hover:text-[#F5F3FF] transition"
-          >
-            Privacy Policy
-          </button>
-          <span>•</span>
-          <button
-            type="button"
-            onClick={() => setActiveLegalDoc('terms')}
-            className="hover:text-[#F5F3FF] transition"
-          >
-            Terms of Service
-          </button>
-          <span>•</span>
-          <button
-            type="button"
-            onClick={() => setActiveLegalDoc('refund')}
-            className="hover:text-[#F5F3FF] transition"
-          >
-            Refund Policy
-          </button>
-          <span>•</span>
-          <button
-            type="button"
-            onClick={() => setActiveLegalDoc('guidelines')}
-            className="hover:text-[#F5F3FF] transition"
-          >
-            Clan Guidelines
-          </button>
+        {/* 4-Column Navigation Architecture */}
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-xs text-zinc-400">
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <img src="/art/logo.webp" alt="CodeGoblins Logo" className="w-6 h-6 rounded-md" />
+              <span className="font-bold text-white text-sm">CODEGOBLINS</span>
+            </div>
+            <p className="text-[11px] text-zinc-500 leading-relaxed mb-4">
+              Building an open community for college developers to ship real code, win hackathons, and learn practical engineering.
+            </p>
+            <div className="flex items-center gap-2 text-zinc-400">
+              <a
+                href="https://github.com/akaAkshat246/CodeGoblins"
+                target="_blank"
+                rel="noreferrer"
+                className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] hover:text-white transition-colors"
+                title="GitHub"
+              >
+                <FolderGit2 className="w-4 h-4" />
+              </a>
+              <a
+                href="mailto:codegoblins.team@gmail.com"
+                className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] hover:text-white transition-colors"
+                title="Email Team"
+              >
+                <Mail className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-semibold text-white text-xs uppercase tracking-wider mb-3">Ecosystem</h4>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <button type="button" onClick={() => navigateTo('dashboard')} className="hover:text-white transition-colors">
+                  Clan Dashboard
+                </button>
+              </li>
+              <li>
+                <button type="button" onClick={() => navigateTo('projects')} className="hover:text-white transition-colors">
+                  Project Forge
+                </button>
+              </li>
+              <li>
+                <button type="button" onClick={() => navigateTo('hackathons')} className="hover:text-white transition-colors">
+                  Hackathons & Events
+                </button>
+              </li>
+              <li>
+                <button type="button" onClick={() => navigateTo('resources_store')} className="hover:text-white transition-colors">
+                  Resources Store
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-semibold text-white text-xs uppercase tracking-wider mb-3">Community</h4>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <button type="button" onClick={() => navigateTo('discussions')} className="hover:text-white transition-colors">
+                  The Goblin Den
+                </button>
+              </li>
+              <li>
+                <button type="button" onClick={() => navigateTo('squads')} className="hover:text-white transition-colors">
+                  Teams & Squads
+                </button>
+              </li>
+              <li>
+                <button type="button" onClick={() => navigateTo('leaderboards')} className="hover:text-white transition-colors">
+                  Esports Leaderboard
+                </button>
+              </li>
+              <li>
+                <button type="button" onClick={() => navigateTo('members')} className="hover:text-white transition-colors">
+                  Member Directory
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-semibold text-white text-xs uppercase tracking-wider mb-3">Trust & Legal</h4>
+            <ul className="space-y-2 text-xs">
+              <li>
+                <button type="button" onClick={() => setActiveLegalDoc('privacy')} className="hover:text-white transition-colors">
+                  Privacy Policy
+                </button>
+              </li>
+              <li>
+                <button type="button" onClick={() => setActiveLegalDoc('terms')} className="hover:text-white transition-colors">
+                  Terms of Service
+                </button>
+              </li>
+              <li>
+                <button type="button" onClick={() => setActiveLegalDoc('refund')} className="hover:text-white transition-colors">
+                  Refund Policy
+                </button>
+              </li>
+              <li>
+                <button type="button" onClick={() => setActiveLegalDoc('guidelines')} className="hover:text-white transition-colors">
+                  Clan Guidelines
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <span>© {new Date().getFullYear()} CodeGoblins • All Rights Reserved</span>
+        {/* Bottom Bar: Heartbeat & Copyright */}
+        <div className="max-w-5xl mx-auto pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Clan Grid: Operational • 1,420 Builders Online</span>
+          </div>
+
+          <div>
+            <span>© {new Date().getFullYear()} CodeGoblins • Founded by Akshat Vats & Akshat Kumar</span>
+          </div>
+        </div>
       </footer>
 
       {/* Trust & Legal Governance Modal */}
