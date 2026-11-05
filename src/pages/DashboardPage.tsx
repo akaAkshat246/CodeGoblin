@@ -25,6 +25,7 @@ import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
 import { SEOHead } from '../components/SEOHead';
 import { playSuccessChime, playLevelUpFanfare } from '../utils/soundEffects';
+import { SpotlightCard, NumberTicker } from '../components/framer';
 
 export const DashboardPage: React.FC = () => {
   const {
@@ -202,16 +203,16 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. MINIMAL 4-STAT METRIC STRIP */}
+      {/* 2. MINIMAL 4-STAT METRIC STRIP WITH FRAMER SPOTLIGHT & NUMBER TICKER */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {/* Metric 1: Level Progress */}
-        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] space-y-2">
+        <SpotlightCard className="p-4 space-y-2" spotlightColor="rgba(163, 230, 53, 0.15)">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>Level {currentLevel}</span>
             <span className="font-mono text-zinc-300 font-medium">{levelProgressPercent}%</span>
           </div>
           <div className="text-lg font-bold font-mono text-white">
-            {currentXP.toLocaleString()}{' '}
+            <NumberTicker value={currentXP} />{' '}
             <span className="text-xs font-normal text-zinc-500">XP</span>
           </div>
           <div className="w-full h-1 rounded-full bg-white/[0.06] overflow-hidden">
@@ -220,23 +221,23 @@ export const DashboardPage: React.FC = () => {
               style={{ width: `${levelProgressPercent}%` }}
             />
           </div>
-        </div>
+        </SpotlightCard>
 
         {/* Metric 2: Streak */}
-        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] space-y-2">
+        <SpotlightCard className="p-4 space-y-2" spotlightColor="rgba(245, 158, 11, 0.15)">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>Daily Streak</span>
             <Flame className="w-3.5 h-3.5 text-amber-400" />
           </div>
           <div className="text-lg font-bold font-mono text-white">
-            {currentUser.streakDays}{' '}
+            <NumberTicker value={currentUser.streakDays} />{' '}
             <span className="text-xs font-normal text-zinc-500">days</span>
           </div>
           <p className="text-[11px] text-zinc-500">Best: {currentUser.longestStreak} days</p>
-        </div>
+        </SpotlightCard>
 
         {/* Metric 3: Quests Pending */}
-        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] space-y-2">
+        <SpotlightCard className="p-4 space-y-2" spotlightColor="rgba(163, 230, 53, 0.15)">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>Daily Quests</span>
             <Check className="w-3.5 h-3.5 text-[#A3E635]" />
@@ -248,10 +249,10 @@ export const DashboardPage: React.FC = () => {
           <p className="text-[11px] text-zinc-500">
             {pendingQuests.length > 0 ? `${pendingQuests.length} pending today` : 'All caught up! 🎉'}
           </p>
-        </div>
+        </SpotlightCard>
 
         {/* Metric 4: Clan Rank */}
-        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] space-y-2">
+        <SpotlightCard className="p-4 space-y-2" spotlightColor="rgba(192, 132, 252, 0.15)">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>Clan Standing</span>
             <Crown className="w-3.5 h-3.5 text-amber-400" />
@@ -260,7 +261,7 @@ export const DashboardPage: React.FC = () => {
             Rank #{userRank}
           </div>
           <p className="text-[11px] text-zinc-500">Top {Math.round((userRank / allUsers.length) * 100)}% of builders</p>
-        </div>
+        </SpotlightCard>
       </div>
 
       {/* 3. CURRENT FOCUS BANNER (Direct, Action-oriented) */}
@@ -293,10 +294,10 @@ export const DashboardPage: React.FC = () => {
         </div>
       )}
 
-      {/* 3.5 POLISHED EDTECH TOOLS (Daily Builder Goal + Deep Work Focus Sprint) */}
+      {/* 3.5 POLISHED EDTECH TOOLS (Daily Builder Goal + Deep Work Focus Sprint with Framer Spotlight) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {/* Daily Builder Target */}
-        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] flex flex-col justify-between space-y-3">
+        <SpotlightCard className="p-4 flex flex-col justify-between space-y-3" spotlightColor="rgba(163, 230, 53, 0.15)">
           <div>
             <div className="flex items-center justify-between text-xs mb-1.5">
               <span className="flex items-center gap-1.5 font-semibold text-white">
@@ -338,10 +339,10 @@ export const DashboardPage: React.FC = () => {
               </button>
             </div>
           </div>
-        </div>
+        </SpotlightCard>
 
         {/* Clan Focus Sprint (25m Deep Work Pomodoro) */}
-        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] flex flex-col justify-between space-y-3">
+        <SpotlightCard className="p-4 flex flex-col justify-between space-y-3" spotlightColor="rgba(139, 92, 246, 0.15)">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-xs font-semibold text-white">
               <Timer className="w-3.5 h-3.5 text-purple-400" />
@@ -386,7 +387,7 @@ export const DashboardPage: React.FC = () => {
           <p className="text-[11px] text-zinc-500">
             25m undistracted study sprint. Awards +20 Focus XP upon completion.
           </p>
-        </div>
+        </SpotlightCard>
       </div>
 
       {/* 4. CLEAN TABS FOR MAIN CONTENT */}

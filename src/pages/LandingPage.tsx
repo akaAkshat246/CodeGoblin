@@ -30,6 +30,7 @@ import {
 import { useApp } from '../context/AppContext';
 import { LegalTrustModal, LegalDocType } from '../components/LegalTrustModal';
 import { SEOHead } from '../components/SEOHead';
+import { SpotlightCard, Marquee, NumberTicker, ShimmerButton } from '../components/framer';
 
 // The 9 Goblin Roles with authentic copy
 export const GOBLIN_ROLES = [
@@ -1314,7 +1315,7 @@ export const LandingPage: React.FC = () => {
               {(() => {
                 const rec = getTrackRecommendation();
                 return (
-                  <div className="p-5 rounded-2xl bg-[#09090F] border border-white/[0.08] flex flex-col justify-between">
+                  <SpotlightCard className="p-5 flex flex-col justify-between" spotlightColor="rgba(163, 230, 53, 0.15)">
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-2">
                         <span className="text-[10px] font-semibold text-lime-400 uppercase tracking-wider font-mono">
@@ -1342,21 +1343,72 @@ export const LandingPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <button
+                    <ShimmerButton
                       type="button"
                       onClick={() => {
                         navigateTo('learning_hub');
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
-                      className="w-full py-2.5 px-4 rounded-xl bg-lime-400 hover:bg-lime-300 text-black text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                      className="w-full py-2.5 px-4 flex items-center justify-center gap-2"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
                       <span>Start This Track in the Den (+{rec.xp} XP)</span>
-                    </button>
-                  </div>
+                    </ShimmerButton>
+                  </SpotlightCard>
                 );
               })()}
             </div>
+          </div>
+        </section>
+
+        {/* ================= FRAMER LIVE METRICS & INFINITE MARQUEE TICKER ================= */}
+        <section className="px-4 sm:px-6 max-w-5xl mx-auto py-6 space-y-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { label: 'Active Builders', value: 1420, suffix: '+', icon: Users, color: 'text-lime-400' },
+              { label: 'Bounty Pool', value: 150000, prefix: '₹', icon: Trophy, color: 'text-amber-400' },
+              { label: 'Guild Roles', value: 9, suffix: ' Roles', icon: Swords, color: 'text-purple-400' },
+              { label: 'Code Blueprints', value: 50, suffix: '+', icon: FolderGit2, color: 'text-emerald-400' },
+            ].map((stat, idx) => (
+              <SpotlightCard key={idx} className="p-4" spotlightColor="rgba(255, 255, 255, 0.08)">
+                <div className="flex items-center justify-between text-zinc-400 text-xs mb-1.5">
+                  <span>{stat.label}</span>
+                  <stat.icon className={`w-3.5 h-3.5 ${stat.color}`} />
+                </div>
+                <div className={`text-xl font-bold font-mono ${stat.color}`}>
+                  <NumberTicker value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
+                </div>
+              </SpotlightCard>
+            ))}
+          </div>
+
+          {/* Framer Infinite Marquee Ticker */}
+          <div className="py-2">
+            <Marquee speed={32} pauseOnHover={true}>
+              {[
+                '⚛️ React 19',
+                '⚡ Next.js 15',
+                '🟦 TypeScript',
+                '🐍 Python & PyTorch',
+                '⚡ FastAPI',
+                '🐳 Docker',
+                '🟢 Supabase',
+                '☁️ Cloudflare Workers',
+                '🤖 LangChain & LLM Agents',
+                '🏛️ IIT Delhi',
+                '🏛️ BITS Pilani',
+                '🏛️ VIT Vellore',
+                '🏛️ NIT Trichy',
+                '🚀 Tier-3 Hackers',
+              ].map((badge, idx) => (
+                <div
+                  key={idx}
+                  className="px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs font-mono font-medium text-zinc-300 flex items-center gap-1.5 whitespace-nowrap"
+                >
+                  {badge}
+                </div>
+              ))}
+            </Marquee>
           </div>
         </section>
 
@@ -1376,9 +1428,10 @@ export const LandingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
             {TESTIMONIALS.map((t, idx) => (
-              <div
+              <SpotlightCard
                 key={idx}
-                className="p-5 rounded-2xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] transition-colors flex flex-col justify-between"
+                className="p-5 flex flex-col justify-between"
+                spotlightColor="rgba(139, 92, 246, 0.15)"
               >
                 <div>
                   <div className="flex items-center gap-1 text-amber-400 text-xs mb-3">
@@ -1404,7 +1457,7 @@ export const LandingPage: React.FC = () => {
                     <p className="text-[10px] text-zinc-500 font-mono">{t.project}</p>
                   </div>
                 </div>
-              </div>
+              </SpotlightCard>
             ))}
           </div>
         </section>
