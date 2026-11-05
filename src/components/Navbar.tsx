@@ -12,11 +12,20 @@ import {
   X,
   CheckCircle2,
   Trophy,
-  ShieldCheck
+  ShieldCheck,
+  Volume2,
+  VolumeX,
+  Keyboard,
+  Shield,
+  Zap,
+  Check
 } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
 import { isAdminEmail } from '../utils/adminAuth';
+import { isSoundEnabled, setSoundEnabled, playSuccessChime, playClickTick } from '../utils/soundEffects';
+import { ShortcutsModal } from './ShortcutsModal';
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -39,6 +48,31 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isNotifMenuOpen, setIsNotifMenuOpen] = useState(false);
+  const [isStreakPopOpen, setIsStreakPopOpen] = useState(false);
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  const [soundOn, setSoundOn] = useState(() => isSoundEnabled());
+  const [streakClaimedToday, setStreakClaimedToday] = useState(false);
+
+  const toggleSound = () => {
+    const nextState = !soundOn;
+    setSoundOn(nextState);
+    setSoundEnabled(nextState);
+    if (nextState) {
+      playClickTick();
+    }
+  };
+
+  const handleClaimStreakBonus = () => {
+    if (streakClaimedToday) return;
+    setStreakClaimedToday(true);
+    playSuccessChime();
+    confetti({
+      particleCount: 40,
+      spread: 60,
+      origin: { y: 0.15 },
+      colors: ['#F59E0B', '#A3E635', '#8B5CF6']
+    });
+  };
 
   const activeGoblin = GOBLIN_CHARACTERS.find((g) => g.id === currentUser?.avatarGoblinId) || GOBLIN_CHARACTERS[1];
   const unreadNotifs = notifications.filter((n) => !n.read);
@@ -133,27 +167,136 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }
                 </button>
               )}
 
-              {/* Daily Streak Indicator */}
-              <div
-                title={`${currentUser.streakDays} day activity streak in Asia/Kolkata timezone`}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#171725] border border-amber-500/30 text-amber-400 text-xs font-semibold cursor-pointer hover:border-amber-400 transition"
-                onClick={() => navigateTo('profile')}
-              >
-                <Flame className="w-4 h-4 text-amber-400 animate-pulse fill-amber-400/20" />
-                <span>{currentUser.streakDays}d</span>
+              {/* Interactive Daily Streak Indicator & Popover */}
+              <div className="relative">
+                <button
+                  type="button"
+                  title="Daily Streak & Consistency Tracker"
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#111118] border border-amber-500/20 hover:border-amber-500/40 text-amber-400 text-xs font-semibold cursor-pointer transition-colors"
+                  onClick={() => setIsStreakPopOpen(!isStreakPopOpen)}
+                >
+                  <Flame className="w-3.5 h-3.5 text-amber-400 fill-amber-400/20" />
+                  <span>{currentUser.streakDays}d</span>
+                </button>
+
+                {isStreakPopOpen && (
+                  <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-[#111118] border border-white/10 shadow-2xl p-4 z-50 text-left animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-white/[0.06]">
+                      <div className="flex items-center gap-2">
+                        <Flame className="w-4 h-4 text-amber-400 fill-amber-400/20" />
+                        <span className="text-xs font-semibold text-white">Daily Streak Tracker</span>
+                      </div>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400/10 text-amber-400 border border-amber-400/20">
+                        {currentUser.streakDays} Days
+                      </span>
+                    </div>
+
+                    {/* 7-Day Consistency Weekday Strip */}
+                    <div className="mb-3">
+                      <span className="text-[10px] text-zinc-500 uppercase tracking-wider block mb-2 font-medium">
+                        This Week (Mon - Sun)
+                      </span>
+                      <div className="flex items-center justify-between">
+                        {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => {
+                          const isDone = idx < 5; // Simulates active consistency
+                          const isToday = idx === 4;
+                          return (
+                            <div key={idx} className="flex flex-col items-center gap-1">
+                              <span className="text-[10px] text-zinc-500 font-mono">{day}</span>
+                              <div
+                                className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                                  isToday
+                                    ? 'bg-amber-400 text-black ring-2 ring-amber-400/30'
+                                    : isDone
+                                    ? 'bg-lime-400/20 text-lime-400 border border-lime-400/30'
+                                    : 'bg-white/[0.03] text-zinc-600 border border-white/[0.06]'
+                                }`}
+                              >
+                                {isDone ? <Check className="w-3 h-3" /> : '•'}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Streak Perks */}
+                    <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04] text-[11px] space-y-1.5 mb-3 text-zinc-400">
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center gap-1">
+                          <Zap className="w-3 h-3 text-lime-400" />
+                          <span>XP Multiplier:</span>
+                        </span>
+                        <span className="font-semibold text-lime-400 font-mono">1.2x Active</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center gap-1">
+                          <Shield className="w-3 h-3 text-purple-400" />
+                          <span>Streak Shield:</span>
+                        </span>
+                        <span className="text-zinc-300">1 Protected</span>
+                      </div>
+                    </div>
+
+                    {/* Claim Button */}
+                    <button
+                      onClick={handleClaimStreakBonus}
+                      disabled={streakClaimedToday}
+                      className={`w-full py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors ${
+                        streakClaimedToday
+                          ? 'bg-white/[0.04] text-zinc-500 cursor-not-allowed'
+                          : 'bg-amber-400 hover:bg-amber-300 text-black font-bold'
+                      }`}
+                    >
+                      {streakClaimedToday ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-lime-400" />
+                          <span>Today's Bonus Claimed</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span>Claim Daily Streak Bonus (+15 XP)</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* XP & Level Badge */}
               <div
                 title={`Level ${currentUser.level} Goblin Cadet • ${currentUser.xp} XP total`}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#171725] border border-[#8B5CF6]/30 text-xs font-medium cursor-pointer hover:border-[#A3E635] transition"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#111118] border border-white/[0.06] text-xs font-medium cursor-pointer hover:border-white/20 transition-colors"
                 onClick={() => navigateTo('profile')}
               >
-                <Sparkles className="w-3.5 h-3.5 text-[#A3E635]" />
-                <span className="text-[#A3E635] font-bold">Lvl {currentUser.level}</span>
-                <span className="text-white/40">•</span>
-                <span className="text-[#F5F3FF] font-mono text-[11px]">{currentUser.xp} XP</span>
+                <Sparkles className="w-3.5 h-3.5 text-lime-400" />
+                <span className="text-lime-400 font-semibold">Lvl {currentUser.level}</span>
+                <span className="text-zinc-600">•</span>
+                <span className="text-zinc-300 font-mono text-[11px]">{currentUser.xp} XP</span>
               </div>
+
+              {/* Audio Feedback Toggle */}
+              <button
+                type="button"
+                onClick={toggleSound}
+                title={soundOn ? 'Sound feedback enabled (click to mute)' : 'Sound feedback muted (click to enable)'}
+                className="p-2 rounded-lg bg-[#111118] border border-white/[0.06] text-zinc-400 hover:text-white hover:border-white/20 transition-colors"
+                aria-label="Toggle sound feedback"
+              >
+                {soundOn ? <Volume2 className="w-3.5 h-3.5 text-lime-400" /> : <VolumeX className="w-3.5 h-3.5 text-zinc-500" />}
+              </button>
+
+              {/* Keyboard Shortcuts Trigger */}
+              <button
+                type="button"
+                onClick={() => setIsShortcutsOpen(true)}
+                title="Keyboard Shortcuts (?)"
+                className="hidden md:flex p-2 rounded-lg bg-[#111118] border border-white/[0.06] text-zinc-400 hover:text-white hover:border-white/20 transition-colors"
+                aria-label="Open keyboard shortcuts"
+              >
+                <Keyboard className="w-3.5 h-3.5" />
+              </button>
 
               {/* Notification Bell with Dropdown */}
               <div className="relative">
@@ -331,6 +474,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }
           )}
         </div>
       </div>
+      <ShortcutsModal isOpen={isShortcutsOpen} onClose={() => setIsShortcutsOpen(false)} />
     </header>
   );
 };

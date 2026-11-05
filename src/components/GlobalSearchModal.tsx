@@ -120,15 +120,40 @@ export const GlobalSearchModal: React.FC = () => {
         {/* Search Results Container */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {!q ? (
-            <div className="py-8 text-center text-[#A1A1B5] space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#8B5CF6]">
-                Global Clan Search
-              </p>
-              <p className="text-xs">
-                Type keywords like <span className="text-[#A3E635]">"Vibe Coding"</span>,{' '}
-                <span className="text-[#A3E635]">"React"</span>, <span className="text-[#A3E635]">"GoblinHacks"</span>, or{' '}
-                <span className="text-[#A3E635]">"FastAPI"</span>.
-              </p>
+            <div className="space-y-4 py-2">
+              <div>
+                <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider block mb-2 px-1">
+                  Quick Navigation
+                </span>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { label: 'Home / Dashboard', page: 'dashboard' as const, icon: '🏠' },
+                    { label: 'Learning Hub & Roadmaps', page: 'learning_hub' as const, icon: '📚' },
+                    { label: 'Quests & Challenges', page: 'quests' as const, icon: '📜' },
+                    { label: 'Events & Workshops', page: 'hackathons' as const, icon: '🏆' },
+                    { label: 'Project Forge', page: 'projects' as const, icon: '🔨' },
+                    { label: 'Teams & Squads', page: 'squads' as const, icon: '👥' },
+                    { label: 'The Goblin Den Discussions', page: 'discussions' as const, icon: '💬' },
+                    { label: 'Esports Leaderboards', page: 'leaderboards' as const, icon: '👑' },
+                  ].map((nav) => (
+                    <button
+                      key={nav.page}
+                      onClick={() => {
+                        navigateTo(nav.page);
+                        setIsSearchModalOpen(false);
+                      }}
+                      className="flex items-center gap-2.5 p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-xs text-left text-zinc-300 hover:text-white transition-colors"
+                    >
+                      <span className="text-sm">{nav.icon}</span>
+                      <span className="font-medium truncate">{nav.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-2 px-1 text-center text-xs text-zinc-500">
+                Type keywords like <span className="text-lime-400 font-medium">"React"</span>, <span className="text-lime-400 font-medium">"Hackathon"</span>, or <span className="text-lime-400 font-medium">"TypeScript"</span> to search everything.
+              </div>
             </div>
           ) : totalResults === 0 ? (
             <div className="py-8 text-center text-[#A1A1B5]">

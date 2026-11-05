@@ -29,6 +29,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { AdminPage } from './pages/AdminPage';
 import { ResourcesStorePage } from './pages/ResourcesStorePage';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { ShortcutsModal } from './components/ShortcutsModal';
 
 export const AppContent: React.FC = () => {
   const { activePage } = useApp();
@@ -38,13 +39,24 @@ export const AppContent: React.FC = () => {
     }
     return true;
   });
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
 
-  // Toggle sidebar via Ctrl+B or Cmd+B shortcut
+  // Global Keyboard Shortcuts
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const activeTag = (document.activeElement?.tagName || '').toLowerCase();
+      const isInput = activeTag === 'input' || activeTag === 'textarea';
+
+      // Toggle sidebar via Ctrl+B or Cmd+B shortcut
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
         e.preventDefault();
         setIsSidebarOpen((prev) => !prev);
+      }
+
+      // Toggle shortcuts cheatsheet via ?
+      if (e.key === '?' && !isInput && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setIsShortcutsOpen((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -61,6 +73,7 @@ export const AppContent: React.FC = () => {
       <AuthModal />
       <OnboardingModal />
       <GlobalSearchModal />
+      <ShortcutsModal isOpen={isShortcutsOpen} onClose={() => setIsShortcutsOpen(false)} />
 
       {/* Landing Page (Full Width View) */}
       {isLanding ? (

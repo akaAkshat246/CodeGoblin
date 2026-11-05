@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Flame,
   Check,
@@ -12,12 +12,19 @@ import {
   Crown,
   Layers,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  Play,
+  Pause,
+  RotateCcw,
+  Timer,
+  Target,
+  Zap
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
 import { SEOHead } from '../components/SEOHead';
+import { playSuccessChime, playLevelUpFanfare } from '../utils/soundEffects';
 
 export const DashboardPage: React.FC = () => {
   const {
@@ -60,8 +67,74 @@ export const DashboardPage: React.FC = () => {
     Math.max(0, Math.round(((currentXP - prevLevelXP) / (nextLevelXP - prevLevelXP)) * 100))
   );
 
+  // Focus Sprint (25m Deep Work Pomodoro)
+  const [focusSeconds, setFocusSeconds] = useState(25 * 60);
+  const [isFocusRunning, setIsFocusRunning] = useState(false);
+  const [focusFinished, setFocusFinished] = useState(false);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | null = null;
+    if (isFocusRunning && focusSeconds > 0) {
+      interval = setInterval(() => {
+        setFocusSeconds((prev) => prev - 1);
+      }, 1000);
+    } else if (focusSeconds === 0 && isFocusRunning) {
+      setIsFocusRunning(false);
+      setFocusFinished(true);
+      playLevelUpFanfare();
+      confetti({
+        particleCount: 50,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#A3E635', '#8B5CF6', '#F59E0B']
+      });
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isFocusRunning, focusSeconds]);
+
+  const toggleFocus = () => {
+    if (focusFinished) {
+      setFocusSeconds(25 * 60);
+      setFocusFinished(false);
+    }
+    setIsFocusRunning((prev) => !prev);
+  };
+
+  const resetFocus = () => {
+    setIsFocusRunning(false);
+    setFocusSeconds(25 * 60);
+    setFocusFinished(false);
+  };
+
+  const formatTimer = (totalSec: number) => {
+    const mins = Math.floor(totalSec / 60);
+    const secs = totalSec % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Daily Builder Target
+  const [dailyGoalClaimed, setDailyGoalClaimed] = useState(false);
+  const dailyTargetXP = 200;
+  const todayEarnedXP = 160 + (completedQuestIds.length * 20);
+  const isGoalReached = todayEarnedXP >= dailyTargetXP;
+
+  const handleClaimDailyGoal = () => {
+    if (dailyGoalClaimed) return;
+    setDailyGoalClaimed(true);
+    playSuccessChime();
+    confetti({
+      particleCount: 45,
+      spread: 60,
+      origin: { y: 0.7 },
+      colors: ['#A3E635', '#F59E0B']
+    });
+  };
+
   const handleClaimQuest = (questId: string) => {
     completeQuest(questId);
+    playSuccessChime();
     confetti({
       particleCount: 35,
       spread: 55,
@@ -219,6 +292,102 @@ export const DashboardPage: React.FC = () => {
           </button>
         </div>
       )}
+
+      {/* 3.5 POLISHED EDTECH TOOLS (Daily Builder Goal + Deep Work Focus Sprint) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* Daily Builder Target */}
+        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] flex flex-col justify-between space-y-3">
+          <div>
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="flex items-center gap-1.5 font-semibold text-white">
+                <Target className="w-3.5 h-3.5 text-lime-400" />
+                <span>Daily Builder Target</span>
+              </span>
+              <span className="font-mono text-xs text-lime-400 font-semibold">
+                {todayEarnedXP} / {dailyTargetXP} XP
+              </span>
+            </div>
+            <p className="text-xs text-zinc-400">
+              {isGoalReached
+                ? 'Target reached! Daily consistency bonus is ready.'
+                : `Earn ${Math.max(0, dailyTargetXP - todayEarnedXP)} more XP today to unlock focus bonus.`}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <div className="w-full h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+              <div
+                className="h-full bg-lime-400 transition-all duration-300"
+                style={{ width: `${Math.min(100, Math.round((todayEarnedXP / dailyTargetXP) * 100))}%` }}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] text-zinc-500">1.2x streak boost active</span>
+              <button
+                onClick={handleClaimDailyGoal}
+                disabled={!isGoalReached || dailyGoalClaimed}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1 ${
+                  dailyGoalClaimed
+                    ? 'bg-white/[0.04] text-zinc-500 cursor-not-allowed'
+                    : isGoalReached
+                    ? 'bg-lime-400 hover:bg-lime-300 text-black'
+                    : 'bg-white/[0.04] text-zinc-500 cursor-not-allowed'
+                }`}
+              >
+                {dailyGoalClaimed ? 'Bonus Claimed' : 'Claim +25 XP Bonus'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Clan Focus Sprint (25m Deep Work Pomodoro) */}
+        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] flex flex-col justify-between space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-white">
+              <Timer className="w-3.5 h-3.5 text-purple-400" />
+              <span>Deep Work Sprint</span>
+            </span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">
+              {focusFinished ? 'Completed!' : isFocusRunning ? 'Running' : 'Paused'}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between py-1">
+            <div className="font-mono text-2xl font-bold tracking-wider text-white">
+              {formatTimer(focusSeconds)}
+            </div>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={toggleFocus}
+                className="px-3 py-1.5 rounded-lg bg-white text-black hover:bg-zinc-200 text-xs font-semibold transition-colors flex items-center gap-1"
+              >
+                {isFocusRunning ? (
+                  <>
+                    <Pause className="w-3.5 h-3.5" />
+                    <span>Pause</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-3.5 h-3.5" />
+                    <span>{focusFinished ? 'Restart' : 'Start Focus'}</span>
+                  </>
+                )}
+              </button>
+              <button
+                onClick={resetFocus}
+                className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-400 hover:text-white border border-white/[0.06] transition-colors"
+                title="Reset timer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          <p className="text-[11px] text-zinc-500">
+            25m undistracted study sprint. Awards +20 Focus XP upon completion.
+          </p>
+        </div>
+      </div>
 
       {/* 4. CLEAN TABS FOR MAIN CONTENT */}
       <div className="space-y-4 pt-2">
