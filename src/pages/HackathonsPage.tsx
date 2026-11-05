@@ -1,22 +1,16 @@
 import React, { useState } from 'react';
 import {
-  Trophy,
   Calendar,
-  MapPin,
   Users,
-  ExternalLink,
   Search,
-  Sparkles,
-  CheckCircle2,
-  Clock,
-  ArrowRight,
+  Check,
   CreditCard,
   QrCode,
   ShieldCheck,
-  Video,
   X,
   Lock,
-  Download
+  ArrowRight,
+  ExternalLink
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useApp } from '../context/AppContext';
@@ -27,7 +21,7 @@ export const HackathonsPage: React.FC = () => {
   const { hackathons, registerForWorkshopWithPayment, currentUser, navigateTo } = useApp();
   const [filterType, setFilterType] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Checkout Modal State
   const [checkoutEvent, setCheckoutEvent] = useState<HackathonEvent | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card'>('upi');
@@ -60,8 +54,8 @@ export const HackathonsPage: React.FC = () => {
     } else {
       registerForWorkshopWithPayment(evt.id, false, 0);
       confetti({
-        particleCount: 50,
-        spread: 60,
+        particleCount: 40,
+        spread: 55,
         origin: { y: 0.8 },
         colors: ['#8B5CF6', '#A3E635', '#F5F3FF']
       });
@@ -79,12 +73,12 @@ export const HackathonsPage: React.FC = () => {
       setCheckoutEvent(null);
       setTicketEvent(bookedEvent);
       confetti({
-        particleCount: 80,
-        spread: 70,
+        particleCount: 60,
+        spread: 60,
         origin: { y: 0.7 },
-        colors: ['#A3E635', '#8B5CF6', '#FBBF24']
+        colors: ['#A3E635', '#8B5CF6']
       });
-    }, 1200);
+    }, 1000);
   };
 
   const downloadCalendarICS = (evt: HackathonEvent) => {
@@ -107,61 +101,56 @@ END:VCALENDAR`;
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 animate-in fade-in duration-200">
       <SEOHead
-        title="Hackathons, Sprints & Live Workshops"
-        description="Join premier student hackathons, sprint challenges, and hands-on vibe coding masterclasses with CodeGoblins. Form your squad and claim podiums."
+        title="Events & Workshops"
+        description="Join premier student hackathons, sprint challenges, and hands-on vibe coding masterclasses."
         canonicalPath="/events"
         pageId="events_hub"
       />
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-amber-500/20 text-amber-400">
-              <Trophy className="w-5 h-5" />
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-display font-black text-[#F5F3FF]">
-              Events, Sprints & Workshops
-            </h1>
-          </div>
-          <p className="text-xs sm:text-sm text-[#A1A1B5] mt-1">
-            Discover premier hackathons, masterclass workshops, sprint challenges, and lock your digital passes.
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            Events & Workshops
+          </h1>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
+            Discover hackathons, masterclasses, and sprint challenges.
           </p>
         </div>
 
         <button
           onClick={() => navigateTo('squads')}
-          className="goblin-btn-primary py-2.5 px-4 text-xs font-bold flex items-center justify-center gap-2 self-start sm:self-auto"
+          className="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-zinc-200 transition flex items-center gap-1.5 self-start sm:self-auto"
         >
-          <Users className="w-4 h-4" />
-          <span>Find Teammates in Squads</span>
+          <Users className="w-3.5 h-3.5 text-zinc-400" />
+          <span>Assemble Squad</span>
         </button>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#11111B] border border-white/5">
-        <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-[#8B5CF6] absolute left-3.5 top-2.5" />
+      {/* Search & Filters */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="relative w-full sm:w-72">
+          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-2.5" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search workshops or hackathons..."
-            className="w-full pl-9 pr-3.5 py-1.5 rounded-xl bg-[#171725] border border-white/5 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+            placeholder="Search events..."
+            className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-[#111118] border border-white/[0.06] text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 transition"
           />
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto text-xs font-semibold">
+        <div className="flex items-center gap-1.5 text-xs font-medium self-start sm:self-auto">
           {['All', 'Workshops', 'Hackathons', 'Code Jams'].map((type) => (
             <button
               key={type}
               onClick={() => setFilterType(type)}
               className={`px-3 py-1.5 rounded-lg transition ${
                 filterType === type
-                  ? 'bg-[#171725] text-[#A3E635] border border-[#A3E635]/30'
-                  : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
+                  ? 'bg-white/[0.08] text-white font-semibold'
+                  : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
               {type}
@@ -171,7 +160,7 @@ END:VCALENDAR`;
       </div>
 
       {/* Events List */}
-      <div className="space-y-6">
+      <div className="space-y-3">
         {filteredEvents.map((evt) => {
           const isRegistered = currentUser ? evt.registeredUserIds.includes(currentUser.id) : false;
           const isPaid = !!evt.priceInr && evt.priceInr > 0;
@@ -179,228 +168,150 @@ END:VCALENDAR`;
           return (
             <div
               key={evt.id}
-              className="goblin-card p-6 sm:p-7 border-[#8B5CF6]/25 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 overflow-hidden relative"
+              className="p-5 rounded-xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] transition flex flex-col md:flex-row md:items-center justify-between gap-5"
             >
-              {/* Event Details */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 flex-1">
-                <div className="w-full sm:w-44 h-32 rounded-2xl overflow-hidden shrink-0 relative ring-1 ring-white/10">
-                  <img
-                    src={evt.bannerImage}
-                    alt={evt.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold bg-[#A3E635] text-[#09090F]">
+              {/* Event Info */}
+              <div className="space-y-2 flex-1">
+                <div className="flex flex-wrap items-center gap-2 text-xs">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] text-zinc-300">
                     {evt.type}
                   </span>
-                  {isPaid ? (
-                    <span className="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold bg-[#8B5CF6] text-white">
-                      ₹{evt.priceInr}
-                    </span>
-                  ) : (
-                    <span className="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/80 text-white">
-                      Free Pass
-                    </span>
-                  )}
+                  <span className="text-zinc-400 font-medium">{evt.organizer}</span>
+                  <span className="text-zinc-600">•</span>
+                  <span className="text-zinc-400 font-mono">{evt.format}</span>
+                  <span className="text-zinc-600">•</span>
+                  <span className="font-mono text-amber-400 font-medium">{evt.prizePool}</span>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex flex-wrap items-center gap-2 text-xs">
-                    <span className="text-[#A1A1B5] font-semibold">{evt.organizer}</span>
-                    <span className="text-white/20">•</span>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-400">
-                      {evt.status}
-                    </span>
-                    <span className="text-white/20">•</span>
-                    <span className="text-[#A3E635] font-mono font-bold">{evt.format}</span>
-                    {evt.location && <span className="text-[#A1A1B5]">({evt.location})</span>}
-                  </div>
+                <h3 className="text-base font-bold text-white">{evt.title}</h3>
 
-                  <h3 className="text-lg sm:text-xl font-bold text-[#F5F3FF]">
-                    {evt.title}
-                  </h3>
-
-                  {evt.instructorName && (
-                    <p className="text-xs text-[#C084FC] font-semibold flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-[#A3E635]" />
-                      <span>Led by {evt.instructorName} ({evt.instructorRole})</span>
-                    </p>
-                  )}
-
-                  <p className="text-xs text-[#A1A1B5] leading-relaxed max-w-2xl line-clamp-2">
-                    {evt.description}
+                {evt.instructorName && (
+                  <p className="text-xs text-zinc-400">
+                    Led by <span className="text-zinc-200 font-medium">{evt.instructorName}</span> ({evt.instructorRole})
                   </p>
+                )}
 
-                  <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[#A1A1B5] pt-1">
-                    <div className="flex items-center gap-1.5 text-amber-400 font-bold">
-                      <Trophy className="w-3.5 h-3.5" />
-                      <span>{evt.prizePool}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-[#C084FC]">
-                      <Users className="w-3.5 h-3.5" />
-                      <span>{evt.teamSize}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-[#8B5CF6]" />
-                      <span>
-                        {new Date(evt.startDate).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                  </div>
+                <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2 max-w-2xl">
+                  {evt.description}
+                </p>
+
+                <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-zinc-500 pt-1">
+                  <span>
+                    Starts: {new Date(evt.startDate).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                  </span>
+                  <span>•</span>
+                  <span>{evt.teamSize}</span>
+                  <span>•</span>
+                  <span>{evt.registeredUserIds.length} registered</span>
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row lg:flex-col gap-2.5 w-full lg:w-auto shrink-0">
+              {/* Actions */}
+              <div className="flex flex-row md:flex-col items-center md:items-end gap-2.5 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-white/[0.04]">
                 {isRegistered ? (
                   <>
                     <button
                       onClick={() => setTicketEvent(evt)}
-                      className="px-5 py-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center justify-center gap-2 hover:bg-emerald-500/25 transition"
+                      className="px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold flex items-center gap-1.5 transition"
                     >
-                      <QrCode className="w-4 h-4" />
-                      <span>View Digital Pass</span>
+                      <QrCode className="w-3.5 h-3.5" />
+                      <span>View Pass</span>
                     </button>
                     <button
                       onClick={() => downloadCalendarICS(evt)}
-                      className="px-4 py-1.5 rounded-lg text-[11px] font-semibold text-[#A1A1B5] hover:text-[#F5F3FF] flex items-center justify-center gap-1"
+                      className="text-[11px] text-zinc-400 hover:text-zinc-200 flex items-center gap-1"
                     >
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>Add to Calendar (.ics)</span>
+                      <span>.ics file</span>
                     </button>
                   </>
                 ) : (
                   <button
                     onClick={() => handleOpenRegistration(evt)}
-                    className="goblin-btn-green py-2.5 px-6 text-xs font-bold flex items-center justify-center gap-2 shadow-glow-green"
+                    className="px-4 py-2 rounded-xl bg-[#A3E635] hover:bg-[#bef264] text-[#09090F] text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
                   >
-                    <Sparkles className="w-4 h-4 text-[#09090F]" />
                     <span>{isPaid ? `Book Seat (₹${evt.priceInr})` : 'Register Free'}</span>
                   </button>
                 )}
 
                 <button
                   onClick={() => navigateTo('squads')}
-                  className="px-5 py-2.5 rounded-xl bg-[#171725] border border-white/10 hover:border-[#8B5CF6] text-xs font-semibold text-[#F5F3FF] flex items-center justify-center gap-2 transition"
+                  className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-xs text-zinc-300 font-medium transition"
                 >
-                  <Users className="w-4 h-4 text-[#8B5CF6]" />
-                  <span>Assemble Squad</span>
+                  Find Squad
                 </button>
-
-                <a
-                  href={evt.officialUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-center text-[11px] text-[#A855F7] hover:underline flex items-center justify-center gap-1 font-semibold pt-1"
-                >
-                  <span>Details / Syllabus</span>
-                  <ExternalLink className="w-3 h-3" />
-                </a>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Simulated Razorpay Checkout Modal */}
+      {/* Simulated Checkout Modal */}
       {checkoutEvent && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-[#11111B] border border-[#8B5CF6]/40 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-[#8B5CF6]/20 text-[#A855F7] flex items-center justify-center font-black">
-                  ₹
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-[#F5F3FF]">Razorpay Checkout</h3>
-                  <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3" /> 256-bit Encrypted Session
-                  </span>
-                </div>
+          <div className="bg-[#111118] border border-white/10 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl relative animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+              <div>
+                <h3 className="text-sm font-bold text-white">Seat Reservation</h3>
+                <span className="text-[10px] text-zinc-400 font-mono">Secure Simulated Checkout</span>
               </div>
               <button
                 onClick={() => setCheckoutEvent(null)}
-                className="p-1 rounded-lg text-[#A1A1B5] hover:text-[#F5F3FF]"
+                className="p-1 rounded-lg text-zinc-400 hover:text-white"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Order Summary */}
-            <div className="p-4 rounded-2xl bg-[#171725] border border-white/5 space-y-2">
-              <span className="text-[10px] font-mono uppercase text-[#A1A1B5]">Masterclass Seat Reservation</span>
-              <h4 className="text-sm font-bold text-[#F5F3FF]">{checkoutEvent.title}</h4>
-              <div className="flex justify-between items-center pt-2 border-t border-white/5 text-xs">
-                <span className="text-[#A1A1B5]">Workshop Ticket</span>
-                <span className="text-base font-black text-[#A3E635]">₹{checkoutEvent.priceInr}.00</span>
+            <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-1">
+              <h4 className="text-xs font-bold text-white">{checkoutEvent.title}</h4>
+              <div className="flex justify-between items-center pt-2 text-xs">
+                <span className="text-zinc-400">Workshop Ticket</span>
+                <span className="text-sm font-bold font-mono text-[#A3E635]">₹{checkoutEvent.priceInr}.00</span>
               </div>
             </div>
 
-            {/* Payment Method Switcher */}
-            <div className="space-y-3">
-              <span className="text-xs font-semibold text-[#A1A1B5]">Select Payment Method</span>
-              <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <span className="text-xs text-zinc-400">Payment Option</span>
+              <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('upi')}
-                  className={`p-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-2 ${
+                  className={`p-2.5 rounded-xl border text-xs font-medium transition ${
                     paymentMethod === 'upi'
-                      ? 'border-[#A3E635] bg-[#A3E635]/10 text-[#A3E635]'
-                      : 'border-white/5 bg-[#171725] text-[#A1A1B5]'
+                      ? 'border-[#A3E635]/40 bg-[#A3E635]/10 text-[#A3E635]'
+                      : 'border-white/[0.06] bg-white/[0.02] text-zinc-400'
                   }`}
                 >
-                  <Sparkles className="w-4 h-4" />
-                  <span>UPI / QR</span>
+                  UPI / QR
                 </button>
-
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('card')}
-                  className={`p-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-2 ${
+                  className={`p-2.5 rounded-xl border text-xs font-medium transition ${
                     paymentMethod === 'card'
-                      ? 'border-[#8B5CF6] bg-[#8B5CF6]/10 text-[#C084FC]'
-                      : 'border-white/5 bg-[#171725] text-[#A1A1B5]'
+                      ? 'border-[#A3E635]/40 bg-[#A3E635]/10 text-[#A3E635]'
+                      : 'border-white/[0.06] bg-white/[0.02] text-zinc-400'
                   }`}
                 >
-                  <CreditCard className="w-4 h-4" />
-                  <span>Debit / Card</span>
+                  Card
                 </button>
               </div>
-
-              {paymentMethod === 'upi' ? (
-                <div className="p-3 bg-[#171725] rounded-xl text-center border border-white/5 space-y-1">
-                  <p className="text-[11px] text-[#A1A1B5]">Simulated VPA Address</p>
-                  <p className="font-mono text-xs font-bold text-[#F5F3FF]">
-                    {currentUser?.username || 'cadet'}@okhdfcbank
-                  </p>
-                </div>
-              ) : (
-                <div className="p-3 bg-[#171725] rounded-xl space-y-2 border border-white/5">
-                  <input
-                    type="text"
-                    disabled
-                    value="•••• •••• •••• 4242 (Test Card)"
-                    className="w-full bg-black/30 border border-white/5 rounded-lg px-3 py-1.5 text-xs text-[#A1A1B5] font-mono"
-                  />
-                </div>
-              )}
             </div>
 
-            {/* Checkout Action Button */}
             <button
               disabled={isProcessingPayment}
               onClick={handleSimulatedPayment}
-              className="w-full goblin-btn-primary py-3 text-xs font-bold flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-xl bg-[#A3E635] hover:bg-[#bef264] text-[#09090F] text-xs font-bold flex items-center justify-center gap-2 transition disabled:opacity-50"
             >
               {isProcessingPayment ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Verifying HMAC Signature...</span>
+                  <div className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                  <span>Processing...</span>
                 </>
               ) : (
                 <>
-                  <Lock className="w-4 h-4" />
-                  <span>Pay ₹{checkoutEvent.priceInr} & Confirm Registration</span>
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Confirm (₹{checkoutEvent.priceInr})</span>
                 </>
               )}
             </button>
@@ -408,52 +319,47 @@ END:VCALENDAR`;
         </div>
       )}
 
-      {/* Digital Pass / Ticket Modal */}
+      {/* Digital Pass Modal */}
       {ticketEvent && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-[#11111B] border border-[#A3E635]/40 rounded-3xl max-w-sm w-full p-6 space-y-6 shadow-2xl relative text-center animate-in zoom-in-95 duration-200">
+          <div className="bg-[#111118] border border-white/10 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl relative text-center animate-in zoom-in-95 duration-150">
             <button
               onClick={() => setTicketEvent(null)}
-              className="absolute top-4 right-4 p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-[#A1A1B5] hover:text-[#F5F3FF]"
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-zinc-400 hover:text-white"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
 
-            <div className="w-12 h-12 rounded-2xl bg-[#A3E635]/20 text-[#A3E635] mx-auto flex items-center justify-center">
-              <QrCode className="w-6 h-6" />
-            </div>
-
             <div>
-              <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#A3E635]/20 text-[#A3E635] uppercase">
-                Official Clan Pass
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#A3E635]/15 text-[#A3E635]">
+                Official Pass
               </span>
-              <h3 className="text-lg font-black text-[#F5F3FF] mt-2 leading-snug">
+              <h3 className="text-base font-bold text-white mt-2">
                 {ticketEvent.title}
               </h3>
-              <p className="text-xs text-[#A1A1B5] mt-1">
-                Attendee: <strong className="text-[#F5F3FF]">{currentUser?.displayName}</strong>
+              <p className="text-xs text-zinc-400 mt-0.5">
+                Attendee: <span className="text-white font-medium">{currentUser?.displayName}</span>
               </p>
             </div>
 
-            {/* Simulated QR Code Canvas */}
-            <div className="p-4 bg-white rounded-2xl w-44 h-44 mx-auto flex flex-col items-center justify-center shadow-lg">
-              <div className="w-36 h-36 border-4 border-black border-dashed flex flex-col items-center justify-center text-black">
-                <QrCode className="w-20 h-20" />
-                <span className="text-[9px] font-mono font-bold mt-1">CG-PASS-{ticketEvent.id.toUpperCase()}</span>
-              </div>
+            {/* QR Box */}
+            <div className="p-4 bg-white rounded-xl w-40 h-40 mx-auto flex flex-col items-center justify-center">
+              <QrCode className="w-24 h-24 text-black" />
+              <span className="text-[8px] font-mono text-black font-semibold mt-1">
+                CG-PASS-{ticketEvent.id.toUpperCase()}
+              </span>
             </div>
 
-            <div className="text-[11px] font-mono text-[#A1A1B5] space-y-1">
-              <div>Starts: {new Date(ticketEvent.startDate).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
-              <div>Access: Secure Video Live Link (Dispatched 1 hour prior)</div>
-            </div>
+            <p className="text-[11px] font-mono text-zinc-400">
+              Starts: {new Date(ticketEvent.startDate).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+            </p>
 
             <button
               onClick={() => downloadCalendarICS(ticketEvent)}
-              className="w-full goblin-btn-green py-2.5 text-xs font-bold flex items-center justify-center gap-2"
+              className="w-full py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-xs font-semibold text-white flex items-center justify-center gap-2 transition"
             >
-              <Calendar className="w-4 h-4 text-[#09090F]" />
-              <span>Download iCal (.ics) Calendar Pass</span>
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Download iCal (.ics)</span>
             </button>
           </div>
         </div>

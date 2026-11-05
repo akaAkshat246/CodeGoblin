@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import {
   MessageSquare,
   Search,
-  Filter,
   Plus,
   ArrowUp,
   Bookmark,
   CheckCircle2,
-  Code,
-  Tag,
   Sparkles,
   X
 } from 'lucide-react';
@@ -106,42 +103,40 @@ export const DiscussionsPage: React.FC = () => {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-[#8B5CF6]/20 text-[#A855F7]">
-              <MessageSquare className="w-5 h-5" />
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-display font-black text-[#F5F3FF]">
+            <MessageSquare className="w-5 h-5 text-purple-400" />
+            <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
               The Goblin Den
             </h1>
           </div>
-          <p className="text-xs sm:text-sm text-[#A1A1B5] mt-1">
-            Student discussions, vibe coding setups, technical debugging, and hackathon team queries.
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+            Community discussions, debugging help, architecture reviews, and team matchmaking.
           </p>
         </div>
 
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="goblin-btn-primary py-2.5 px-4 text-xs font-bold flex items-center justify-center gap-2 self-start sm:self-auto"
+          className="px-3.5 py-1.5 rounded-lg bg-white text-black hover:bg-zinc-200 text-xs font-semibold flex items-center justify-center gap-1.5 self-start sm:self-auto transition-colors"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-3.5 h-3.5" />
           <span>New Discussion</span>
         </button>
       </div>
 
-      {/* Categories Horizontal Scroller */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+      {/* Category Pills Scroller */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
               selectedCategory === cat
-                ? 'bg-[#8B5CF6] text-[#FFFFFF] shadow-glow-purple'
-                : 'bg-[#171725] text-[#A1A1B5] hover:text-[#F5F3FF] hover:bg-[#1E1E32]'
+                ? 'bg-white text-black font-semibold'
+                : 'bg-white/[0.03] text-zinc-400 hover:text-white border border-white/[0.06]'
             }`}
           >
             {cat}
@@ -150,60 +145,41 @@ export const DiscussionsPage: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 rounded-2xl bg-[#11111B] border border-white/5">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 rounded-xl bg-[#111118] border border-white/[0.06]">
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-[#8B5CF6] absolute left-3.5 top-2.5" />
+          <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search discussion threads..."
-            className="w-full pl-9 pr-3.5 py-1.5 rounded-xl bg-[#171725] border border-white/5 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+            className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30"
           />
         </div>
 
-        <div className="flex items-center gap-1 self-start sm:self-auto text-xs font-semibold">
-          <button
-            onClick={() => setFilterType('trending')}
-            className={`px-3 py-1.5 rounded-lg transition ${
-              filterType === 'trending' ? 'bg-[#171725] text-[#A3E635]' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-            }`}
-          >
-            Trending
-          </button>
-          <button
-            onClick={() => setFilterType('newest')}
-            className={`px-3 py-1.5 rounded-lg transition ${
-              filterType === 'newest' ? 'bg-[#171725] text-[#A3E635]' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-            }`}
-          >
-            Newest
-          </button>
-          <button
-            onClick={() => setFilterType('solved')}
-            className={`px-3 py-1.5 rounded-lg transition ${
-              filterType === 'solved' ? 'bg-[#171725] text-[#A3E635]' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-            }`}
-          >
-            Solved
-          </button>
-          <button
-            onClick={() => setFilterType('unanswered')}
-            className={`px-3 py-1.5 rounded-lg transition ${
-              filterType === 'unanswered' ? 'bg-[#171725] text-[#A3E635]' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-            }`}
-          >
-            Unanswered
-          </button>
+        <div className="flex items-center gap-1 self-start sm:self-auto text-xs">
+          {(['trending', 'newest', 'solved', 'unanswered'] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setFilterType(tab)}
+              className={`px-2.5 py-1 rounded-md text-xs font-medium capitalize transition-colors ${
+                filterType === tab
+                  ? 'bg-white/[0.08] text-white font-semibold'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Discussion Threads List */}
-      <div className="space-y-3.5">
+      <div className="space-y-3">
         {filteredPosts.length === 0 ? (
-          <div className="p-12 text-center rounded-2xl bg-[#11111B] border border-white/5 text-[#A1A1B5]">
-            <p className="text-sm font-semibold text-[#F5F3FF]">No discussion threads found.</p>
-            <p className="text-xs mt-1">Be the first to start a conversation in this channel!</p>
+          <div className="p-12 text-center rounded-xl bg-[#111118] border border-white/[0.06] text-zinc-400">
+            <p className="text-sm font-medium text-white">No discussions found.</p>
+            <p className="text-xs mt-1">Start a conversation or adjust your filter.</p>
           </div>
         ) : (
           filteredPosts.map((post) => {
@@ -214,7 +190,7 @@ export const DiscussionsPage: React.FC = () => {
             return (
               <div
                 key={post.id}
-                className="goblin-card p-4 sm:p-5 flex flex-col justify-between group transition hover:border-[#8B5CF6]/40"
+                className="p-4 sm:p-5 rounded-xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] transition-colors flex flex-col justify-between group"
               >
                 <div>
                   {/* Top Bar: Author, category, solved status */}
@@ -223,25 +199,26 @@ export const DiscussionsPage: React.FC = () => {
                       <img
                         src={authorGoblin.avatarImg}
                         alt={post.authorName}
-                        className="w-7 h-7 rounded-lg object-cover ring-1 ring-[#8B5CF6]/30"
+                        className="w-6 h-6 rounded-md object-cover border border-white/10"
                       />
-                      <span className="font-bold text-[#F5F3FF]">{post.authorName}</span>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#8B5CF6]/15 text-[#C084FC]">
+                      <span className="font-semibold text-white">{post.authorName}</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.04] text-zinc-400 border border-white/[0.06]">
                         {post.authorRole}
                       </span>
-                      <span className="text-[11px] text-[#A1A1B5]">
-                        in <span className="text-[#A3E635] font-semibold">{post.category}</span>
+                      <span className="text-zinc-600 hidden sm:inline">•</span>
+                      <span className="text-[11px] text-zinc-400 hidden sm:inline">
+                        in <span className="text-zinc-300 font-medium">{post.category}</span>
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       {post.solved && (
-                        <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-500/15 text-emerald-400 flex items-center gap-1 border border-emerald-500/30">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-400 flex items-center gap-1 border border-emerald-500/20">
                           <CheckCircle2 className="w-3 h-3" />
                           <span>Solved</span>
                         </span>
                       )}
-                      <span className="text-[10px] text-[#A1A1B5]">
+                      <span className="text-[11px] text-zinc-500">
                         {new Date(post.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                       </span>
                     </div>
@@ -250,20 +227,20 @@ export const DiscussionsPage: React.FC = () => {
                   {/* Title & snippet */}
                   <h3
                     onClick={() => navigateTo('discussion_detail', post.id)}
-                    className="text-base font-bold text-[#F5F3FF] group-hover:text-[#A855F7] cursor-pointer transition"
+                    className="text-sm sm:text-base font-semibold text-white group-hover:text-purple-300 cursor-pointer transition-colors"
                   >
                     {post.title}
                   </h3>
-                  <p className="text-xs text-[#A1A1B5] mt-1.5 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-zinc-400 mt-1 line-clamp-2 leading-relaxed">
                     {post.content}
                   </p>
 
                   {/* Tags */}
-                  <div className="mt-3 flex flex-wrap gap-1.5">
+                  <div className="mt-2.5 flex flex-wrap gap-1.5">
                     {post.tags.map((tag, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-0.5 rounded text-[10px] bg-[#11111B] border border-white/5 text-[#A1A1B5]"
+                        className="px-2 py-0.5 rounded text-[10px] bg-white/[0.03] border border-white/[0.06] text-zinc-400"
                       >
                         #{tag}
                       </span>
@@ -272,23 +249,23 @@ export const DiscussionsPage: React.FC = () => {
                 </div>
 
                 {/* Bottom Bar: Upvotes, replies, bookmark */}
-                <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs text-[#A1A1B5]">
-                  <div className="flex items-center gap-4">
+                <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400">
+                  <div className="flex items-center gap-3">
                     <button
                       onClick={() => upvotePost(post.id)}
-                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition ${
+                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-medium transition-colors ${
                         hasUpvoted
-                          ? 'bg-[#8B5CF6]/20 border-[#8B5CF6] text-[#A855F7]'
-                          : 'bg-[#11111B] border-white/5 hover:border-white/20'
+                          ? 'bg-purple-500/15 border-purple-500/30 text-purple-300'
+                          : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.06] text-zinc-400 hover:text-white'
                       }`}
                     >
                       <ArrowUp className="w-3.5 h-3.5" />
-                      <span className="font-bold">{post.upvotes}</span>
+                      <span>{post.upvotes}</span>
                     </button>
 
                     <button
                       onClick={() => navigateTo('discussion_detail', post.id)}
-                      className="flex items-center gap-1.5 hover:text-[#F5F3FF] transition"
+                      className="flex items-center gap-1.5 hover:text-white transition-colors text-xs text-zinc-400"
                     >
                       <MessageSquare className="w-3.5 h-3.5" />
                       <span>{post.repliesCount} replies</span>
@@ -298,8 +275,10 @@ export const DiscussionsPage: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => toggleSavePost(post.id)}
-                      className={`p-1.5 rounded-lg border transition ${
-                        isSaved ? 'text-[#A3E635] border-[#A3E635]/40' : 'text-[#A1A1B5] border-white/5 hover:text-[#F5F3FF]'
+                      className={`p-1.5 rounded-lg border transition-colors ${
+                        isSaved
+                          ? 'text-lime-400 border-lime-400/30 bg-lime-400/10'
+                          : 'text-zinc-500 border-white/[0.06] hover:text-white hover:bg-white/[0.04]'
                       }`}
                       title={isSaved ? 'Bookmarked' : 'Bookmark Post'}
                     >
@@ -307,7 +286,7 @@ export const DiscussionsPage: React.FC = () => {
                     </button>
                     <button
                       onClick={() => navigateTo('discussion_detail', post.id)}
-                      className="text-xs text-[#A855F7] font-semibold hover:underline"
+                      className="text-xs text-zinc-300 hover:text-white font-medium"
                     >
                       Open Thread →
                     </button>
@@ -321,25 +300,25 @@ export const DiscussionsPage: React.FC = () => {
 
       {/* CREATE DISCUSSION MODAL */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 rounded-3xl bg-[#11111B] border border-[#8B5CF6]/30 shadow-2xl text-left">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 rounded-2xl bg-[#111118] border border-white/10 shadow-2xl text-left">
             <button
               onClick={() => setIsCreateModalOpen(false)}
-              className="absolute top-5 right-5 p-2 rounded-xl text-[#A1A1B5] hover:text-[#F5F3FF] hover:bg-[#171725] transition"
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.05] transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
 
-            <h3 className="text-xl font-display font-black text-[#F5F3FF] mb-1">
-              Start a New Clan Discussion
+            <h3 className="text-lg font-semibold text-white mb-1">
+              Start a Discussion
             </h3>
-            <p className="text-xs text-[#A1A1B5] mb-5">
-              Ask questions, share vibe coding setups, or solicit project feedback. Earn +50 XP upon publishing.
+            <p className="text-xs text-zinc-400 mb-5">
+              Ask questions, share code architecture, or request project feedback.
             </p>
 
             <form onSubmit={handleCreatePost} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
+                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                   Discussion Title
                 </label>
                 <input
@@ -347,79 +326,79 @@ export const DiscussionsPage: React.FC = () => {
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. How to structure prompt context for full-stack code agents?"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                  placeholder="e.g. Best architecture for real-time multiplayer state with WebSockets?"
+                  className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
-                    Channel / Category
+                  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                    Category
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                    className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-xs text-white focus:outline-none focus:border-white/30"
                   >
                     {categories.filter((c) => c !== 'All').map((c) => (
-                      <option key={c} value={c}>
+                      <option key={c} value={c} className="bg-[#111118] text-white">
                         {c}
                       </option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
+                  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                     Tags (comma separated)
                   </label>
                   <input
                     type="text"
                     value={tagsInput}
                     onChange={(e) => setTagsInput(e.target.value)}
-                    placeholder="React, VibeCoding, Hackathons"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                    placeholder="React, Architecture, Fullstack"
+                    className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
-                  Discussion Body / Context
+                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                  Discussion Body
                 </label>
                 <textarea
                   rows={4}
                   required
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="Explain the background, what you tried, and what you want peer builders to discuss..."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                  placeholder="Explain the background, what you tried, and what you're trying to solve..."
+                  className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30"
                 />
               </div>
 
               {/* Code Snippet Option */}
               <div className="pt-1">
                 <div className="flex items-center justify-between mb-2">
-                  <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#F5F3FF]">
+                  <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-zinc-300">
                     <input
                       type="checkbox"
                       checked={hasCodeSnippet}
                       onChange={(e) => setHasCodeSnippet(e.target.checked)}
-                      className="rounded accent-[#8B5CF6]"
+                      className="rounded accent-purple-500"
                     />
-                    <span>Attach Code Snippet / Prompt Spec</span>
+                    <span>Attach Code Snippet</span>
                   </label>
                   {hasCodeSnippet && (
                     <select
                       value={snippetLanguage}
                       onChange={(e) => setSnippetLanguage(e.target.value)}
-                      className="px-2 py-1 rounded-lg bg-[#171725] border border-white/10 text-[10px] text-[#A3E635] font-mono focus:outline-none"
+                      className="px-2 py-1 rounded-md bg-black/40 border border-white/10 text-[11px] text-zinc-300 font-mono focus:outline-none"
                     >
-                      <option value="typescript">TypeScript</option>
-                      <option value="python">Python</option>
-                      <option value="javascript">JavaScript</option>
-                      <option value="sql">SQL / Postgres</option>
-                      <option value="json">JSON Spec</option>
+                      <option value="typescript" className="bg-[#111118]">TypeScript</option>
+                      <option value="python" className="bg-[#111118]">Python</option>
+                      <option value="javascript" className="bg-[#111118]">JavaScript</option>
+                      <option value="sql" className="bg-[#111118]">SQL</option>
+                      <option value="json" className="bg-[#111118]">JSON</option>
                     </select>
                   )}
                 </div>
@@ -429,26 +408,26 @@ export const DiscussionsPage: React.FC = () => {
                     rows={4}
                     value={snippetCode}
                     onChange={(e) => setSnippetCode(e.target.value)}
-                    placeholder="// Paste your code snippet or agent prompt here..."
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#09090F] border border-[#8B5CF6]/30 font-mono text-xs text-[#A3E635] focus:outline-none focus:border-[#A3E635]"
+                    placeholder="// Paste your code snippet here..."
+                    className="w-full px-3 py-2 rounded-lg bg-black/60 border border-white/10 font-mono text-xs text-lime-400 placeholder-zinc-600 focus:outline-none focus:border-white/30"
                   />
                 )}
               </div>
 
-              <div className="pt-2 flex justify-end gap-3">
+              <div className="pt-2 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsCreateModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-[#A1A1B5] hover:text-[#F5F3FF]"
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="goblin-btn-primary px-6 py-2.5 text-xs font-bold flex items-center gap-2"
+                  className="px-4 py-1.5 rounded-lg bg-white text-black hover:bg-zinc-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  <span>Publish Thread (+50 XP)</span>
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Publish Discussion (+50 XP)</span>
                 </button>
               </div>
             </form>

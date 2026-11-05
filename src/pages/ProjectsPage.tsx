@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
 import {
-  Hammer,
   Search,
   Plus,
   Heart,
   Bookmark,
   ExternalLink,
-  GitBranch,
-  Sparkles,
-  Users,
   X,
-  CheckCircle2
+  Sparkles
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { GOBLIN_CHARACTERS } from '../data/mockData';
 import { SEOHead } from '../components/SEOHead';
 
 export const ProjectsPage: React.FC = () => {
@@ -105,61 +100,56 @@ export const ProjectsPage: React.FC = () => {
   });
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 animate-in fade-in duration-200">
       <SEOHead
-        title="Project Forge & Member Showcase"
-        description="Explore live software applications, AI agents, and hackathon prototypes built by CodeGoblins clan members. Inspect live demos and source code."
+        title="Project Forge"
+        description="Explore live software applications, AI agents, and prototypes built by clan members."
         canonicalPath="/projects"
         pageId="projects_showcase"
       />
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-amber-500/20 text-amber-400">
-              <Hammer className="w-5 h-5" />
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-display font-black text-[#F5F3FF]">
-              Project Forge
-            </h1>
-          </div>
-          <p className="text-xs sm:text-sm text-[#A1A1B5] mt-1">
-            Showcase real software, discover peer demos, and find contributors for your hackathon projects.
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            Project Forge
+          </h1>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
+            Discover peer demos, explore source code, and share your live software.
           </p>
         </div>
 
         <button
           onClick={() => setIsForgeModalOpen(true)}
-          className="goblin-btn-primary py-2.5 px-4 text-xs font-bold flex items-center justify-center gap-2 self-start sm:self-auto"
+          className="px-3.5 py-2 rounded-xl bg-[#A3E635] hover:bg-[#bef264] text-[#09090F] text-xs font-bold transition flex items-center gap-1.5 self-start sm:self-auto shadow-sm"
         >
-          <Plus className="w-4 h-4" />
-          <span>Forge New Project</span>
+          <Plus className="w-3.5 h-3.5" />
+          <span>New Project</span>
         </button>
       </div>
 
-      {/* Filter & Search Controls */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#11111B] border border-white/5">
-        <div className="relative w-full md:w-80">
-          <Search className="w-4 h-4 text-[#8B5CF6] absolute left-3.5 top-2.5" />
+      {/* Filters & Search */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="relative w-full sm:w-72">
+          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-2.5" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search projects by title or tech stack..."
-            className="w-full pl-9 pr-3.5 py-1.5 rounded-xl bg-[#171725] border border-white/5 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+            placeholder="Search projects or tech..."
+            className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-[#111118] border border-white/[0.06] text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 transition"
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-1.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none"
+            className="px-3 py-1.5 rounded-lg bg-[#111118] border border-white/[0.06] text-xs text-zinc-300 focus:outline-none"
           >
             {categories.map((c) => (
               <option key={c} value={c}>
-                Category: {c}
+                {c === 'All' ? 'All Categories' : c}
               </option>
             ))}
           </select>
@@ -167,7 +157,7 @@ export const ProjectsPage: React.FC = () => {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-1.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none"
+            className="px-3 py-1.5 rounded-lg bg-[#111118] border border-white/[0.06] text-xs text-zinc-300 focus:outline-none"
           >
             <option value="All">All Statuses</option>
             <option value="Shipped">Shipped</option>
@@ -177,12 +167,12 @@ export const ProjectsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Project Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Projects Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {filteredProjects.length === 0 ? (
-          <div className="col-span-full p-12 text-center rounded-2xl bg-[#11111B] border border-white/5 text-[#A1A1B5]">
-            <p className="text-sm font-semibold text-[#F5F3FF]">No projects matching filters.</p>
-            <p className="text-xs mt-1">Be the first to forge a project in this category!</p>
+          <div className="col-span-full p-8 text-center rounded-xl bg-[#111118] border border-white/[0.06] text-zinc-400">
+            <p className="text-sm font-semibold text-white">No projects found.</p>
+            <p className="text-xs mt-1">Be the first to publish a project in this category!</p>
           </div>
         ) : (
           filteredProjects.map((project) => {
@@ -192,73 +182,46 @@ export const ProjectsPage: React.FC = () => {
             return (
               <div
                 key={project.id}
-                className="goblin-card overflow-hidden flex flex-col justify-between group"
+                className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] transition flex flex-col justify-between space-y-3"
               >
-                <div>
-                  {/* Cover banner */}
-                  <div className="h-44 w-full overflow-hidden relative cursor-pointer" onClick={() => navigateTo('project_detail', project.id)}>
-                    <img
-                      src={project.coverImage}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#171725] via-transparent to-transparent pointer-events-none" />
-                    
-                    <span
-                      className={`absolute top-3 right-3 px-2.5 py-0.5 rounded-md text-[10px] font-bold border backdrop-blur-md ${
-                        project.status === 'Shipped'
-                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                          : project.status === 'Looking for Teammates'
-                          ? 'bg-[#8B5CF6]/25 text-[#A855F7] border-[#8B5CF6]/40'
-                          : 'bg-amber-500/20 text-amber-400 border-amber-500/30'
-                      }`}
-                    >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] text-zinc-300">
                       {project.status}
                     </span>
-
-                    {project.featured && (
-                      <span className="absolute top-3 left-3 px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#A3E635] text-[#09090F] shadow-sm">
-                        Featured
-                      </span>
-                    )}
+                    <span className="text-[11px] text-zinc-500 font-mono">
+                      {project.category}
+                    </span>
                   </div>
 
-                  {/* Body */}
-                  <div className="p-5">
-                    <div className="text-[10px] text-[#A3E635] font-semibold mb-1">
-                      {project.category}
-                    </div>
-                    <h3
-                      onClick={() => navigateTo('project_detail', project.id)}
-                      className="text-base font-bold text-[#F5F3FF] group-hover:text-[#A3E635] cursor-pointer transition"
-                    >
-                      {project.title}
-                    </h3>
-                    <p className="text-xs text-[#A1A1B5] mt-1 line-clamp-2 leading-relaxed">
-                      {project.tagline}
-                    </p>
+                  <h3
+                    onClick={() => navigateTo('project_detail', project.id)}
+                    className="text-sm font-semibold text-white hover:text-[#A3E635] cursor-pointer transition leading-snug"
+                  >
+                    {project.title}
+                  </h3>
+                  <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                    {project.tagline}
+                  </p>
 
-                    {/* Tech Stack Pills */}
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {project.techStack.map((tech, i) => (
-                        <span
-                          key={i}
-                          className="px-2 py-0.5 rounded text-[10px] bg-[#11111B] border border-white/5 text-[#A1A1B5]"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {project.techStack.slice(0, 3).map((tech, i) => (
+                      <span
+                        key={i}
+                        className="px-1.5 py-0.2 rounded text-[10px] bg-white/[0.04] text-zinc-400 font-mono"
+                      >
+                        {tech}
+                      </span>
+                    ))}
                   </div>
                 </div>
 
-                {/* Footer Controls */}
-                <div className="p-5 pt-0 border-t border-white/5 mt-2 flex items-center justify-between text-xs text-[#A1A1B5]">
+                <div className="pt-3 border-t border-white/[0.04] flex items-center justify-between text-xs text-zinc-400">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => likeProject(project.id)}
                       className={`flex items-center gap-1 transition ${
-                        isLiked ? 'text-rose-400 font-bold' : 'hover:text-rose-400'
+                        isLiked ? 'text-rose-400 font-medium' : 'hover:text-rose-400'
                       }`}
                     >
                       <Heart className={`w-3.5 h-3.5 ${isLiked ? 'fill-rose-400' : ''}`} />
@@ -267,20 +230,19 @@ export const ProjectsPage: React.FC = () => {
 
                     <button
                       onClick={() => toggleSaveProject(project.id)}
-                      className={`hover:text-[#F5F3FF] transition ${isSaved ? 'text-[#A3E635]' : ''}`}
-                      title={isSaved ? 'Bookmarked' : 'Bookmark'}
+                      className={`hover:text-white transition ${isSaved ? 'text-[#A3E635]' : ''}`}
                     >
                       <Bookmark className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     {project.liveDemoUrl && (
                       <a
                         href={project.liveDemoUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[#A3E635] hover:underline flex items-center gap-1 font-semibold"
+                        className="text-zinc-400 hover:text-white flex items-center gap-1 font-medium"
                       >
                         <span>Demo</span>
                         <ExternalLink className="w-3 h-3" />
@@ -288,7 +250,7 @@ export const ProjectsPage: React.FC = () => {
                     )}
                     <button
                       onClick={() => navigateTo('project_detail', project.id)}
-                      className="text-[#A855F7] font-semibold hover:underline"
+                      className="text-zinc-300 hover:text-white font-medium"
                     >
                       Details →
                     </button>
@@ -300,36 +262,27 @@ export const ProjectsPage: React.FC = () => {
         )}
       </div>
 
-      {/* FORGE PROJECT MODAL */}
+      {/* Project Creation Modal */}
       {isForgeModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-8 rounded-3xl bg-[#11111B] border border-[#8B5CF6]/30 shadow-2xl text-left">
-            <button
-              onClick={() => setIsForgeModalOpen(false)}
-              className="absolute top-5 right-5 p-2 rounded-xl text-[#A1A1B5] hover:text-[#F5F3FF]"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-2 mb-1">
-              <span className="p-1.5 rounded-lg bg-amber-500/20 text-amber-400">
-                <Hammer className="w-4 h-4" />
-              </span>
-              <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
-                Forge Submission
-              </span>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-150">
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 rounded-2xl bg-[#111118] border border-white/10 shadow-2xl text-left space-y-4">
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+              <div>
+                <h3 className="text-base font-bold text-white">Publish Project</h3>
+                <p className="text-xs text-zinc-400 mt-0.5">Share with community and earn +150 XP</p>
+              </div>
+              <button
+                onClick={() => setIsForgeModalOpen(false)}
+                className="p-1 rounded-lg text-zinc-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-            <h3 className="text-2xl font-display font-black text-[#F5F3FF]">
-              Publish a Project to the Showcase
-            </h3>
-            <p className="text-xs text-[#A1A1B5] mt-1 mb-5">
-              Submit your project to inspire peers, find contributors, and earn +150 XP!
-            </p>
 
-            <form onSubmit={handleCreateProject} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <form onSubmit={handleCreateProject} className="space-y-3.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
+                  <label className="block text-xs font-medium text-zinc-300 mb-1">
                     Project Title
                   </label>
                   <input
@@ -338,72 +291,41 @@ export const ProjectsPage: React.FC = () => {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g. CampusRadar"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                    className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none focus:border-white/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
+                  <label className="block text-xs font-medium text-zinc-300 mb-1">
                     Category
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                    className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none focus:border-white/20"
                   >
                     {categories.filter((c) => c !== 'All').map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
+                      <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
-                  Tagline (Punchy 1-sentence elevator pitch)
+                <label className="block text-xs font-medium text-zinc-300 mb-1">
+                  Tagline (1-line description)
                 </label>
                 <input
                   type="text"
                   required
                   value={tagline}
                   onChange={(e) => setTagline(e.target.value)}
-                  placeholder="e.g. Real-time crowdsourced shuttle tracker with arrival estimations"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                  placeholder="e.g. Real-time bus tracker with arrival estimations"
+                  className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none focus:border-white/20"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
-                    Problem Statement
-                  </label>
-                  <textarea
-                    rows={2}
-                    required
-                    value={problemStatement}
-                    onChange={(e) => setProblemStatement(e.target.value)}
-                    placeholder="What real pain point does this solve?"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
-                    Your Solution
-                  </label>
-                  <textarea
-                    rows={2}
-                    required
-                    value={solution}
-                    onChange={(e) => setSolution(e.target.value)}
-                    placeholder="How does your tech architecture solve it?"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
-                  />
-                </div>
-              </div>
-
               <div>
-                <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
+                <label className="block text-xs font-medium text-zinc-300 mb-1">
                   Tech Stack (comma separated)
                 </label>
                 <input
@@ -412,67 +334,52 @@ export const ProjectsPage: React.FC = () => {
                   value={techStackInput}
                   onChange={(e) => setTechStackInput(e.target.value)}
                   placeholder="React, TypeScript, Tailwind, Node.js"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none focus:border-white/20"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
-                    GitHub Repository URL
+                  <label className="block text-xs font-medium text-zinc-300 mb-1">
+                    GitHub URL
                   </label>
                   <input
                     type="url"
                     required
                     value={githubUrl}
                     onChange={(e) => setGithubUrl(e.target.value)}
-                    placeholder="https://github.com/username/project"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                    placeholder="https://github.com/..."
+                    className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none focus:border-white/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
+                  <label className="block text-xs font-medium text-zinc-300 mb-1">
                     Live Demo URL (Optional)
                   </label>
                   <input
                     type="url"
                     value={liveDemoUrl}
                     onChange={(e) => setLiveDemoUrl(e.target.value)}
-                    placeholder="https://myproject.dev"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                    placeholder="https://..."
+                    className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none focus:border-white/20"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
-                  Status
-                </label>
-                <select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value as any)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
-                >
-                  <option value="Shipped">Shipped (Live & Working)</option>
-                  <option value="In Progress">In Progress (Active Dev)</option>
-                  <option value="Looking for Teammates">Looking for Teammates</option>
-                </select>
-              </div>
-
-              <div className="pt-3 flex justify-end gap-3">
+              <div className="pt-2 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsForgeModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold text-[#A1A1B5]"
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="goblin-btn-primary px-6 py-2.5 text-xs font-bold flex items-center gap-2"
+                  className="px-4 py-1.5 rounded-lg bg-[#A3E635] hover:bg-[#bef264] text-[#09090F] text-xs font-bold flex items-center gap-1.5"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  <span>Forge Project (+150 XP)</span>
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Publish</span>
                 </button>
               </div>
             </form>

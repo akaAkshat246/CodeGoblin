@@ -2,13 +2,9 @@ import React, { useState } from 'react';
 import {
   Users,
   Search,
-  Filter,
-  Sparkles,
   GraduationCap,
   Flame,
   CheckCircle2,
-  ExternalLink,
-  MessageSquare,
   X
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
@@ -44,117 +40,113 @@ export const MembersPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-[#A3E635]/20 text-[#A3E635]">
-              <Users className="w-5 h-5" />
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-display font-black text-[#F5F3FF]">
-              Members & Mentorship Directory
+            <Users className="w-5 h-5 text-lime-400" />
+            <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
+              Goblin Directory & Mentors
             </h1>
           </div>
-          <p className="text-xs sm:text-sm text-[#A1A1B5] mt-1">
-            Discover peer coders, connect with verified student mentors, and build cross-college networks.
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+            Discover fellow student developers, connect with mentors, and form hackathon squads.
           </p>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#11111B] border border-white/5">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 rounded-xl bg-[#111118] border border-white/[0.06]">
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-[#8B5CF6] absolute left-3.5 top-2.5" />
+          <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search members by name, skill, or college..."
-            className="w-full pl-9 pr-3.5 py-1.5 rounded-xl bg-[#171725] border border-white/5 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+            className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-black/40 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30"
           />
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto text-xs font-semibold">
+        <div className="flex items-center gap-1.5 self-start sm:self-auto text-xs">
           <button
             onClick={() => setMentorFilter('all')}
-            className={`px-3 py-1.5 rounded-lg transition ${
+            className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
               mentorFilter === 'all'
-                ? 'bg-[#171725] text-[#A3E635] border border-[#A3E635]/30'
-                : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
+                ? 'bg-white text-black font-semibold'
+                : 'text-zinc-400 hover:text-white bg-white/[0.03] border border-white/[0.06]'
             }`}
           >
             All Members ({allUsers.length})
           </button>
           <button
             onClick={() => setMentorFilter('mentors')}
-            className={`px-3 py-1.5 rounded-lg transition ${
+            className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
               mentorFilter === 'mentors'
-                ? 'bg-[#171725] text-[#A3E635] border border-[#A3E635]/30'
-                : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
+                ? 'bg-white text-black font-semibold'
+                : 'text-zinc-400 hover:text-white bg-white/[0.03] border border-white/[0.06]'
             }`}
           >
-            Available Mentors ({allUsers.filter((u) => u.isMentor).length})
+            Mentors ({allUsers.filter((u) => u.isMentor).length})
           </button>
         </div>
       </div>
 
-      {/* Members Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {/* Members Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredMembers.map((member) => {
           const goblin = GOBLIN_CHARACTERS.find((g) => g.id === member.avatarGoblinId) || GOBLIN_CHARACTERS[0];
 
           return (
             <div
               key={member.id}
-              className="goblin-card p-5 flex flex-col justify-between group transition hover:border-[#8B5CF6]/40"
+              className="p-4 sm:p-5 rounded-xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] flex flex-col justify-between transition-colors group"
             >
               <div>
                 <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5">
                     <img
                       src={goblin.avatarImg}
                       alt={member.displayName}
-                      className="w-12 h-12 rounded-xl object-cover ring-2 ring-[#8B5CF6]/30 group-hover:ring-[#A3E635] transition shrink-0"
+                      className="w-10 h-10 rounded-lg object-cover border border-white/10 shrink-0"
                     />
                     <div>
                       <h3
                         onClick={() => navigateTo('profile', member.id)}
-                        className="text-sm font-bold text-[#F5F3FF] hover:text-[#A855F7] cursor-pointer transition"
+                        className="text-xs sm:text-sm font-semibold text-white hover:text-purple-300 cursor-pointer transition-colors"
                       >
                         {member.displayName}
                       </h3>
-                      <p className="text-[11px] text-[#A1A1B5] font-mono">@{member.username}</p>
-                      <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className="text-[10px] text-[#A3E635] font-semibold">
-                          {goblin.roleTitle}
-                        </span>
-                      </div>
+                      <p className="text-[11px] text-zinc-500 font-mono">@{member.username}</p>
+                      <span className="text-[10px] text-lime-400 font-medium">
+                        {goblin.roleTitle}
+                      </span>
                     </div>
                   </div>
 
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#8B5CF6]/20 text-[#C084FC]">
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-white/[0.04] text-zinc-400 border border-white/[0.06]">
                     Lvl {member.level}
                   </span>
                 </div>
 
-                <p className="text-xs text-[#A1A1B5] line-clamp-2 leading-relaxed">
+                <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                   {member.bio}
                 </p>
 
                 {member.college && (
-                  <p className="text-[11px] text-slate-300 font-medium mt-2 flex items-center gap-1.5">
-                    <GraduationCap className="w-3.5 h-3.5 text-[#8B5CF6]" />
+                  <p className="text-[11px] text-zinc-400 mt-2 flex items-center gap-1.5">
+                    <GraduationCap className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
                     <span className="truncate">{member.college}</span>
                   </p>
                 )}
 
                 {/* Skills tags */}
-                <div className="mt-3 flex flex-wrap gap-1">
+                <div className="mt-2.5 flex flex-wrap gap-1">
                   {member.skills.slice(0, 4).map((skill, i) => (
                     <span
                       key={i}
-                      className="px-2 py-0.5 rounded text-[10px] bg-[#11111B] border border-white/5 text-[#A1A1B5]"
+                      className="px-2 py-0.5 rounded text-[10px] bg-white/[0.03] border border-white/[0.06] text-zinc-400"
                     >
                       {skill}
                     </span>
@@ -162,10 +154,10 @@ export const MembersPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Footer controls */}
-              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs">
-                <span className="text-amber-400 font-mono flex items-center gap-1">
-                  <Flame className="w-3.5 h-3.5" />
+              {/* Footer */}
+              <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs">
+                <span className="text-zinc-500 font-mono flex items-center gap-1 text-[11px]">
+                  <Flame className="w-3.5 h-3.5 text-amber-400" />
                   <span>{member.streakDays}d streak</span>
                 </span>
 
@@ -173,14 +165,14 @@ export const MembersPage: React.FC = () => {
                   {member.isMentor && member.id !== currentUser?.id && (
                     <button
                       onClick={() => setSelectedMentor(member)}
-                      className="goblin-btn-green py-1 px-3 text-[11px] font-bold"
+                      className="px-2.5 py-1 rounded-md bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-lime-400 text-[11px] font-medium transition-colors"
                     >
                       Request Mentor
                     </button>
                   )}
                   <button
                     onClick={() => navigateTo('profile', member.id)}
-                    className="text-[#A855F7] font-semibold hover:underline text-xs"
+                    className="text-zinc-400 hover:text-white font-medium text-xs transition-colors"
                   >
                     Profile →
                   </button>
@@ -193,34 +185,34 @@ export const MembersPage: React.FC = () => {
 
       {/* MENTORSHIP REQUEST MODAL */}
       {selectedMentor && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-md p-6 rounded-3xl bg-[#11111B] border border-[#A3E635]/40 shadow-glow-green text-left">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="relative w-full max-w-md p-6 rounded-2xl bg-[#111118] border border-white/10 shadow-2xl text-left">
             <button
               onClick={() => setSelectedMentor(null)}
-              className="absolute top-5 right-5 p-2 rounded-xl text-[#A1A1B5] hover:text-[#F5F3FF]"
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.05] transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
 
-            <h3 className="text-lg font-bold text-[#F5F3FF]">
+            <h3 className="text-base font-semibold text-white">
               Request Mentorship with {selectedMentor.displayName}
             </h3>
-            <p className="text-xs text-[#A1A1B5] mt-1 mb-4">
-              {selectedMentor.mentorBio || 'Connect for 1-on-1 advice on code, career, or hackathon strategy.'}
+            <p className="text-xs text-zinc-400 mt-1 mb-4">
+              {selectedMentor.mentorBio || 'Connect for 1-on-1 advice on code, projects, or career.'}
             </p>
 
             {mentorshipSent ? (
               <div className="p-6 text-center text-emerald-400 space-y-2">
-                <CheckCircle2 className="w-10 h-10 mx-auto" />
-                <p className="text-sm font-bold">Mentorship Request Dispatched!</p>
-                <p className="text-xs text-[#A1A1B5]">
-                  {selectedMentor.displayName} will receive a notification in their Goblin HQ.
+                <CheckCircle2 className="w-8 h-8 mx-auto" />
+                <p className="text-sm font-semibold">Mentorship Request Sent</p>
+                <p className="text-xs text-zinc-400">
+                  {selectedMentor.displayName} will be notified.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSendMentorshipRequest} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
+                  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                     What would you like to discuss?
                   </label>
                   <textarea
@@ -228,22 +220,22 @@ export const MembersPage: React.FC = () => {
                     required
                     value={mentorshipTopic}
                     onChange={(e) => setMentorshipTopic(e.target.value)}
-                    placeholder="e.g. Guidance on setting up my first full-stack React + FastAPI architecture, or review my hackathon pitch..."
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#A3E635]"
+                    placeholder="e.g. Code review on my full-stack repository or hackathon team guidance..."
+                    className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30"
                   />
                 </div>
 
-                <div className="flex justify-end gap-3 pt-2">
+                <div className="flex justify-end gap-2 pt-2">
                   <button
                     type="button"
                     onClick={() => setSelectedMentor(null)}
-                    className="px-4 py-2 rounded-xl text-xs font-semibold text-[#A1A1B5]"
+                    className="px-3.5 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="goblin-btn-green py-2 px-5 text-xs font-bold"
+                    className="px-4 py-1.5 rounded-lg bg-white text-black hover:bg-zinc-200 text-xs font-semibold transition-colors"
                   >
                     Send Request
                   </button>

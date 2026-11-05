@@ -22,7 +22,7 @@ import { LEARNING_TRACKS } from '../data/mockData';
 import { Quest, LearningRoadmap } from '../types';
 
 export const QuestsPage: React.FC = () => {
-  const { quests, completedQuestIds, completeQuest, currentUser } = useApp();
+  const { quests, completedQuestIds, completeQuest } = useApp();
   const [selectedTrackId, setSelectedTrackId] = useState<string>('all');
   const [activeSubmissionQuest, setActiveSubmissionQuest] = useState<Quest | null>(null);
   const [submissionAnswer, setSubmissionAnswer] = useState('');
@@ -55,68 +55,61 @@ export const QuestsPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-300">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-[#A3E635]/20 text-[#A3E635]">
-              <Scroll className="w-5 h-5" />
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-display font-black text-[#F5F3FF]">
-              Quests & Learning Tracks
+            <Scroll className="w-5 h-5 text-lime-400" />
+            <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
+              Quests & Challenges
             </h1>
           </div>
-          <p className="text-xs sm:text-sm text-[#A1A1B5] mt-1">
-            Turn theoretical college syllabus into practical code. Solve quests, master vibe coding, and earn XP.
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+            Turn syllabus theory into shipped code. Complete hands-on challenges to level up and earn XP.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#171725] px-4 py-2 rounded-2xl border border-white/5 self-start sm:self-auto">
-          <span className="text-xs text-[#A1A1B5]">Completed:</span>
-          <span className="text-sm font-mono font-bold text-[#A3E635]">
-            {completedQuestIds.length} / {quests.length} Quests
+        <div className="flex items-center gap-2 self-start sm:self-auto px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+          <span className="text-xs text-zinc-400">Completed:</span>
+          <span className="text-xs font-mono font-semibold text-lime-400">
+            {completedQuestIds.length} / {quests.length}
           </span>
         </div>
       </div>
 
-      {/* 8 Track Selector Cards */}
-      <div className="space-y-3">
-        <p className="text-xs font-bold text-[#A1A1B5] uppercase tracking-wider">
-          Learning Tracks (8 Specializations)
-        </p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
-          <button
-            onClick={() => setSelectedTrackId('all')}
-            className={`p-3 rounded-2xl border text-center transition flex flex-col items-center justify-center gap-1.5 ${
-              selectedTrackId === 'all'
-                ? 'bg-[#8B5CF6] text-white border-[#8B5CF6] shadow-glow-purple font-bold'
-                : 'bg-[#171725] text-[#A1A1B5] border-white/5 hover:border-[#8B5CF6]/40 hover:text-[#F5F3FF]'
-            }`}
-          >
-            <Layers className="w-4 h-4" />
-            <span className="text-[11px]">All Tracks</span>
-          </button>
+      {/* Track Selector Pills */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        <button
+          onClick={() => setSelectedTrackId('all')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+            selectedTrackId === 'all'
+              ? 'bg-white text-black font-semibold'
+              : 'bg-white/[0.03] text-zinc-400 hover:text-white border border-white/[0.06]'
+          }`}
+        >
+          <Layers className="w-3.5 h-3.5" />
+          <span>All Tracks</span>
+        </button>
 
-          {LEARNING_TRACKS.map((track: LearningRoadmap) => {
-            const Icon = getTrackIcon(track.icon);
-            const active = selectedTrackId === track.id;
-            return (
-              <button
-                key={track.id}
-                onClick={() => setSelectedTrackId(track.id)}
-                className={`p-3 rounded-2xl border text-center transition flex flex-col items-center justify-center gap-1.5 ${
-                  active
-                    ? 'bg-[#8B5CF6] text-white border-[#8B5CF6] shadow-glow-purple font-bold'
-                    : 'bg-[#171725] text-[#A1A1B5] border-white/5 hover:border-[#8B5CF6]/40 hover:text-[#F5F3FF]'
-                }`}
-              >
-                <Icon className="w-4 h-4 text-[#A3E635]" />
-                <span className="text-[10px] leading-tight line-clamp-2">{track.title}</span>
-              </button>
-            );
-          })}
-        </div>
+        {LEARNING_TRACKS.map((track: LearningRoadmap) => {
+          const Icon = getTrackIcon(track.icon);
+          const active = selectedTrackId === track.id;
+          return (
+            <button
+              key={track.id}
+              onClick={() => setSelectedTrackId(track.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex items-center gap-1.5 ${
+                active
+                  ? 'bg-white text-black font-semibold'
+                  : 'bg-white/[0.03] text-zinc-400 hover:text-white border border-white/[0.06]'
+              }`}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              <span>{track.title}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Selected Track Overview Banner */}
@@ -125,16 +118,19 @@ export const QuestsPage: React.FC = () => {
           const track = LEARNING_TRACKS.find((t: LearningRoadmap) => t.id === selectedTrackId);
           if (!track) return null;
           return (
-            <div className="p-5 rounded-3xl bg-[#11111B] border border-[#8B5CF6]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
-                <span className="text-[10px] font-bold text-[#A3E635] uppercase tracking-wider">
-                  Track Overview • {track.level}
-                </span>
-                <h3 className="text-lg font-bold text-[#F5F3FF] mt-0.5">{track.title}</h3>
-                <p className="text-xs text-[#A1A1B5] mt-1 max-w-2xl">{track.description}</p>
-                <div className="mt-2.5 flex flex-wrap gap-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-semibold text-lime-400 uppercase tracking-wider">
+                    {track.level}
+                  </span>
+                  <span className="text-zinc-600">•</span>
+                  <span className="text-xs font-semibold text-white">{track.title}</span>
+                </div>
+                <p className="text-xs text-zinc-400 mt-1 max-w-2xl">{track.description}</p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
                   {track.tags.map((tag: string, i: number) => (
-                    <span key={i} className="px-2 py-0.5 rounded text-[10px] bg-[#171725] border border-white/5 text-[#A1A1B5]">
+                    <span key={i} className="px-2 py-0.5 rounded text-[10px] bg-white/[0.03] border border-white/[0.06] text-zinc-400">
                       {tag}
                     </span>
                   ))}
@@ -146,71 +142,73 @@ export const QuestsPage: React.FC = () => {
       )}
 
       {/* Quest Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredQuests.map((quest) => {
           const isDone = completedQuestIds.includes(quest.id);
 
           return (
             <div
               key={quest.id}
-              className={`goblin-card p-5 sm:p-6 flex flex-col justify-between transition-all ${
-                isDone ? 'border-emerald-500/30 bg-[#171725]/60' : 'hover:border-[#A3E635]/40'
+              className={`p-5 rounded-xl border flex flex-col justify-between transition-colors ${
+                isDone
+                  ? 'bg-[#111118]/60 border-emerald-500/20'
+                  : 'bg-[#111118] border-white/[0.06] hover:border-white/[0.12]'
               }`}
             >
               <div>
                 {/* Header pills */}
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#8B5CF6]/20 text-[#C084FC]">
+                  <div className="flex items-center gap-1.5">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-purple-500/10 text-purple-300 border border-purple-500/20">
                       {quest.category}
                     </span>
-                    <span className="text-[10px] font-semibold text-[#A1A1B5]">
+                    <span className="text-[10px] text-zinc-400">
                       {quest.level}
                     </span>
                     {quest.isDailyQuest && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-400">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
                         Daily
                       </span>
                     )}
                   </div>
 
-                  <span className="px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-[#A3E635]/15 text-[#A3E635]">
+                  <span className="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-lime-400/10 text-lime-400 border border-lime-400/20">
                     +{quest.xpReward} XP
                   </span>
                 </div>
 
-                <h3 className="text-base font-bold text-[#F5F3FF]">{quest.title}</h3>
-                <p className="text-xs text-[#A1A1B5] mt-1.5 leading-relaxed">
+                <h3 className="text-sm font-semibold text-white">{quest.title}</h3>
+                <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed">
                   {quest.description}
                 </p>
 
                 {/* Objectives */}
-                <div className="mt-4 space-y-1.5 text-xs text-[#A1A1B5]">
-                  <p className="text-[11px] font-bold text-[#F5F3FF] uppercase tracking-wider">
-                    Core Objectives:
+                <div className="mt-4 space-y-1.5 text-xs text-zinc-400">
+                  <p className="text-[10px] font-semibold text-zinc-300 uppercase tracking-wider">
+                    Core Objectives
                   </p>
                   {quest.objectives.map((obj, i) => (
                     <div key={i} className="flex items-start gap-2">
-                      <span className="text-[#A3E635] mt-0.5">✔</span>
-                      <span className="text-[11px]">{obj}</span>
+                      <span className="text-lime-400 text-xs mt-0.5">✓</span>
+                      <span className="text-xs text-zinc-300">{obj}</span>
                     </div>
                   ))}
                 </div>
 
-                {/* Resources */}
+                {/* References */}
                 {quest.resources.length > 0 && (
-                  <div className="mt-4 pt-3 border-t border-white/5 flex flex-wrap gap-2 text-[11px]">
-                    <span className="text-[#A1A1B5]">Curated References:</span>
+                  <div className="mt-4 pt-3 border-t border-white/[0.06] flex flex-wrap items-center gap-2 text-xs">
+                    <span className="text-zinc-500 text-[11px]">References:</span>
                     {quest.resources.map((res, i) => (
                       <a
                         key={i}
                         href={res.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[#A855F7] hover:text-[#A3E635] flex items-center gap-1 transition font-medium"
+                        className="text-zinc-300 hover:text-white flex items-center gap-1 transition-colors text-[11px]"
                       >
                         <span>{res.title}</span>
-                        <ExternalLink className="w-3 h-3" />
+                        <ExternalLink className="w-3 h-3 text-zinc-500" />
                       </a>
                     ))}
                   </div>
@@ -218,23 +216,23 @@ export const QuestsPage: React.FC = () => {
               </div>
 
               {/* Action Button */}
-              <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs text-[#A1A1B5]">
+              <div className="mt-5 pt-3.5 border-t border-white/[0.06] flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-xs text-zinc-500">
                   <Clock className="w-3.5 h-3.5" />
-                  <span>~{quest.estimatedMinutes} mins</span>
+                  <span>~{quest.estimatedMinutes}m</span>
                 </div>
 
                 {isDone ? (
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
-                    <CheckCircle2 className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-400">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
                     <span>XP Claimed</span>
                   </div>
                 ) : (
                   <button
                     onClick={() => setActiveSubmissionQuest(quest)}
-                    className="goblin-btn-green py-2 px-4 text-xs font-bold flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded-lg bg-white text-black hover:bg-zinc-200 text-xs font-medium transition-colors flex items-center gap-1.5"
                   >
-                    <span>Submit Assignment</span>
+                    <span>Submit</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 )}
@@ -246,54 +244,54 @@ export const QuestsPage: React.FC = () => {
 
       {/* SUBMISSION MODAL */}
       {activeSubmissionQuest && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg p-6 rounded-3xl bg-[#11111B] border border-[#A3E635]/40 shadow-glow-green text-left">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
+          <div className="relative w-full max-w-lg p-6 rounded-2xl bg-[#111118] border border-white/10 shadow-2xl text-left">
             <button
               onClick={() => setActiveSubmissionQuest(null)}
-              className="absolute top-5 right-5 p-2 rounded-xl text-[#A1A1B5] hover:text-[#F5F3FF]"
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.05] transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
 
-            <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#A3E635]/15 text-[#A3E635]">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-lime-400/10 text-lime-400 border border-lime-400/20">
               +{activeSubmissionQuest.xpReward} XP Reward
             </span>
 
-            <h3 className="text-lg font-bold text-[#F5F3FF] mt-2">
+            <h3 className="text-base font-semibold text-white mt-2">
               Submit Solution: {activeSubmissionQuest.title}
             </h3>
 
-            <div className="my-3 p-3 rounded-xl bg-[#171725] border border-white/5 text-xs text-[#A1A1B5]">
-              <span className="font-bold text-[#F5F3FF] block mb-1">Assignment Challenge:</span>
+            <div className="my-3 p-3 rounded-lg bg-white/[0.03] border border-white/[0.06] text-xs text-zinc-400">
+              <span className="font-medium text-white block mb-1">Challenge Prompt</span>
               <p>{activeSubmissionQuest.assignmentPrompt}</p>
             </div>
 
             <form onSubmit={handleSubmitQuest} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">
-                  Your Answer / Code Snippet / Prompt Solution
+                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                  Your Answer or Solution
                 </label>
                 <textarea
                   rows={4}
                   required
                   value={submissionAnswer}
                   onChange={(e) => setSubmissionAnswer(e.target.value)}
-                  placeholder="Paste your solution or summary here..."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#09090F] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#A3E635]"
+                  placeholder="Paste your code snippet, PR link, or summary..."
+                  className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-2">
+              <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setActiveSubmissionQuest(null)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-[#A1A1B5]"
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="goblin-btn-green py-2 px-5 text-xs font-bold flex items-center gap-1.5"
+                  className="px-4 py-1.5 rounded-lg bg-lime-400 hover:bg-lime-300 text-black text-xs font-semibold flex items-center gap-1.5 transition-colors"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Verify & Claim +{activeSubmissionQuest.xpReward} XP</span>

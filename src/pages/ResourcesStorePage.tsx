@@ -1,30 +1,19 @@
 import React, { useState } from 'react';
 import {
-  PackageOpen,
   Search,
   Download,
   Copy,
   Check,
-  ExternalLink,
-  Sparkles,
-  FileText,
-  Terminal,
-  Presentation,
-  BookMarked,
-  Filter,
-  CheckCircle2,
   X,
-  Code2,
-  Flame,
-  Layers
+  PackageOpen
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useApp } from '../context/AppContext';
-import { DigitalResource, ResourceCategory } from '../types';
+import { DigitalResource } from '../types';
 import { SEOHead } from '../components/SEOHead';
 
 export const ResourcesStorePage: React.FC = () => {
-  const { resources, downloadedResourceIds, downloadResource, currentUser } = useApp();
+  const { resources, downloadedResourceIds, downloadResource } = useApp();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeResourceModal, setActiveResourceModal] = useState<DigitalResource | null>(null);
@@ -53,8 +42,8 @@ export const ResourcesStorePage: React.FC = () => {
   const handleDownload = (res: DigitalResource) => {
     downloadResource(res.id);
     confetti({
-      particleCount: 50,
-      spread: 60,
+      particleCount: 40,
+      spread: 55,
       origin: { y: 0.8 },
       colors: ['#8B5CF6', '#A3E635', '#F5F3FF']
     });
@@ -63,95 +52,68 @@ export const ResourcesStorePage: React.FC = () => {
   const handleCopyCode = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2500);
-  };
-
-  const getCategoryIcon = (category: ResourceCategory) => {
-    switch (category) {
-      case 'Starter Kits':
-        return <Terminal className="w-4 h-4 text-[#A3E635]" />;
-      case 'Pitch Decks':
-        return <Presentation className="w-4 h-4 text-[#C084FC]" />;
-      case 'Documentation':
-        return <FileText className="w-4 h-4 text-sky-400" />;
-      case 'AI Prompts':
-        return <Sparkles className="w-4 h-4 text-amber-400" />;
-      case 'Guides & E-books':
-        return <BookMarked className="w-4 h-4 text-emerald-400" />;
-      default:
-        return <PackageOpen className="w-4 h-4 text-[#8B5CF6]" />;
-    }
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 animate-in fade-in duration-200">
       <SEOHead
-        title="Developer Starter Kits, Pitch Decks & Blueprints"
-        description="Download curated hackathon starter kits, pitch deck templates, production README standards, and vibe coding system prompts from CodeGoblins."
+        title="Resources Store"
+        description="Download curated hackathon starter kits, pitch deck templates, and vibe coding system prompts."
         canonicalPath="/store"
         pageId="resources_store"
       />
 
-      {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-[#8B5CF6]/20 text-[#A855F7]">
-              <PackageOpen className="w-5 h-5" />
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-display font-black text-[#F5F3FF]">
-              Developer Resources Store
-            </h1>
-          </div>
-          <p className="text-xs sm:text-sm text-[#A1A1B5] mt-1">
-            Production boilerplates, winning hackathon pitch templates, system prompts, and field guides. Free for all goblin builders.
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            Resources Store
+          </h1>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
+            Production starter kits, winning pitch decks, and system prompts.
           </p>
         </div>
 
-        {/* Stash Indicator */}
-        <div className="flex items-center gap-2 self-start sm:self-auto bg-[#11111B] border border-white/5 px-4 py-2 rounded-2xl">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#A3E635] animate-pulse" />
-          <span className="text-xs text-[#A1A1B5]">
-            Downloaded in Stash:{' '}
-            <strong className="text-[#F5F3FF] font-mono">{downloadedResourceIds.length}</strong>
-          </span>
+        <div className="flex items-center gap-2 self-start sm:self-auto text-xs font-mono text-zinc-400">
+          <span>Saved: {downloadedResourceIds.length}</span>
           {downloadedResourceIds.length > 0 && (
             <button
               onClick={() => setShowOnlyDownloaded(!showOnlyDownloaded)}
-              className={`ml-2 text-[10px] px-2 py-0.5 rounded font-bold transition ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-sans transition ${
                 showOnlyDownloaded
-                  ? 'bg-[#A3E635] text-black'
-                  : 'bg-white/10 text-[#F5F3FF] hover:bg-white/20'
+                  ? 'bg-white/[0.1] text-white'
+                  : 'bg-white/[0.04] text-zinc-400 hover:text-white'
               }`}
             >
-              {showOnlyDownloaded ? 'Showing Saved' : 'Filter Saved'}
+              {showOnlyDownloaded ? 'Show All' : 'Show Saved'}
             </button>
           )}
         </div>
       </div>
 
-      {/* Search and Category Filter Bar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[#11111B] border border-white/5">
-        <div className="relative w-full md:w-96">
-          <Search className="w-4 h-4 text-[#8B5CF6] absolute left-3.5 top-3" />
+      {/* Search & Category Pills */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="relative w-full sm:w-72">
+          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-2.5" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search starter kits, pitch decks, prompts..."
-            className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#171725] border border-white/5 text-xs text-[#F5F3FF] placeholder-[#A1A1B5] focus:outline-none focus:border-[#8B5CF6]"
+            placeholder="Search blueprints, prompts..."
+            className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-[#111118] border border-white/[0.06] text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/20 transition"
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-1.5 self-start sm:self-auto text-xs font-medium">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
+              className={`px-3 py-1.5 rounded-lg transition ${
                 selectedCategory === cat
-                  ? 'bg-[#8B5CF6] text-white shadow-glow-purple'
-                  : 'bg-[#171725] text-[#A1A1B5] hover:text-[#F5F3FF] border border-white/5'
+                  ? 'bg-white/[0.08] text-white font-semibold'
+                  : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
               {cat}
@@ -160,42 +122,38 @@ export const ResourcesStorePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Resource Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Resource Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {filteredResources.map((res) => {
           const isDownloaded = downloadedResourceIds.includes(res.id);
 
           return (
             <div
               key={res.id}
-              className="goblin-card p-6 flex flex-col justify-between border-white/5 hover:border-[#8B5CF6]/50 transition group"
+              className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] transition flex flex-col justify-between space-y-3"
             >
-              <div>
-                {/* Badges & Category Header */}
-                <div className="flex items-center justify-between text-xs mb-3">
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#171725] border border-white/5">
-                    {getCategoryIcon(res.category)}
-                    <span className="text-[11px] font-bold text-[#F5F3FF]">{res.category}</span>
-                  </div>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#A3E635]/15 text-[#A3E635]">
-                    {res.badge}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] text-zinc-300">
+                    {res.category}
+                  </span>
+                  <span className="text-[10px] font-mono text-zinc-400">
+                    {res.fileFormat}
                   </span>
                 </div>
 
-                {/* Title & Description */}
-                <h3 className="text-base font-bold text-[#F5F3FF] group-hover:text-[#A3E635] transition leading-snug">
+                <h3 className="text-sm font-semibold text-white leading-snug">
                   {res.title}
                 </h3>
-                <p className="text-xs text-[#A1A1B5] mt-2 line-clamp-3 leading-relaxed">
+                <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                   {res.description}
                 </p>
 
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1.5 mt-4">
-                  {res.tags.map((tag) => (
+                <div className="flex flex-wrap gap-1 pt-1">
+                  {res.tags.slice(0, 3).map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 rounded bg-white/5 text-[10px] text-[#A1A1B5] font-mono"
+                      className="px-1.5 py-0.2 rounded text-[10px] text-zinc-500 font-mono"
                     >
                       #{tag}
                     </span>
@@ -203,39 +161,36 @@ export const ResourcesStorePage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Card Footer */}
-              <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between gap-3">
-                <div className="text-[11px] font-mono text-[#A1A1B5]">
-                  <span>{res.fileFormat}</span>
-                  <span className="mx-1.5">•</span>
-                  <span>{res.downloadsCount} DLs</span>
-                </div>
+              <div className="pt-3 border-t border-white/[0.04] flex items-center justify-between text-xs">
+                <span className="text-[11px] font-mono text-zinc-500">
+                  {res.downloadsCount} DLs
+                </span>
 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setActiveResourceModal(res)}
-                    className="px-3 py-1.5 rounded-lg bg-[#171725] border border-white/5 hover:border-white/20 text-xs font-semibold text-[#F5F3FF] transition"
+                    className="px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-400 hover:text-white"
                   >
                     Inspect
                   </button>
 
                   <button
                     onClick={() => handleDownload(res)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+                    className={`px-3 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1 ${
                       isDownloaded
-                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                        : 'goblin-btn-primary'
+                        ? 'bg-emerald-500/10 text-emerald-400'
+                        : 'bg-white/[0.08] hover:bg-[#A3E635] hover:text-[#09090F] text-white'
                     }`}
                   >
                     {isDownloaded ? (
                       <>
-                        <Check className="w-3.5 h-3.5" />
+                        <Check className="w-3 h-3" />
                         <span>Saved</span>
                       </>
                     ) : (
                       <>
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Get Free</span>
+                        <Download className="w-3 h-3" />
+                        <span>Get</span>
                       </>
                     )}
                   </button>
@@ -247,53 +202,43 @@ export const ResourcesStorePage: React.FC = () => {
       </div>
 
       {filteredResources.length === 0 && (
-        <div className="p-12 text-center rounded-3xl bg-[#11111B] border border-white/5 space-y-3">
-          <PackageOpen className="w-10 h-10 text-[#8B5CF6] mx-auto opacity-60" />
-          <h3 className="text-lg font-bold text-[#F5F3FF]">No Blueprints Found</h3>
-          <p className="text-xs text-[#A1A1B5] max-w-sm mx-auto">
-            Try adjusting your search query or select another category filter to explore the armory.
-          </p>
+        <div className="p-8 text-center rounded-xl bg-[#111118] border border-white/[0.06] space-y-2">
+          <PackageOpen className="w-8 h-8 text-zinc-500 mx-auto opacity-50" />
+          <h3 className="text-sm font-semibold text-white">No Resources Found</h3>
+          <p className="text-xs text-zinc-400">Try adjusting your search query or filter.</p>
         </div>
       )}
 
-      {/* Resource Inspection & Download Modal */}
+      {/* Resource Modal */}
       {activeResourceModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-[#11111B] border border-[#8B5CF6]/30 rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto shadow-2xl relative animate-in zoom-in-95 duration-200">
-            {/* Modal Header */}
+          <div className="bg-[#111118] border border-white/10 rounded-2xl max-w-xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl relative animate-in zoom-in-95 duration-150">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#8B5CF6]/20 text-[#C084FC]">
-                    {activeResourceModal.category}
-                  </span>
-                  <span className="text-xs font-mono text-[#A3E635]">
-                    {activeResourceModal.fileFormat} • {activeResourceModal.fileSize}
-                  </span>
-                </div>
-                <h2 className="text-xl sm:text-2xl font-black text-[#F5F3FF]">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] text-zinc-400">
+                  {activeResourceModal.category} • {activeResourceModal.fileFormat}
+                </span>
+                <h2 className="text-lg font-bold text-white mt-1.5">
                   {activeResourceModal.title}
                 </h2>
               </div>
-
               <button
                 onClick={() => setActiveResourceModal(null)}
-                className="p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-[#A1A1B5] hover:text-[#F5F3FF] transition"
+                className="p-1 rounded-lg text-zinc-400 hover:text-white"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Description */}
-            <p className="text-xs sm:text-sm text-[#A1A1B5] leading-relaxed">
+            <p className="text-xs text-zinc-300 leading-relaxed">
               {activeResourceModal.description}
             </p>
 
-            {/* Code Snippet / Terminal Command */}
+            {/* Code Snippet */}
             {activeResourceModal.codeSnippet && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs font-mono text-[#A1A1B5]">
-                  <span>CLI Quickstart / Code Payload</span>
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
+                  <span>Quickstart Snippet</span>
                   <button
                     onClick={() => handleCopyCode(activeResourceModal.codeSnippet!, activeResourceModal.id)}
                     className="flex items-center gap-1 text-[#A3E635] hover:underline"
@@ -306,38 +251,34 @@ export const ResourcesStorePage: React.FC = () => {
                     ) : (
                       <>
                         <Copy className="w-3 h-3" />
-                        <span>Copy Code</span>
+                        <span>Copy</span>
                       </>
                     )}
                   </button>
                 </div>
-                <pre className="p-4 rounded-2xl bg-[#09090F] border border-white/10 text-xs font-mono text-[#A3E635] overflow-x-auto">
+                <pre className="p-3.5 rounded-xl bg-black/40 border border-white/[0.06] text-xs font-mono text-zinc-200 overflow-x-auto">
                   <code>{activeResourceModal.codeSnippet}</code>
                 </pre>
               </div>
             )}
 
-            {/* Slides Preview (if pitch deck) */}
+            {/* Slides Preview */}
             {activeResourceModal.slidesPreview && (
-              <div className="space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5F3FF]">
-                  Pitch Slide Structure Breakdown
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <h4 className="text-xs font-semibold text-white">Slide Outline</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {activeResourceModal.slidesPreview.map((s) => (
                     <div
                       key={s.slideNumber}
-                      className="p-3.5 rounded-xl bg-[#171725] border border-white/5 text-xs space-y-1"
+                      className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] text-xs space-y-1"
                     >
-                      <div className="font-bold text-[#F5F3FF] flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-md bg-[#8B5CF6]/30 text-[#C084FC] flex items-center justify-center text-[10px] font-mono">
-                          {s.slideNumber}
-                        </span>
+                      <div className="font-semibold text-white flex items-center gap-1.5">
+                        <span className="text-[10px] font-mono text-zinc-400">#{s.slideNumber}</span>
                         <span>{s.title}</span>
                       </div>
-                      <ul className="list-disc list-inside text-[11px] text-[#A1A1B5] space-y-0.5 pt-1">
+                      <ul className="list-disc list-inside text-[11px] text-zinc-400 space-y-0.5">
                         {s.bullets.map((b, idx) => (
-                          <li key={idx}>{b}</li>
+                          <li key={idx} className="truncate">{b}</li>
                         ))}
                       </ul>
                     </div>
@@ -346,41 +287,38 @@ export const ResourcesStorePage: React.FC = () => {
               </div>
             )}
 
-            {/* Preview Content (if documentation or guide) */}
+            {/* Preview Content */}
             {activeResourceModal.previewContent && (
-              <div className="space-y-2">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5F3FF]">
-                  Blueprint Architecture / Table of Contents
-                </h4>
-                <pre className="p-4 rounded-2xl bg-[#09090F] border border-white/10 text-[11px] font-mono text-[#F5F3FF] overflow-x-auto whitespace-pre">
+              <div className="space-y-1.5">
+                <h4 className="text-xs font-semibold text-white">Preview</h4>
+                <pre className="p-3.5 rounded-xl bg-black/40 border border-white/[0.06] text-[11px] font-mono text-zinc-300 overflow-x-auto whitespace-pre">
                   {activeResourceModal.previewContent}
                 </pre>
               </div>
             )}
 
-            {/* Action Bar */}
-            <div className="pt-4 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <span className="text-xs text-[#A1A1B5]">
-                Free Community Tier • Grants <strong className="text-[#A3E635]">+25 Clan XP</strong>
+            {/* Modal Actions */}
+            <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between gap-3">
+              <span className="text-xs text-zinc-400">
+                Reward: <strong className="text-[#A3E635]">+25 XP</strong>
               </span>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveResourceModal(null)}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-white/10 text-xs font-semibold text-[#A1A1B5] hover:text-[#F5F3FF] hover:bg-white/5 transition"
+                  className="px-3.5 py-1.5 rounded-lg border border-white/[0.08] text-xs font-medium text-zinc-300 hover:text-white"
                 >
                   Close
                 </button>
-
                 <button
                   onClick={() => {
                     handleDownload(activeResourceModal);
                     setActiveResourceModal(null);
                   }}
-                  className="w-full sm:w-auto goblin-btn-primary py-2.5 px-6 text-xs font-bold flex items-center justify-center gap-2"
+                  className="px-4 py-1.5 rounded-lg bg-[#A3E635] hover:bg-[#bef264] text-[#09090F] text-xs font-bold flex items-center gap-1.5"
                 >
-                  <Download className="w-4 h-4" />
-                  <span>Download Starter Package</span>
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download</span>
                 </button>
               </div>
             </div>
@@ -390,4 +328,3 @@ export const ResourcesStorePage: React.FC = () => {
     </div>
   );
 };
-

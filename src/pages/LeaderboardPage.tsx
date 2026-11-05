@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import {
-  Crown,
   Trophy,
   Flame,
-  Zap,
-  Sparkles,
   Medal,
   ArrowUp,
   ArrowDown,
-  ShieldCheck,
-  User,
-  HelpCircle
+  ShieldCheck
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
@@ -33,93 +28,81 @@ export const LeaderboardPage: React.FC = () => {
   const userRankIndex = currentUser ? sortedUsers.findIndex((u) => u.id === currentUser.id) : -1;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-amber-500/20 text-amber-400">
-              <Crown className="w-5 h-5" />
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-display font-black text-[#F5F3FF]">
-              Esports Leaderboards & Reputation
+            <Trophy className="w-5 h-5 text-amber-400" />
+            <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
+              Leaderboards & Reputation
             </h1>
           </div>
-          <p className="text-xs sm:text-sm text-[#A1A1B5] mt-1">
-            Real-time clan rankings based on verified quests, shipped projects, hackathon podiums, and helpful solutions.
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+            Community rankings verified by completed quests, shipped projects, and helpful answers.
           </p>
         </div>
 
         {/* Tab Filters */}
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#11111B] border border-white/5 self-start sm:self-auto text-xs font-semibold">
-          <button
-            onClick={() => setActiveTab('weekly')}
-            className={`px-3 py-1.5 rounded-xl transition ${
-              activeTab === 'weekly' ? 'bg-[#8B5CF6] text-white shadow-glow-purple' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-            }`}
-          >
-            Weekly XP
-          </button>
-          <button
-            onClick={() => setActiveTab('allTime')}
-            className={`px-3 py-1.5 rounded-xl transition ${
-              activeTab === 'allTime' ? 'bg-[#8B5CF6] text-white shadow-glow-purple' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-            }`}
-          >
-            All-Time
-          </button>
-          <button
-            onClick={() => setActiveTab('streak')}
-            className={`px-3 py-1.5 rounded-xl transition ${
-              activeTab === 'streak' ? 'bg-[#8B5CF6] text-white shadow-glow-purple' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-            }`}
-          >
-            Streaks (IST)
-          </button>
-          <button
-            onClick={() => setActiveTab('helpful')}
-            className={`px-3 py-1.5 rounded-xl transition ${
-              activeTab === 'helpful' ? 'bg-[#8B5CF6] text-white shadow-glow-purple' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-            }`}
-          >
-            Helpful
-          </button>
+        <div className="flex items-center gap-1 p-1 rounded-lg bg-[#111118] border border-white/[0.06] self-start sm:self-auto text-xs">
+          {(
+            [
+              { id: 'weekly', label: 'Weekly XP' },
+              { id: 'allTime', label: 'All-Time' },
+              { id: 'streak', label: 'Streaks' },
+              { id: 'helpful', label: 'Helpful' }
+            ] as const
+          ).map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
+                activeTab === tab.id
+                  ? 'bg-white text-black font-semibold'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* STICKY "YOUR RANK" HIGHLIGHT PANEL */}
+      {/* Your Standing Banner */}
       {currentUser && userRankIndex !== -1 && (
-        <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-[#1E1E32] via-[#171725] to-[#11111B] border border-[#A3E635]/40 shadow-glow-green flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <span className="w-10 h-10 rounded-2xl bg-[#A3E635]/20 text-[#A3E635] font-black text-lg flex items-center justify-center font-display border border-[#A3E635]/40">
+        <div className="p-4 rounded-xl bg-[#111118] border border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="w-9 h-9 rounded-lg bg-white/[0.04] text-white font-mono font-bold text-sm flex items-center justify-center border border-white/[0.08]">
               #{userRankIndex + 1}
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-sm text-[#F5F3FF]">Your Standing: {currentUser.displayName}</span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#A3E635]/20 text-[#A3E635] flex items-center gap-0.5">
-                  <ArrowUp className="w-3 h-3" />
-                  <span>+{currentUser.rankChange || 2} this week</span>
+                <span className="font-semibold text-sm text-white">
+                  Your Rank: {currentUser.displayName}
+                </span>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-lime-400/10 text-lime-400 border border-lime-400/20 flex items-center gap-0.5">
+                  <ArrowUp className="w-2.5 h-2.5" />
+                  <span>+{currentUser.rankChange || 2}</span>
                 </span>
               </div>
-              <p className="text-xs text-[#A1A1B5]">
+              <p className="text-xs text-zinc-400 mt-0.5">
                 Level {currentUser.level} {currentUser.role} • {currentUser.streakDays}d streak • {currentUser.college}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-6 font-mono text-xs">
+          <div className="flex items-center gap-5 text-xs">
             <div>
-              <span className="text-[10px] text-[#A1A1B5] block uppercase">Reputation</span>
-              <span className="font-bold text-[#C084FC] text-sm">{currentUser.reputationScore}</span>
+              <span className="text-[10px] text-zinc-500 uppercase block font-medium">Reputation</span>
+              <span className="font-semibold text-purple-300 font-mono text-sm">{currentUser.reputationScore}</span>
             </div>
             <div>
-              <span className="text-[10px] text-[#A1A1B5] block uppercase">XP Score</span>
-              <span className="font-black text-[#A3E635] text-base">{currentUser.xp} XP</span>
+              <span className="text-[10px] text-zinc-500 uppercase block font-medium">Total Score</span>
+              <span className="font-semibold text-lime-400 font-mono text-sm">{currentUser.xp} XP</span>
             </div>
             <button
               onClick={() => navigateTo('profile')}
-              className="goblin-btn-primary py-1.5 px-3.5 text-xs font-bold"
+              className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-white text-xs font-medium transition-colors"
             >
               My Profile
             </button>
@@ -127,46 +110,44 @@ export const LeaderboardPage: React.FC = () => {
         </div>
       )}
 
-      {/* TOP 3 PODIUM */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4 pb-2">
+      {/* Top 3 Podium Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* 2nd Place (Silver) */}
         {top3[1] && (
           <div
             onClick={() => navigateTo('profile', top3[1].id)}
-            className="goblin-card p-6 flex flex-col items-center text-center justify-between border-slate-400/30 cursor-pointer order-2 md:order-1 transition hover:-translate-y-1"
+            className="p-5 rounded-xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] flex flex-col items-center text-center justify-between cursor-pointer transition-colors order-2 md:order-1"
           >
-            <div className="w-full flex justify-between items-center text-xs mb-2 text-slate-400 font-bold">
-              <span className="flex items-center gap-1">
-                <Medal className="w-4 h-4 text-slate-300" />
-                <span>#2 Silver Goblin</span>
+            <div className="w-full flex justify-between items-center text-xs mb-3 text-zinc-400">
+              <span className="flex items-center gap-1 font-medium text-zinc-300">
+                <Medal className="w-4 h-4 text-zinc-300" />
+                <span>#2 Silver</span>
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-400/10 text-slate-300">
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.04] text-zinc-400">
                 Lvl {top3[1].level}
               </span>
             </div>
 
-            <div className="relative my-3">
-              <div className="w-20 h-20 rounded-2xl overflow-hidden ring-4 ring-slate-400/60 shadow-lg">
-                <img
-                  src={
-                    GOBLIN_CHARACTERS.find((g) => g.id === top3[1].avatarGoblinId)?.avatarImg ||
-                    GOBLIN_CHARACTERS[0].avatarImg
-                  }
-                  alt={top3[1].displayName}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+            <div className="w-16 h-16 rounded-xl overflow-hidden border border-white/10 my-2">
+              <img
+                src={
+                  GOBLIN_CHARACTERS.find((g) => g.id === top3[1].avatarGoblinId)?.avatarImg ||
+                  GOBLIN_CHARACTERS[0].avatarImg
+                }
+                alt={top3[1].displayName}
+                className="w-full h-full object-cover"
+              />
             </div>
 
-            <div>
-              <h3 className="text-base font-bold text-[#F5F3FF]">{top3[1].displayName}</h3>
-              <p className="text-xs text-[#A1A1B5] font-mono">@{top3[1].username}</p>
-              <p className="text-[11px] text-[#A3E635] mt-1 font-semibold">{top3[1].college}</p>
+            <div className="mt-2">
+              <h3 className="text-sm font-semibold text-white">{top3[1].displayName}</h3>
+              <p className="text-xs text-zinc-500 font-mono">@{top3[1].username}</p>
+              <p className="text-[11px] text-zinc-400 mt-1">{top3[1].college}</p>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-white/5 w-full flex items-center justify-between text-xs font-mono">
-              <span className="text-slate-400">{top3[1].streakDays}d streak</span>
-              <span className="text-[#A3E635] font-bold">
+            <div className="mt-4 pt-3 border-t border-white/[0.06] w-full flex items-center justify-between text-xs font-mono">
+              <span className="text-zinc-500">{top3[1].streakDays}d streak</span>
+              <span className="text-lime-400 font-semibold">
                 {activeTab === 'helpful' ? `${top3[1].reputationScore} Rep` : `${top3[1].xp} XP`}
               </span>
             </div>
@@ -177,43 +158,41 @@ export const LeaderboardPage: React.FC = () => {
         {top3[0] && (
           <div
             onClick={() => navigateTo('profile', top3[0].id)}
-            className="goblin-card p-6 flex flex-col items-center text-center justify-between border-amber-400/60 shadow-glow-green cursor-pointer order-1 md:order-2 md:-translate-y-4 transition hover:-translate-y-5 bg-gradient-to-b from-[#1E1E32] to-[#171725]"
+            className="p-5 rounded-xl bg-[#111118] border border-amber-400/30 hover:border-amber-400/50 flex flex-col items-center text-center justify-between cursor-pointer transition-colors order-1 md:order-2"
           >
-            <div className="w-full flex justify-between items-center text-xs mb-2 text-amber-400 font-black">
-              <span className="flex items-center gap-1.5">
-                <Crown className="w-5 h-5 text-amber-400 animate-bounce" />
-                <span>#1 Grand Champion</span>
+            <div className="w-full flex justify-between items-center text-xs mb-3 text-amber-400 font-semibold">
+              <span className="flex items-center gap-1">
+                <Medal className="w-4 h-4 text-amber-400" />
+                <span>#1 Champion</span>
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-300">
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-400/10 text-amber-300 border border-amber-400/20">
                 Lvl {top3[0].level}
               </span>
             </div>
 
-            <div className="relative my-3">
-              <div className="w-24 h-24 rounded-2xl overflow-hidden ring-4 ring-amber-400 shadow-glow-combined">
-                <img
-                  src={
-                    GOBLIN_CHARACTERS.find((g) => g.id === top3[0].avatarGoblinId)?.avatarImg ||
-                    GOBLIN_CHARACTERS[0].avatarImg
-                  }
-                  alt={top3[0].displayName}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+            <div className="w-20 h-20 rounded-xl overflow-hidden border-2 border-amber-400/40 my-1">
+              <img
+                src={
+                  GOBLIN_CHARACTERS.find((g) => g.id === top3[0].avatarGoblinId)?.avatarImg ||
+                  GOBLIN_CHARACTERS[0].avatarImg
+                }
+                alt={top3[0].displayName}
+                className="w-full h-full object-cover"
+              />
             </div>
 
-            <div>
-              <h3 className="text-lg font-black text-[#F5F3FF]">{top3[0].displayName}</h3>
-              <p className="text-xs text-[#A1A1B5] font-mono">@{top3[0].username}</p>
-              <p className="text-xs text-[#A3E635] mt-1 font-semibold">{top3[0].college}</p>
+            <div className="mt-2">
+              <h3 className="text-base font-semibold text-white">{top3[0].displayName}</h3>
+              <p className="text-xs text-zinc-500 font-mono">@{top3[0].username}</p>
+              <p className="text-[11px] text-zinc-400 mt-1">{top3[0].college}</p>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-white/5 w-full flex items-center justify-between text-xs font-mono">
+            <div className="mt-4 pt-3 border-t border-white/[0.06] w-full flex items-center justify-between text-xs font-mono">
               <span className="text-amber-400 flex items-center gap-1">
-                <Flame className="w-3.5 h-3.5 fill-amber-400/30" />
+                <Flame className="w-3.5 h-3.5" />
                 <span>{top3[0].streakDays}d streak</span>
               </span>
-              <span className="text-[#A3E635] font-black text-sm">
+              <span className="text-lime-400 font-bold">
                 {activeTab === 'helpful' ? `${top3[0].reputationScore} Rep` : `${top3[0].xp} XP`}
               </span>
             </div>
@@ -224,40 +203,38 @@ export const LeaderboardPage: React.FC = () => {
         {top3[2] && (
           <div
             onClick={() => navigateTo('profile', top3[2].id)}
-            className="goblin-card p-6 flex flex-col items-center text-center justify-between border-amber-700/40 cursor-pointer order-3 transition hover:-translate-y-1"
+            className="p-5 rounded-xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] flex flex-col items-center text-center justify-between cursor-pointer transition-colors order-3"
           >
-            <div className="w-full flex justify-between items-center text-xs mb-2 text-amber-600 font-bold">
-              <span className="flex items-center gap-1">
-                <Medal className="w-4 h-4 text-amber-600" />
-                <span>#3 Bronze Goblin</span>
+            <div className="w-full flex justify-between items-center text-xs mb-3 text-zinc-400">
+              <span className="flex items-center gap-1 font-medium text-amber-500">
+                <Medal className="w-4 h-4 text-amber-500" />
+                <span>#3 Bronze</span>
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-700/10 text-amber-500">
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.04] text-zinc-400">
                 Lvl {top3[2].level}
               </span>
             </div>
 
-            <div className="relative my-3">
-              <div className="w-20 h-20 rounded-2xl overflow-hidden ring-4 ring-amber-700/60 shadow-lg">
-                <img
-                  src={
-                    GOBLIN_CHARACTERS.find((g) => g.id === top3[2].avatarGoblinId)?.avatarImg ||
-                    GOBLIN_CHARACTERS[0].avatarImg
-                  }
-                  alt={top3[2].displayName}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+            <div className="w-16 h-16 rounded-xl overflow-hidden border border-white/10 my-2">
+              <img
+                src={
+                  GOBLIN_CHARACTERS.find((g) => g.id === top3[2].avatarGoblinId)?.avatarImg ||
+                  GOBLIN_CHARACTERS[0].avatarImg
+                }
+                alt={top3[2].displayName}
+                className="w-full h-full object-cover"
+              />
             </div>
 
-            <div>
-              <h3 className="text-base font-bold text-[#F5F3FF]">{top3[2].displayName}</h3>
-              <p className="text-xs text-[#A1A1B5] font-mono">@{top3[2].username}</p>
-              <p className="text-[11px] text-[#A3E635] mt-1 font-semibold">{top3[2].college}</p>
+            <div className="mt-2">
+              <h3 className="text-sm font-semibold text-white">{top3[2].displayName}</h3>
+              <p className="text-xs text-zinc-500 font-mono">@{top3[2].username}</p>
+              <p className="text-[11px] text-zinc-400 mt-1">{top3[2].college}</p>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-white/5 w-full flex items-center justify-between text-xs font-mono">
-              <span className="text-amber-600">{top3[2].streakDays}d streak</span>
-              <span className="text-[#A3E635] font-bold">
+            <div className="mt-4 pt-3 border-t border-white/[0.06] w-full flex items-center justify-between text-xs font-mono">
+              <span className="text-zinc-500">{top3[2].streakDays}d streak</span>
+              <span className="text-lime-400 font-semibold">
                 {activeTab === 'helpful' ? `${top3[2].reputationScore} Rep` : `${top3[2].xp} XP`}
               </span>
             </div>
@@ -265,19 +242,19 @@ export const LeaderboardPage: React.FC = () => {
         )}
       </div>
 
-      {/* FULL LEADERBOARD TABLE WITH MOVEMENT DELTAS */}
-      <div className="goblin-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between text-xs font-bold text-[#A1A1B5] uppercase tracking-wider">
+      {/* Leaderboard Table */}
+      <div className="rounded-xl bg-[#111118] border border-white/[0.06] overflow-hidden">
+        <div className="px-5 py-3 border-b border-white/[0.06] flex items-center justify-between text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
           <span>Rank & Member</span>
-          <div className="flex items-center gap-8">
-            <span className="hidden sm:inline">Movement</span>
+          <div className="flex items-center gap-6 sm:gap-8">
+            <span className="hidden sm:inline">Move</span>
             <span className="hidden sm:inline">Streak</span>
-            <span>Reputation</span>
-            <span>Total Score</span>
+            <span>Rep</span>
+            <span>Score</span>
           </div>
         </div>
 
-        <div className="divide-y divide-white/5">
+        <div className="divide-y divide-white/[0.04]">
           {sortedUsers.map((user, index) => {
             const goblin = GOBLIN_CHARACTERS.find((g) => g.id === user.avatarGoblinId) || GOBLIN_CHARACTERS[0];
             const change = user.rankChange || 0;
@@ -285,34 +262,34 @@ export const LeaderboardPage: React.FC = () => {
               <div
                 key={user.id}
                 onClick={() => navigateTo('profile', user.id)}
-                className={`px-6 py-4 flex items-center justify-between hover:bg-[#1E1E32] cursor-pointer transition text-xs ${
-                  user.id === currentUser?.id ? 'bg-[#8B5CF6]/10' : ''
+                className={`px-5 py-3.5 flex items-center justify-between hover:bg-white/[0.02] cursor-pointer transition-colors text-xs ${
+                  user.id === currentUser?.id ? 'bg-white/[0.03]' : ''
                 }`}
               >
-                <div className="flex items-center gap-3.5">
-                  <span className="w-6 font-black text-center text-[#A1A1B5]">
+                <div className="flex items-center gap-3">
+                  <span className="w-5 font-mono text-center text-zinc-500 text-xs font-medium">
                     #{index + 1}
                   </span>
                   <img
                     src={goblin.avatarImg}
                     alt={user.displayName}
-                    className="w-8 h-8 rounded-xl object-cover ring-1 ring-white/10"
+                    className="w-7 h-7 rounded-lg object-cover border border-white/10"
                   />
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-[#F5F3FF]">{user.displayName}</span>
-                      <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#8B5CF6]/20 text-[#C084FC]">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-medium text-white">{user.displayName}</span>
+                      <span className="text-[10px] px-1 py-0.2 rounded bg-white/[0.04] text-zinc-400">
                         Lvl {user.level}
                       </span>
                     </div>
-                    <p className="text-[10px] text-[#A1A1B5]">{user.college}</p>
+                    <p className="text-[11px] text-zinc-500">{user.college}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-8 font-mono">
-                  <div className="hidden sm:flex items-center gap-1 text-[11px] font-bold">
+                <div className="flex items-center gap-6 sm:gap-8 font-mono text-xs">
+                  <div className="hidden sm:flex items-center gap-1 text-[11px]">
                     {change > 0 ? (
-                      <span className="text-[#A3E635] flex items-center gap-0.5">
+                      <span className="text-lime-400 flex items-center gap-0.5">
                         <ArrowUp className="w-3 h-3" />
                         +{change}
                       </span>
@@ -322,16 +299,16 @@ export const LeaderboardPage: React.FC = () => {
                         {change}
                       </span>
                     ) : (
-                      <span className="text-white/20">• 0</span>
+                      <span className="text-zinc-600">• 0</span>
                     )}
                   </div>
-                  <span className="hidden sm:inline text-amber-400 font-semibold">
+                  <span className="hidden sm:inline text-zinc-400">
                     {user.streakDays}d
                   </span>
-                  <span className="text-[#C084FC] font-semibold">
+                  <span className="text-purple-300">
                     {user.reputationScore}
                   </span>
-                  <span className="text-[#A3E635] font-black text-sm">
+                  <span className="text-lime-400 font-semibold">
                     {user.xp} XP
                   </span>
                 </div>
@@ -341,11 +318,11 @@ export const LeaderboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Rules of Engagement */}
-      <div className="p-4 rounded-2xl bg-[#11111B] border border-white/5 text-xs text-[#A1A1B5] flex items-center gap-2">
-        <ShieldCheck className="w-4 h-4 text-[#A3E635] shrink-0" />
+      {/* Rules Notice */}
+      <div className="p-3.5 rounded-xl bg-[#111118] border border-white/[0.06] text-xs text-zinc-400 flex items-center gap-2.5">
+        <ShieldCheck className="w-4 h-4 text-lime-400 shrink-0" />
         <span>
-          Points are verified by clan logic: +150-250 XP per quest, +150-500 XP per shipped project, +100 XP per accepted answer, +10-50 XP daily streak bonuses. Duplicate/spam activities are automatically disqualified.
+          XP is earned by verified submissions (+150-250 XP per quest, +200-500 XP per project, +50 XP per accepted answer). Spam is automatically disqualified.
         </span>
       </div>
     </div>

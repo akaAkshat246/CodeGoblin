@@ -4,16 +4,12 @@ import {
   Plus,
   CheckCircle2,
   Trophy,
-  Sparkles,
-  MessageSquare,
   Send,
-  Calendar,
-  AlertCircle,
-  Briefcase,
   X
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
+import { SEOHead } from '../components/SEOHead';
 
 export const SquadsPage: React.FC = () => {
   const {
@@ -119,58 +115,65 @@ export const SquadsPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-300">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 animate-in fade-in duration-200">
+      <SEOHead
+        title="Teams & Collaboration"
+        description="Form squads, recruit hackathon teammates, and collaborate in shared team workspaces."
+        canonicalPath="/squads"
+        pageId="squads_hub"
+      />
+
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-[#8B5CF6]/20 text-[#A855F7]">
-              <Users2 className="w-5 h-5" />
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-display font-black text-[#F5F3FF]">
-              Teams & Collaboration Hub
-            </h1>
-          </div>
-          <p className="text-xs sm:text-sm text-[#A1A1B5] mt-1">
-            Form squads, recruit teammates, manage task deadlines, and chat in private team channels.
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            Teams & Collaboration
+          </h1>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
+            Form squads, recruit teammates, and manage project tasks.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center p-1 rounded-2xl bg-[#11111B] border border-white/5 text-xs font-semibold">
-            <button
-              onClick={() => setActiveTab('squads')}
-              className={`px-3 py-1.5 rounded-xl transition ${
-                activeTab === 'squads' ? 'bg-[#8B5CF6] text-white shadow-glow-purple' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-              }`}
-            >
-              Squads ({squads.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('recruitment')}
-              className={`px-3 py-1.5 rounded-xl transition ${
-                activeTab === 'recruitment' ? 'bg-[#8B5CF6] text-white shadow-glow-purple' : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
-              }`}
-            >
-              Recruitment Board ({recruitmentListings.length})
-            </button>
-          </div>
-
+        <div className="flex items-center gap-2 self-start sm:self-auto">
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="goblin-btn-primary py-2.5 px-4 text-xs font-bold flex items-center justify-center gap-2 self-start sm:self-auto"
+            className="px-3.5 py-2 rounded-xl bg-[#A3E635] hover:bg-[#bef264] text-[#09090F] text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
           >
-            <Plus className="w-4 h-4" />
-            <span>Form New Team</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span>Form Team</span>
           </button>
         </div>
       </div>
 
-      {/* TAB 1: SQUADS & KANBAN */}
+      {/* Tab Switcher */}
+      <div className="flex items-center gap-2 border-b border-white/[0.06] pb-2 text-xs font-medium">
+        <button
+          onClick={() => setActiveTab('squads')}
+          className={`px-3 py-1.5 rounded-lg transition ${
+            activeTab === 'squads'
+              ? 'bg-white/[0.08] text-white font-semibold'
+              : 'text-zinc-400 hover:text-zinc-200'
+          }`}
+        >
+          Active Squads ({squads.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('recruitment')}
+          className={`px-3 py-1.5 rounded-lg transition ${
+            activeTab === 'recruitment'
+              ? 'bg-white/[0.08] text-white font-semibold'
+              : 'text-zinc-400 hover:text-zinc-200'
+          }`}
+        >
+          Recruitment Calls ({recruitmentListings.length})
+        </button>
+      </div>
+
+      {/* TAB 1: SQUADS */}
       {activeTab === 'squads' && (
-        <div className="space-y-8">
-          {/* Squads Directory Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="space-y-6">
+          {/* Squad Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {squads.map((squad) => {
               const isSelected = selectedSquad?.id === squad.id;
               const isMember = currentUser ? squad.members.some((m) => m.userId === currentUser.id) : false;
@@ -180,65 +183,61 @@ export const SquadsPage: React.FC = () => {
                 <div
                   key={squad.id}
                   onClick={() => setSelectedSquadId(squad.id)}
-                  className={`goblin-card p-5 cursor-pointer transition flex flex-col justify-between ${
+                  className={`p-4 rounded-xl border cursor-pointer transition flex flex-col justify-between space-y-3 ${
                     isSelected
-                      ? 'border-[#A3E635] shadow-glow-green ring-1 ring-[#A3E635]'
-                      : 'hover:border-[#8B5CF6]/40'
+                      ? 'bg-[#171725] border-white/20 ring-1 ring-white/10'
+                      : 'bg-[#111118] border-white/[0.06] hover:border-white/[0.12]'
                   }`}
                 >
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <div className="flex items-center gap-2">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2.5">
                         <img
                           src={leaderGoblin.avatarImg}
                           alt={squad.leaderName}
-                          className="w-8 h-8 rounded-lg object-cover ring-1 ring-white/10"
+                          className="w-7 h-7 rounded-full object-cover ring-1 ring-white/10"
                         />
                         <div>
-                          <h3 className="text-sm font-bold text-[#F5F3FF]">{squad.name}</h3>
-                          <p className="text-[10px] text-[#A1A1B5]">
-                            Led by <span className="text-[#A3E635]">{squad.leaderName}</span>
-                          </p>
+                          <h3 className="text-sm font-semibold text-white">{squad.name}</h3>
+                          <p className="text-[10px] text-zinc-400">Led by {squad.leaderName}</p>
                         </div>
                       </div>
 
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#8B5CF6]/20 text-[#C084FC]">
-                        {squad.members.length} / {squad.maxMembers} Members
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] text-zinc-300">
+                        {squad.members.length} / {squad.maxMembers}
                       </span>
                     </div>
 
-                    <p className="text-xs text-[#A1A1B5] mt-2 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                       {squad.description}
                     </p>
 
-                    <div className="mt-3 flex items-center gap-2 text-xs">
+                    <div className="flex items-center gap-1.5 text-xs text-amber-400/90 font-mono">
                       <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                      <span className="text-[11px] text-[#F5F3FF] font-semibold">
-                        Target: {squad.targetEventOrProject}
-                      </span>
+                      <span>{squad.targetEventOrProject}</span>
                     </div>
 
-                    <div className="mt-3 flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-1 pt-1">
                       {squad.neededRoles.map((role, i) => (
                         <span
                           key={i}
-                          className="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-500/15 border border-rose-500/25 text-rose-300"
+                          className="px-2 py-0.5 rounded text-[10px] bg-rose-500/10 text-rose-300 font-medium"
                         >
-                          Seeking: {role}
+                          Need: {role}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-[11px] text-[#A1A1B5]">
-                      {squad.tasks.length} tasks • {squad.chatMessages?.length || 0} chats
+                  <div className="pt-2 border-t border-white/[0.04] flex items-center justify-between text-xs">
+                    <span className="text-[11px] font-mono text-zinc-500">
+                      {squad.tasks.length} tasks
                     </span>
 
                     {isMember ? (
-                      <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
+                      <span className="text-xs font-medium text-emerald-400 flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>Member of Squad</span>
+                        <span>Member</span>
                       </span>
                     ) : (
                       <button
@@ -246,9 +245,9 @@ export const SquadsPage: React.FC = () => {
                           e.stopPropagation();
                           joinSquad(squad.id);
                         }}
-                        className="goblin-btn-green py-1.5 px-3 text-xs font-bold"
+                        className="px-3 py-1 rounded-lg bg-white/[0.08] hover:bg-[#A3E635] hover:text-[#09090F] text-xs font-medium text-white transition"
                       >
-                        Join Squad
+                        Join
                       </button>
                     )}
                   </div>
@@ -257,105 +256,70 @@ export const SquadsPage: React.FC = () => {
             })}
           </div>
 
-          {/* ACTIVE WORKSPACE & KANBAN TASK BOARD */}
+          {/* ACTIVE WORKSPACE & KANBAN */}
           {selectedSquad && (
-            <div className="p-6 sm:p-8 rounded-3xl bg-[#11111B] border border-[#8B5CF6]/30 space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-white/5">
+            <div className="p-5 rounded-2xl bg-[#111118] border border-white/[0.06] space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/[0.06]">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#A3E635]/20 text-[#A3E635]">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] text-zinc-400">
                       Active Workspace
                     </span>
-                    <h2 className="text-xl font-bold text-[#F5F3FF]">{selectedSquad.name}</h2>
+                    <h2 className="text-base font-bold text-white">{selectedSquad.name}</h2>
                   </div>
-                  <p className="text-xs text-[#A1A1B5] mt-1">{selectedSquad.description}</p>
+                  <p className="text-xs text-zinc-400 mt-0.5">{selectedSquad.description}</p>
                 </div>
 
-                {/* Quick Add Task */}
-                <form onSubmit={handleAddTask} className="flex flex-wrap items-center gap-2">
+                {/* Add Task Form */}
+                <form onSubmit={handleAddTask} className="flex items-center gap-2">
                   <input
                     type="text"
                     value={newTaskTitle}
                     onChange={(e) => setNewTaskTitle(e.target.value)}
                     placeholder="New squad task..."
-                    className="px-3.5 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6] w-48"
+                    className="px-3 py-1.5 rounded-lg bg-[#171725] border border-white/[0.08] text-xs text-white focus:outline-none w-44"
                   />
-                  <select
-                    value={newTaskPriority}
-                    onChange={(e) => setNewTaskPriority(e.target.value as any)}
-                    className="px-2.5 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#A3E635] focus:outline-none"
-                  >
-                    <option value="High">High Priority</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                  </select>
                   <button
                     type="submit"
-                    className="goblin-btn-primary py-2 px-3 text-xs font-bold shrink-0"
+                    className="px-3 py-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] text-xs font-medium text-white transition"
                   >
-                    + Add Task
+                    + Task
                   </button>
                 </form>
               </div>
 
               {/* Members Roster */}
-              <div>
-                <h4 className="text-xs font-bold text-[#A1A1B5] uppercase tracking-wider mb-2">
-                  Squad Roster ({selectedSquad.members.length} / {selectedSquad.maxMembers})
-                </h4>
-                <div className="flex flex-wrap gap-2.5">
-                  {selectedSquad.members.map((member, i) => {
-                    const goblin = GOBLIN_CHARACTERS.find((g) => g.id === member.goblinId) || GOBLIN_CHARACTERS[0];
-                    return (
-                      <div
-                        key={i}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#171725] border border-white/5 text-xs"
-                      >
-                        <img
-                          src={goblin.avatarImg}
-                          alt={member.name}
-                          className="w-6 h-6 rounded-md object-cover"
-                        />
-                        <span className="font-bold text-[#F5F3FF]">{member.name}</span>
-                        <span className="text-[10px] text-[#A3E635]">({member.role})</span>
-                      </div>
-                    );
-                  })}
-                </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-mono text-zinc-400 mr-1">Roster:</span>
+                {selectedSquad.members.map((member, i) => (
+                  <span
+                    key={i}
+                    className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06] text-xs text-zinc-300 font-medium"
+                  >
+                    {member.name} <span className="text-zinc-500">({member.role})</span>
+                  </span>
+                ))}
               </div>
 
-              {/* 3-Column Kanban Board */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                {/* 1. To Do */}
-                <div className="p-4 rounded-2xl bg-[#171725]/60 border border-white/5 space-y-3">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-300 pb-2 border-b border-white/5">
+              {/* 3-Column Minimal Kanban Board */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {/* To Do */}
+                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.04] space-y-2">
+                  <div className="flex items-center justify-between text-xs font-medium text-zinc-400 pb-1">
                     <span>To Do</span>
-                    <span className="px-2 py-0.5 rounded bg-white/5 text-[10px]">
-                      {selectedSquad.tasks.filter((t) => t.status === 'todo').length}
-                    </span>
+                    <span className="text-[10px] font-mono">{selectedSquad.tasks.filter((t) => t.status === 'todo').length}</span>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     {selectedSquad.tasks
                       .filter((t) => t.status === 'todo')
                       .map((task) => (
-                        <div
-                          key={task.id}
-                          className="p-3 rounded-xl bg-[#11111B] border border-white/5 hover:border-[#8B5CF6]/40 transition text-xs space-y-2"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${
-                              task.priority === 'High' ? 'bg-rose-500/20 text-rose-400' : 'bg-slate-500/20 text-slate-300'
-                            }`}>
-                              {task.priority}
-                            </span>
-                            <span className="text-[10px] text-[#A1A1B5] font-mono">{task.deadline}</span>
-                          </div>
-                          <p className="font-semibold text-[#F5F3FF]">{task.title}</p>
-                          <div className="flex items-center justify-between text-[10px] text-[#A1A1B5] pt-1 border-t border-white/5">
+                        <div key={task.id} className="p-2.5 rounded-lg bg-[#171725] border border-white/[0.06] text-xs space-y-1">
+                          <p className="font-medium text-white">{task.title}</p>
+                          <div className="flex items-center justify-between text-[10px] text-zinc-500 pt-1">
                             <span>{task.assigneeName}</span>
                             <button
                               onClick={() => updateSquadTaskStatus(selectedSquad.id, task.id, 'in_progress')}
-                              className="text-[#A855F7] hover:underline font-bold"
+                              className="text-zinc-400 hover:text-white"
                             >
                               Start →
                             </button>
@@ -365,36 +329,25 @@ export const SquadsPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 2. In Progress */}
-                <div className="p-4 rounded-2xl bg-[#171725]/60 border border-white/5 space-y-3">
-                  <div className="flex items-center justify-between text-xs font-bold text-amber-400 pb-2 border-b border-white/5">
+                {/* In Progress */}
+                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.04] space-y-2">
+                  <div className="flex items-center justify-between text-xs font-medium text-amber-400 pb-1">
                     <span>In Progress</span>
-                    <span className="px-2 py-0.5 rounded bg-amber-500/15 text-[10px]">
-                      {selectedSquad.tasks.filter((t) => t.status === 'in_progress').length}
-                    </span>
+                    <span className="text-[10px] font-mono">{selectedSquad.tasks.filter((t) => t.status === 'in_progress').length}</span>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     {selectedSquad.tasks
                       .filter((t) => t.status === 'in_progress')
                       .map((task) => (
-                        <div
-                          key={task.id}
-                          className="p-3 rounded-xl bg-[#11111B] border border-amber-500/20 hover:border-amber-400 transition text-xs space-y-2"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300">
-                              {task.priority}
-                            </span>
-                            <span className="text-[10px] text-[#A1A1B5] font-mono">{task.deadline}</span>
-                          </div>
-                          <p className="font-semibold text-[#F5F3FF]">{task.title}</p>
-                          <div className="flex items-center justify-between text-[10px] text-[#A1A1B5] pt-1 border-t border-white/5">
+                        <div key={task.id} className="p-2.5 rounded-lg bg-[#171725] border border-white/[0.06] text-xs space-y-1">
+                          <p className="font-medium text-white">{task.title}</p>
+                          <div className="flex items-center justify-between text-[10px] text-zinc-500 pt-1">
                             <span>{task.assigneeName}</span>
                             <button
                               onClick={() => updateSquadTaskStatus(selectedSquad.id, task.id, 'done')}
-                              className="text-[#A3E635] hover:underline font-bold"
+                              className="text-[#A3E635] hover:underline"
                             >
-                              Done ✔
+                              Done ✓
                             </button>
                           </div>
                         </div>
@@ -402,46 +355,32 @@ export const SquadsPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 3. Done */}
-                <div className="p-4 rounded-2xl bg-[#171725]/60 border border-white/5 space-y-3">
-                  <div className="flex items-center justify-between text-xs font-bold text-emerald-400 pb-2 border-b border-white/5">
+                {/* Done */}
+                <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.04] space-y-2">
+                  <div className="flex items-center justify-between text-xs font-medium text-emerald-400 pb-1">
                     <span>Done</span>
-                    <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-[10px]">
-                      {selectedSquad.tasks.filter((t) => t.status === 'done').length}
-                    </span>
+                    <span className="text-[10px] font-mono">{selectedSquad.tasks.filter((t) => t.status === 'done').length}</span>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     {selectedSquad.tasks
                       .filter((t) => t.status === 'done')
                       .map((task) => (
-                        <div
-                          key={task.id}
-                          className="p-3 rounded-xl bg-[#11111B] border border-emerald-500/20 text-xs space-y-1.5 opacity-80"
-                        >
-                          <p className="font-semibold text-[#F5F3FF] line-through">{task.title}</p>
-                          <div className="flex items-center justify-between text-[10px] text-emerald-400">
-                            <span>Done by {task.assigneeName}</span>
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                          </div>
+                        <div key={task.id} className="p-2.5 rounded-lg bg-[#171725] border border-white/[0.04] text-xs space-y-1 opacity-70">
+                          <p className="font-medium text-white line-through">{task.title}</p>
+                          <span className="text-[10px] text-emerald-400 block">{task.assigneeName}</span>
                         </div>
                       ))}
                   </div>
                 </div>
               </div>
 
-              {/* Shared Team Discussion / Chat Box */}
-              <div className="pt-4 border-t border-white/5 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold text-[#F5F3FF]">
-                  <MessageSquare className="w-4 h-4 text-[#8B5CF6]" />
-                  <span>Shared Team Chat</span>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-[#09090F] border border-white/5 max-h-48 overflow-y-auto space-y-2.5">
+              {/* Chat Box */}
+              <div className="pt-3 border-t border-white/[0.06] space-y-2">
+                <div className="p-3 rounded-xl bg-black/40 border border-white/[0.04] max-h-36 overflow-y-auto space-y-1.5">
                   {selectedSquad.chatMessages?.map((msg) => (
                     <div key={msg.id} className="text-xs">
-                      <span className="font-bold text-[#A3E635]">{msg.authorName}</span>{' '}
-                      <span className="text-[10px] text-white/30 font-mono">[{msg.timestamp}]</span>:{' '}
-                      <span className="text-[#A1A1B5]">{msg.message}</span>
+                      <span className="font-medium text-zinc-300">{msg.authorName}</span>:{' '}
+                      <span className="text-zinc-400">{msg.message}</span>
                     </div>
                   ))}
                 </div>
@@ -451,14 +390,14 @@ export const SquadsPage: React.FC = () => {
                     type="text"
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
-                    placeholder="Type a team message..."
-                    className="flex-1 px-3.5 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                    placeholder="Type team update..."
+                    className="flex-1 px-3 py-1.5 rounded-lg bg-[#171725] border border-white/[0.08] text-xs text-white focus:outline-none"
                   />
                   <button
                     type="submit"
-                    className="goblin-btn-primary py-2 px-4 text-xs font-bold flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] text-xs font-medium text-white transition flex items-center gap-1"
                   >
-                    <Send className="w-3.5 h-3.5" />
+                    <Send className="w-3 h-3" />
                     <span>Send</span>
                   </button>
                 </form>
@@ -468,143 +407,129 @@ export const SquadsPage: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 2: RECRUITMENT BOARD */}
+      {/* TAB 2: RECRUITMENT */}
       {activeTab === 'recruitment' && (
-        <div className="space-y-4">
-          <div className="p-4 rounded-2xl bg-[#11111B] border border-white/5 text-xs text-[#A1A1B5]">
-            Open recruitment calls posted by teams building for upcoming hackathons. Apply directly with your goblin profile.
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {recruitmentListings.map((listing) => (
-              <div
-                key={listing.id}
-                className="goblin-card p-6 flex flex-col justify-between space-y-4 border-[#8B5CF6]/30"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-[#A3E635]/15 text-[#A3E635]">
-                      {listing.targetEvent}
-                    </span>
-                    {listing.urgency === 'High' && (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300">
-                        Urgent Role
-                      </span>
-                    )}
-                  </div>
-
-                  <h3 className="text-base font-bold text-[#F5F3FF]">{listing.roleTitle}</h3>
-                  <p className="text-xs text-[#A855F7] font-semibold mt-0.5">Team: {listing.squadName}</p>
-                  <p className="text-xs text-[#A1A1B5] mt-2 leading-relaxed">{listing.pitch}</p>
-
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {listing.requiredSkills.map((s, i) => (
-                      <span
-                        key={i}
-                        className="px-2 py-0.5 rounded text-[10px] bg-[#11111B] border border-white/5 text-[#A1A1B5]"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {recruitmentListings.map((listing) => (
+            <div
+              key={listing.id}
+              className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] transition flex flex-col justify-between space-y-3"
+            >
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] text-zinc-300">
+                    {listing.targetEvent}
+                  </span>
+                  {listing.urgency === 'High' && (
+                    <span className="text-rose-400 text-[10px] font-medium font-mono">Urgent</span>
+                  )}
                 </div>
 
-                <div className="pt-3 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-[10px] text-white/30 font-mono">Posted recently</span>
-                  <button
-                    onClick={() => applyToRecruitment(listing.id)}
-                    className="goblin-btn-green py-1.5 px-4 text-xs font-bold"
-                  >
-                    Apply for Role
-                  </button>
+                <h3 className="text-sm font-semibold text-white">{listing.roleTitle}</h3>
+                <p className="text-xs text-zinc-400 font-medium">Team: {listing.squadName}</p>
+                <p className="text-xs text-zinc-400 leading-relaxed line-clamp-2">{listing.pitch}</p>
+
+                <div className="flex flex-wrap gap-1 pt-1">
+                  {listing.requiredSkills.map((s, i) => (
+                    <span key={i} className="px-1.5 py-0.2 rounded text-[10px] bg-white/[0.04] text-zinc-400 font-mono">
+                      {s}
+                    </span>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
+
+              <div className="pt-2 border-t border-white/[0.04] flex items-center justify-end">
+                <button
+                  onClick={() => applyToRecruitment(listing.id)}
+                  className="px-3 py-1 rounded-lg bg-white/[0.08] hover:bg-[#A3E635] hover:text-[#09090F] text-xs font-medium text-white transition"
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* CREATE TEAM MODAL */}
+      {/* CREATE SQUAD MODAL */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg p-6 sm:p-8 rounded-3xl bg-[#11111B] border border-[#8B5CF6]/30 shadow-2xl text-left">
-            <button
-              onClick={() => setIsCreateModalOpen(false)}
-              className="absolute top-5 right-5 p-2 rounded-xl text-[#A1A1B5] hover:text-[#F5F3FF]"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <h3 className="text-xl font-display font-black text-[#F5F3FF] mb-1">
-              Assemble a New Clan Team
-            </h3>
-            <p className="text-xs text-[#A1A1B5] mb-5">
-              Specify the target hackathon or project, required roles, and recruit teammates (+100 XP).
-            </p>
-
-            <form onSubmit={handleCreateSquad} className="space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-150">
+          <div className="relative w-full max-w-md p-6 rounded-2xl bg-[#111118] border border-white/10 shadow-2xl text-left space-y-4">
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
               <div>
-                <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">Team Name</label>
+                <h3 className="text-base font-bold text-white">Assemble Clan Team</h3>
+                <p className="text-xs text-zinc-400 mt-0.5">Recruit teammates and earn +100 XP</p>
+              </div>
+              <button
+                onClick={() => setIsCreateModalOpen(false)}
+                className="p-1 rounded-lg text-zinc-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateSquad} className="space-y-3">
+              <div>
+                <label className="block text-xs font-medium text-zinc-300 mb-1">Team Name</label>
                 <input
                   type="text"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Algorithmic Aces"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">Target Hackathon / Project</label>
+                <label className="block text-xs font-medium text-zinc-300 mb-1">Target Hackathon</label>
                 <input
                   type="text"
                   required
                   value={targetEventOrProject}
                   onChange={(e) => setTargetEventOrProject(e.target.value)}
                   placeholder="e.g. GoblinHacks 2026"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">Roles You Need (comma separated)</label>
+                <label className="block text-xs font-medium text-zinc-300 mb-1">Needed Roles (comma separated)</label>
                 <input
                   type="text"
                   required
                   value={neededRolesInput}
                   onChange={(e) => setNeededRolesInput(e.target.value)}
-                  placeholder="UI/UX Designer, FastAPI Backend, Pitch Presenter"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                  placeholder="UI/UX Designer, FastAPI Backend"
+                  className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#F5F3FF] mb-1">Team Mission / Pitch</label>
+                <label className="block text-xs font-medium text-zinc-300 mb-1">Team Pitch</label>
                 <textarea
-                  rows={3}
+                  rows={2}
                   required
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="What is your team building and what vibe are you looking for?"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none focus:border-[#8B5CF6]"
+                  placeholder="What is your team building?"
+                  className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none"
                 />
               </div>
 
-              <div className="pt-2 flex justify-end gap-3">
+              <div className="pt-2 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsCreateModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-[#A1A1B5]"
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="goblin-btn-primary px-6 py-2.5 text-xs font-bold flex items-center gap-2"
+                  className="px-4 py-1.5 rounded-lg bg-[#A3E635] hover:bg-[#bef264] text-[#09090F] text-xs font-bold"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  <span>Create Team (+100 XP)</span>
+                  Create Team
                 </button>
               </div>
             </form>
