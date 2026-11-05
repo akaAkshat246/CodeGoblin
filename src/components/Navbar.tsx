@@ -19,11 +19,11 @@ import { GOBLIN_CHARACTERS } from '../data/mockData';
 import { isAdminEmail } from '../utils/adminAuth';
 
 interface NavbarProps {
-  onToggleMobileSidebar: () => void;
-  isMobileSidebarOpen: boolean;
+  onToggleSidebar: () => void;
+  isSidebarOpen: boolean;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar, isMobileSidebarOpen }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
   const {
     currentUser,
     activePage,
@@ -51,11 +51,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileSidebar, isMobileS
         {/* Left: Mobile Toggle & Brand Logo */}
         <div className="flex items-center gap-3">
           <button
-            onClick={onToggleMobileSidebar}
-            className="md:hidden p-2 rounded-lg text-[#A1A1B5] hover:text-[#F5F3FF] hover:bg-[#171725] transition"
+            onClick={onToggleSidebar}
+            className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors flex items-center justify-center"
+            title={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
             aria-label="Toggle navigation"
           >
-            {isMobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isSidebarOpen ? <X className="w-4 h-4 md:hidden" /> : null}
+            <Menu className={`w-4 h-4 ${isSidebarOpen ? 'hidden md:block' : 'block'}`} />
           </button>
 
           <button

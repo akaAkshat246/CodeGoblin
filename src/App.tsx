@@ -32,7 +32,24 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 
 export const AppContent: React.FC = () => {
   const { activePage } = useApp();
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1024;
+    }
+    return true;
+  });
+
+  // Toggle sidebar via Ctrl+B or Cmd+B shortcut
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        setIsSidebarOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const isLanding = activePage === 'landing';
 
@@ -55,18 +72,20 @@ export const AppContent: React.FC = () => {
         <div className="flex-1 flex flex-col w-full">
           {/* Main Den Navbar */}
           <Navbar
-            onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-            isMobileSidebarOpen={isMobileSidebarOpen}
+            onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+            isSidebarOpen={isSidebarOpen}
           />
           <div className="flex-1 flex w-full">
             {/* Desktop & Mobile Sidebar */}
             <Sidebar
-              isMobileOpen={isMobileSidebarOpen}
-              onCloseMobile={() => setIsMobileSidebarOpen(false)}
+              isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
             />
 
-          {/* Main Body with Left Margin for Fixed Desktop Sidebar */}
-          <main className="flex-1 md:ml-64 min-h-[calc(100vh-4rem)] pb-12 overflow-x-hidden">
+          {/* Main Body with Transitioning Margin for Sidebar */}
+          <main className={`flex-1 transition-all duration-300 ease-in-out min-h-[calc(100vh-4rem)] pb-12 overflow-x-hidden ${
+            isSidebarOpen ? 'md:ml-60' : 'ml-0'
+          }`}>
             {activePage === 'dashboard' && <DashboardPage />}
             {activePage === 'discover' && <DiscoverPage />}
             {activePage === 'discussions' && <DiscussionsPage />}
