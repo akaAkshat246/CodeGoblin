@@ -46,6 +46,7 @@ import {
   BubbleClusterLoader,
   LiquidLoader,
   BloopPreloader,
+  Goblin3DCard,
 } from '../components/framer';
 
 // The 9 Goblin Roles with authentic copy
@@ -468,6 +469,7 @@ export const LandingPage: React.FC = () => {
     tagline: `Role 0${idx + 1}`,
     badge: `Class 0${idx + 1}`,
     image: `/art/goblin-${idx + 1}.webp`,
+    cutoutImage: `/art/goblin-${idx + 1}-cutout.webp`,
     description: role.desc,
   }));
 

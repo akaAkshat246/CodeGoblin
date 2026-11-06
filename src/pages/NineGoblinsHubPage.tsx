@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
+import { Goblin3DCard } from '../components/framer';
 
 export const NineGoblinsHubPage: React.FC = () => {
   const { navigateTo, currentUser, updateProfile } = useApp();
@@ -93,13 +94,19 @@ export const NineGoblinsHubPage: React.FC = () => {
       {/* Comprehensive Selected Goblin Breakdown */}
       <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#171725] via-[#11111B] to-[#171725] border border-[#8B5CF6]/30 shadow-2xl space-y-6">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-white/5">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            {/* Poster Card Asset */}
-            <div className="w-full sm:w-56 h-36 rounded-2xl overflow-hidden ring-2 ring-[#8B5CF6]/40 shadow-glow-purple shrink-0">
-              <img
-                src={selectedGoblin.cardImg}
-                alt={selectedGoblin.name}
-                className="w-full h-full object-cover"
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            {/* 3D Interactive Card Showcase */}
+            <div className="w-full sm:w-64 shrink-0">
+              <Goblin3DCard
+                id={selectedGoblin.id}
+                name={selectedGoblin.name}
+                roleTitle={selectedGoblin.roleTitle}
+                image={`/art/goblin-${selectedGoblin.id}.webp`}
+                quote={selectedGoblin.quote}
+                badge={`CLASS 0${selectedGoblin.id}`}
+                primaryColor={
+                  selectedGoblin.id === 2 ? '#A3E635' : selectedGoblin.id === 4 ? '#F59E0B' : '#A855F7'
+                }
               />
             </div>
 

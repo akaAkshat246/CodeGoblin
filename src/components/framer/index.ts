@@ -21,3 +21,4 @@ export {
 export { TextVideoMask } from './TextVideoMask';
 export { RunaroundTextWrap } from './RunaroundTextWrap';
 export { CrumpledPaperReveal } from './CrumpledPaperReveal';
+export { Goblin3DCard, type Goblin3DCardProps } from './Goblin3DCard';
