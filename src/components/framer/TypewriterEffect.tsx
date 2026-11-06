@@ -53,3 +53,4 @@ export const TypewriterEffect: React.FC<TypewriterEffectProps> = ({
     </span>
   );
 };
+

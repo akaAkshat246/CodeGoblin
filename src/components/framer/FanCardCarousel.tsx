@@ -187,3 +187,4 @@ export const FanCardCarousel: React.FC<FanCardCarouselProps> = ({
     </div>
   );
 };
+

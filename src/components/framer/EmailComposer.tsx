@@ -179,3 +179,4 @@ export const EmailComposer: React.FC<EmailComposerProps> = ({
     </div>
   );
 };
+

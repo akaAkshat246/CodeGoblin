@@ -110,3 +110,4 @@ export const ScrollRevealButton: React.FC<ScrollRevealButtonProps> = ({
     </button>
   );
 };
+

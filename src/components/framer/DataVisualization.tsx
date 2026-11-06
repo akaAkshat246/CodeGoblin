@@ -262,3 +262,4 @@ export const ChartJS: React.FC<ChartJSProps> = ({
     </div>
   );
 };
+

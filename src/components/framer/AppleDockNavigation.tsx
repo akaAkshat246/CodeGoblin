@@ -217,3 +217,4 @@ const DockButton: React.FC<DockButtonProps> = ({ item, mouseX, onHoverLabel }) =
     </div>
   );
 };
+

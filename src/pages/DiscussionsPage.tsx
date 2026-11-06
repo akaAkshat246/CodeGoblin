@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
+import { SpotlightCard, GlassyButton } from '../components/framer';
 
 export const DiscussionsPage: React.FC = () => {
   const {
@@ -118,25 +119,27 @@ export const DiscussionsPage: React.FC = () => {
           </p>
         </div>
 
-        <button
+        <GlassyButton
+          variant="primary"
+          size="sm"
           onClick={() => setIsCreateModalOpen(true)}
-          className="px-3.5 py-1.5 rounded-lg bg-white text-black hover:bg-zinc-200 text-xs font-semibold flex items-center justify-center gap-1.5 self-start sm:self-auto transition-colors"
+          icon={<Plus className="w-3.5 h-3.5" />}
+          className="self-start sm:self-auto shrink-0"
         >
-          <Plus className="w-3.5 h-3.5" />
-          <span>New Discussion</span>
-        </button>
+          New Discussion
+        </GlassyButton>
       </div>
 
       {/* Category Pills Scroller */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 scrollbar-none">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
               selectedCategory === cat
-                ? 'bg-white text-black font-semibold'
-                : 'bg-white/[0.03] text-zinc-400 hover:text-white border border-white/[0.06]'
+                ? 'bg-lime-400 text-black font-bold shadow-[0_0_12px_rgba(163,230,53,0.3)]'
+                : 'bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.08] border border-white/[0.06]'
             }`}
           >
             {cat}
@@ -188,9 +191,10 @@ export const DiscussionsPage: React.FC = () => {
             const hasUpvoted = currentUser ? post.upvotedUserIds.includes(currentUser.id) : false;
 
             return (
-              <div
+              <SpotlightCard
                 key={post.id}
-                className="p-4 sm:p-5 rounded-xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] transition-colors flex flex-col justify-between group"
+                className="p-4 sm:p-5 flex flex-col justify-between group"
+                spotlightColor={post.solved ? 'rgba(16, 185, 129, 0.12)' : 'rgba(168, 85, 247, 0.15)'}
               >
                 <div>
                   {/* Top Bar: Author, category, solved status */}
@@ -292,7 +296,7 @@ export const DiscussionsPage: React.FC = () => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </SpotlightCard>
             );
           })
         )}
