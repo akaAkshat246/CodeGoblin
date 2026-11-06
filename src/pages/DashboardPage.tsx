@@ -25,7 +25,7 @@ import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
 import { SEOHead } from '../components/SEOHead';
 import { playSuccessChime, playLevelUpFanfare } from '../utils/soundEffects';
-import { SpotlightCard, NumberTicker } from '../components/framer';
+import { SpotlightCard, NumberTicker, BarGraph, ChartJS } from '../components/framer';
 
 export const DashboardPage: React.FC = () => {
   const {
@@ -388,6 +388,39 @@ export const DashboardPage: React.FC = () => {
             25m undistracted study sprint. Awards +20 Focus XP upon completion.
           </p>
         </SpotlightCard>
+      </div>
+
+      {/* 3.6 DATA VISUALIZATION: CLAN TRAJECTORY & DAILY XP */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <ChartJS
+          title="Clan XP Progression"
+          subtitle="Your 7-day builder activity trajectory"
+          data={[
+            { x: 'Mon', y: 120 },
+            { x: 'Tue', y: 240 },
+            { x: 'Wed', y: 190 },
+            { x: 'Thu', y: 310 },
+            { x: 'Fri', y: 480 },
+            { x: 'Sat', y: 620 },
+            { x: 'Sun', y: currentUser.xp },
+          ]}
+          lineColor="#A3E635"
+          height={150}
+        />
+        <BarGraph
+          title="Daily Quests & Forge Activity"
+          subtitle="Completed challenges and commits per day"
+          data={[
+            { label: 'Mon', value: 25 },
+            { label: 'Tue', value: 45 },
+            { label: 'Wed', value: 30 },
+            { label: 'Thu', value: 75, color: '#C084FC' },
+            { label: 'Fri', value: 90 },
+            { label: 'Sat', value: 110, color: '#A3E635' },
+            { label: 'Sun', value: todayEarnedXP || 60, color: '#F59E0B' },
+          ]}
+          height={150}
+        />
       </div>
 
       {/* 4. CLEAN TABS FOR MAIN CONTENT */}

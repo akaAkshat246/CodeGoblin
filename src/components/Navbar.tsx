@@ -26,6 +26,7 @@ import { GOBLIN_CHARACTERS } from '../data/mockData';
 import { isAdminEmail } from '../utils/adminAuth';
 import { isSoundEnabled, setSoundEnabled, playSuccessChime, playClickTick } from '../utils/soundEffects';
 import { ShortcutsModal } from './ShortcutsModal';
+import { HamburgerMenu, ThemeChanger } from './framer';
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -83,16 +84,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }
     <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#09090F]/75 backdrop-blur-2xl shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Left: Mobile Toggle & Brand Logo */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onToggleSidebar}
-            className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors flex items-center justify-center"
-            title={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
-            aria-label="Toggle navigation"
-          >
-            {isSidebarOpen ? <X className="w-4 h-4 md:hidden" /> : null}
-            <Menu className={`w-4 h-4 ${isSidebarOpen ? 'hidden md:block' : 'block'}`} />
-          </button>
+        <div className="flex items-center gap-2">
+          <HamburgerMenu
+            isOpen={isSidebarOpen}
+            toggle={onToggleSidebar}
+            size={18}
+            color="#a1a1aa"
+            activeColor="#A3E635"
+          />
 
           <button
             onClick={() => navigateTo(currentUser ? 'dashboard' : 'landing')}
@@ -286,6 +285,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }
               >
                 {soundOn ? <Volume2 className="w-3.5 h-3.5 text-lime-400" /> : <VolumeX className="w-3.5 h-3.5 text-zinc-500" />}
               </button>
+
+              {/* Framer Theme & Accent Changer */}
+              <ThemeChanger />
 
               {/* Keyboard Shortcuts Trigger */}
               <button

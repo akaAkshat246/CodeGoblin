@@ -30,7 +30,23 @@ import {
 import { useApp } from '../context/AppContext';
 import { LegalTrustModal, LegalDocType } from '../components/LegalTrustModal';
 import { SEOHead } from '../components/SEOHead';
-import { SpotlightCard, Marquee, NumberTicker, ShimmerButton } from '../components/framer';
+import {
+  SpotlightCard,
+  Marquee,
+  NumberTicker,
+  ShimmerButton,
+  FanCardCarousel,
+  TypingLoopText,
+  TextVideoMask,
+  RunaroundTextWrap,
+  CrumpledPaperReveal,
+  EmailComposer,
+  GlassyButton,
+  MatrixPreload,
+  BubbleClusterLoader,
+  LiquidLoader,
+  BloopPreloader,
+} from '../components/framer';
 
 // The 9 Goblin Roles with authentic copy
 export const GOBLIN_ROLES = [
@@ -438,11 +454,22 @@ export const LandingPage: React.FC = () => {
   const [currentChapter, setCurrentChapter] = useState('spawn');
   const [selectedRole, setSelectedRole] = useState(1); // Default to Technical (02)
   const [isNavExpanded, setIsNavExpanded] = useState(false);
+  const [isEmailComposerOpen, setIsEmailComposerOpen] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [activeLegalDoc, setActiveLegalDoc] = useState<LegalDocType>(null);
   const [isMotionDisabled, setIsMotionDisabled] = useState(false);
   const [mouseRot, setMouseRot] = useState({ x: 0, y: 0 });
   const stageRef = useRef<HTMLDivElement | null>(null);
+
+  const fanCarouselGoblins = GOBLIN_ROLES.map((role, idx) => ({
+    id: idx + 1,
+    title: role.name,
+    subtitle: role.tagline,
+    tagline: `Role 0${idx + 1}`,
+    badge: `Class 0${idx + 1}`,
+    image: `/art/goblin-${idx + 1}.webp`,
+    description: role.desc,
+  }));
 
   // Thrive-Inspired High Conversion Features: Interactive Path Diagnostic
   const [quizGoal, setQuizGoal] = useState<'vibe' | 'ai' | 'hackathon' | 'dsa'>('vibe');
@@ -686,6 +713,20 @@ export const LandingPage: React.FC = () => {
                 <i /> A GUILD FOR THE CURIOUS. A HOME FOR THE BUILDERS.
               </span>
 
+              <div className="my-2.5">
+                <TypingLoopText
+                  prefix="WE"
+                  words={[
+                    'Ship production code.',
+                    'Build rogue AI agents.',
+                    'Crack complex systems.',
+                    'Win global hackathons.',
+                    'Deploy without fear.',
+                  ]}
+                  highlightClassName="text-[#A3E635] font-bold"
+                />
+              </div>
+
               <h1>
                 College teaches
                 <br />
@@ -707,7 +748,7 @@ export const LandingPage: React.FC = () => {
                 <strong>You’ve found your goblins.</strong>
               </p>
 
-              <div className="landing-ctas">
+              <div className="landing-ctas flex flex-wrap items-center gap-3">
                 <button
                   type="button"
                   className="landing-primary cursor-pointer"
@@ -715,6 +756,15 @@ export const LandingPage: React.FC = () => {
                 >
                   Enter the Goblin Den <ArrowUpRight size={18} />
                 </button>
+                <GlassyButton
+                  variant="default"
+                  size="md"
+                  type="button"
+                  onClick={() => setIsEmailComposerOpen(true)}
+                  icon={<Mail className="w-4 h-4 text-lime-400" />}
+                >
+                  Message Founders
+                </GlassyButton>
                 <a className="landing-text-link" href="#craft">
                   Discover our story <ChevronDown size={14} />
                 </a>
@@ -910,6 +960,19 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Sealed Goblin Manifesto & Oath Parchment */}
+          <div className="w-full mt-6">
+            <CrumpledPaperReveal
+              title="The Goblin Clan Manifesto & Oath"
+              tagline="Click to break the digital wax seal and unroll underground clan laws"
+              content={`I. CODE TALKS, DRAFTS WALK: An idea is worth zero until there is a working prototype or deployed commit.
+II. NEVER GATEKEEP: If another builder asks how your system works, demystify the stack. No guru posturing.
+III. SHIP BEFORE YOU FEEL READY: Perfectionism is fear disguised as wisdom. Ship v0.1 and let the users break it.
+IV. CHAOS WITH ARCHITECTURE: Build wild, eccentric, and ambitious products, but keep your git commits atomic and your error logs clean.
+V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design, code, infra, or storytelling. Find your squad in the Den.`}
+            />
+          </div>
         </section>
 
         {/* ================= SIDE QUEST / THE PLAYGROUND (goblinOS) ================= */}
@@ -977,6 +1040,10 @@ export const LandingPage: React.FC = () => {
                 <br />
                 No system access. Just a little exploration.
               </small>
+
+              <div className="mt-4 hidden lg:block">
+                <MatrixPreload width={220} height={100} label="NODE 0xCG ONLINE" />
+              </div>
             </div>
 
             <div className="desktop-terminal">
@@ -1025,6 +1092,14 @@ export const LandingPage: React.FC = () => {
               <br />
               Every strength has a place in this guild.
             </p>
+          </div>
+
+          {/* Framer Fan Card Carousel for Showcasing the 9 Goblins */}
+          <div className="w-full my-4">
+            <FanCardCarousel
+              items={fanCarouselGoblins}
+              onSelect={(_, idx) => setSelectedRole(idx)}
+            />
           </div>
 
           <div className="goblin-gallery">
@@ -1218,6 +1293,28 @@ export const LandingPage: React.FC = () => {
                 Ideas into action, consistently.
               </p>
             </div>
+          </div>
+
+          {/* Framer Typographic Mask */}
+          <div className="w-full my-10 text-center">
+            <TextVideoMask
+              text="THE GOBLIN REIGN"
+              subtext="BUILT FOR CURIOUS BUILDERS WHO SHIP BEYOND CONVENTION"
+            />
+          </div>
+
+          {/* Framer Runaround Text Wrap */}
+          <div className="w-full my-6">
+            <RunaroundTextWrap
+              imageSrc="/art/goblin-2.webp"
+              imageAlt="Chief Goblin Architect"
+              title="The Architecture of Clan Collaboration"
+              paragraphs={[
+                "At CodeGoblins, we abandoned the obsolete dogma of solo coding sprints. Complex software in 2026 demands harmonious multidisciplinary squads where full-stack wizards, AI prompt architects, systems engineers, and product designers unite into high-velocity engines.",
+                "Every project initiated inside our forge undergoes peer feedback, live battle-testing, and real-world iteration. We provide open blueprints, automated linting harnesses, and a vibrant community that turns messy prototypes into world-class products.",
+                "Whether you are crafting low-level WebAssembly kernels or orchestrating autonomous agent networks, you belong here in the horde."
+              ]}
+            />
           </div>
         </section>
 
@@ -1676,6 +1773,12 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Email Dispatch Composer Modal */}
+      <EmailComposer
+        isOpen={isEmailComposerOpen}
+        onClose={() => setIsEmailComposerOpen(false)}
+      />
 
       {/* Trust & Legal Governance Modal */}
       <LegalTrustModal

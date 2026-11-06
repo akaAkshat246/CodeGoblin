@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useApp } from './context/AppContext';
+import { useApp, NavigationPage } from './context/AppContext';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
 import { ToastContainer } from './components/ToastContainer';
@@ -30,9 +30,10 @@ import { AdminPage } from './pages/AdminPage';
 import { ResourcesStorePage } from './pages/ResourcesStorePage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ShortcutsModal } from './components/ShortcutsModal';
+import { AppleDockNavigation } from './components/framer';
 
 export const AppContent: React.FC = () => {
-  const { activePage } = useApp();
+  const { activePage, navigateTo } = useApp();
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth >= 1024;
@@ -96,7 +97,7 @@ export const AppContent: React.FC = () => {
             />
 
           {/* Main Body with Transitioning Margin for Sidebar */}
-          <main className={`flex-1 transition-all duration-300 ease-in-out min-h-[calc(100vh-4rem)] pb-12 overflow-x-hidden ${
+          <main className={`flex-1 transition-all duration-300 ease-in-out min-h-[calc(100vh-4rem)] pb-24 md:pb-12 overflow-x-hidden ${
             isSidebarOpen ? 'md:ml-60' : 'ml-0'
           }`}>
             {activePage === 'dashboard' && <DashboardPage />}
@@ -118,6 +119,37 @@ export const AppContent: React.FC = () => {
             {activePage === 'settings' && <SettingsPage />}
             {activePage === 'admin' && <AdminPage />}
           </main>
+
+          {/* Mobile Apple Dock Navigation Bar */}
+          <div className="md:hidden">
+            <AppleDockNavigation
+              activeId={
+                activePage === 'learning_hub'
+                  ? 'learning'
+                  : activePage === 'projects' || activePage === 'project_detail'
+                  ? 'forge'
+                  : activePage === 'discussions' || activePage === 'discussion_detail'
+                  ? 'den'
+                  : activePage === 'leaderboards'
+                  ? 'leaderboard'
+                  : activePage === 'resources_store'
+                  ? 'resources'
+                  : activePage
+              }
+              onNavigate={(pageId) => {
+                let target: NavigationPage = 'dashboard';
+                if (pageId === 'learning') target = 'learning_hub';
+                else if (pageId === 'forge') target = 'projects';
+                else if (pageId === 'den') target = 'discussions';
+                else if (pageId === 'leaderboard') target = 'leaderboards';
+                else if (pageId === 'resources') target = 'resources_store';
+                else if (pageId === 'quests') target = 'quests';
+                else if (pageId === 'dashboard') target = 'dashboard';
+                navigateTo(target);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            />
+          </div>
         </div>
       </div>
       )}

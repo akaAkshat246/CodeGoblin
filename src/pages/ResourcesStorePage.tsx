@@ -11,6 +11,7 @@ import confetti from 'canvas-confetti';
 import { useApp } from '../context/AppContext';
 import { DigitalResource } from '../types';
 import { SEOHead } from '../components/SEOHead';
+import { ScrollRevealButton } from '../components/framer';
 
 export const ResourcesStorePage: React.FC = () => {
   const { resources, downloadedResourceIds, downloadResource } = useApp();
@@ -310,16 +311,15 @@ export const ResourcesStorePage: React.FC = () => {
                 >
                   Close
                 </button>
-                <button
-                  onClick={() => {
+                <ScrollRevealButton
+                  label="Download Resource"
+                  downloadingLabel="Fetching Blueprint..."
+                  completedLabel="Saved to Cache!"
+                  onDownload={() => {
                     handleDownload(activeResourceModal);
-                    setActiveResourceModal(null);
                   }}
-                  className="px-4 py-1.5 rounded-lg bg-[#A3E635] hover:bg-[#bef264] text-[#09090F] text-xs font-bold flex items-center gap-1.5"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>Download</span>
-                </button>
+                  size="sm"
+                />
               </div>
             </div>
           </div>

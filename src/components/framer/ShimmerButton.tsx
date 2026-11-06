@@ -23,3 +23,4 @@ export const ShimmerButton: React.FC<ShimmerButtonProps> = ({
     </button>
   );
 };
+
