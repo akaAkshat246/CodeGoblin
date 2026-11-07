@@ -4,10 +4,8 @@ import {
   ArrowUpRight,
   CodeXml,
   FolderGit2,
-  Menu,
   Swords,
   Users,
-  X,
   ChevronDown,
   Mail,
   Maximize2,
@@ -454,7 +452,6 @@ export const LandingPage: React.FC = () => {
   const { navigateTo, setIsAuthModalOpen } = useApp();
   const [currentChapter, setCurrentChapter] = useState('spawn');
   const [selectedRole, setSelectedRole] = useState(1); // Default to Technical (02)
-  const [isNavExpanded, setIsNavExpanded] = useState(false);
   const [isEmailComposerOpen, setIsEmailComposerOpen] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [activeLegalDoc, setActiveLegalDoc] = useState<LegalDocType>(null);
@@ -550,14 +547,8 @@ export const LandingPage: React.FC = () => {
 
     document.querySelectorAll('.story-chapter').forEach((c) => observer.observe(c));
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsNavExpanded(false);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-
     return () => {
       observer.disconnect();
-      window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
@@ -612,55 +603,6 @@ export const LandingPage: React.FC = () => {
           </span>
         </a>
 
-        <nav className={isNavExpanded ? 'expanded' : ''}>
-          <a href="#craft" onClick={() => setIsNavExpanded(false)}>
-            The story
-          </a>
-          <a href="#guild" onClick={() => setIsNavExpanded(false)}>
-            The goblins <span>09</span>
-          </a>
-          <button
-            type="button"
-            className="text-left font-sans text-xs text-[#d1c8db] hover:text-[#b5ed72] transition"
-            onClick={() => {
-              setIsNavExpanded(false);
-              navigateTo('learning_hub');
-            }}
-          >
-            Roadmaps
-          </button>
-          <button
-            type="button"
-            className="text-left font-sans text-xs text-[#d1c8db] hover:text-[#b5ed72] transition"
-            onClick={() => {
-              setIsNavExpanded(false);
-              navigateTo('hackathons');
-            }}
-          >
-            Workshops
-          </button>
-          <button
-            type="button"
-            className="text-left font-sans text-xs text-[#d1c8db] hover:text-[#b5ed72] transition"
-            onClick={() => {
-              setIsNavExpanded(false);
-              navigateTo('resources_store');
-            }}
-          >
-            Store
-          </button>
-          <button
-            type="button"
-            className="text-left font-sans text-xs text-[#d1c8db] hover:text-[#b5ed72] transition"
-            onClick={() => {
-              setIsNavExpanded(false);
-              navigateTo('projects');
-            }}
-          >
-            Showcase
-          </button>
-        </nav>
-
         <div className="landing-nav-right">
           <button
             type="button"
@@ -675,13 +617,6 @@ export const LandingPage: React.FC = () => {
             onClick={handleEnterDen}
           >
             Enter the Den <ArrowRight size={14} />
-          </button>
-          <button
-            className="landing-menu"
-            aria-label="Toggle menu"
-            onClick={() => setIsNavExpanded(!isNavExpanded)}
-          >
-            {isNavExpanded ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </header>
