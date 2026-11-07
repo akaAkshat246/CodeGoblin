@@ -87,7 +87,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
       {/* Main Sidebar Container */}
       <aside
-        className={`fixed top-16 bottom-0 left-0 w-60 bg-[#09090F]/95 backdrop-blur-xl border-r border-white/[0.06] flex flex-col justify-between p-3 z-40 transition-transform duration-300 ease-in-out ${
+        className={`fixed top-14 bottom-0 left-0 w-60 bg-[#09090F]/95 backdrop-blur-xl border-r border-white/[0.06] flex flex-col justify-between p-3 z-40 transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

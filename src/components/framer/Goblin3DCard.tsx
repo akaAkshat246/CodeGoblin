@@ -293,3 +293,4 @@ export const Goblin3DCard: React.FC<Goblin3DCardProps> = ({
     </div>
   );
 };
+

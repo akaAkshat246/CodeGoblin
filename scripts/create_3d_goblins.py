@@ -180,3 +180,4 @@ if __name__ == "__main__":
     for i in range(1, 10):
         generate_3d_goblin(i)
     print("All 9 3D Goblins successfully generated!")
+

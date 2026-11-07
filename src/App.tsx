@@ -97,7 +97,7 @@ export const AppContent: React.FC = () => {
             />
 
           {/* Main Body with Transitioning Margin for Sidebar */}
-          <main className={`flex-1 transition-all duration-300 ease-in-out min-h-[calc(100vh-4rem)] pb-24 md:pb-12 overflow-x-hidden ${
+          <main className={`flex-1 transition-all duration-300 ease-in-out min-h-[calc(100vh-3.5rem)] pb-24 md:pb-12 overflow-x-hidden ${
             isSidebarOpen ? 'md:ml-60' : 'ml-0'
           }`}>
             {activePage === 'dashboard' && <DashboardPage />}

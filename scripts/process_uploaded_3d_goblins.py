@@ -203,3 +203,4 @@ if __name__ == "__main__":
         else:
             print(f"Warning: {fname} not found!")
     print("All 9 uploaded goblins transformed with 3D sense and saved!")
+
