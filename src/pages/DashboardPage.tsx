@@ -247,7 +247,7 @@ export const DashboardPage: React.FC = () => {
             <span className="text-xs font-normal text-zinc-500">/ {dailyQuests.length}</span>
           </div>
           <p className="text-[11px] text-zinc-500">
-            {pendingQuests.length > 0 ? `${pendingQuests.length} pending today` : 'All caught up! 🎉'}
+            {pendingQuests.length > 0 ? `${pendingQuests.length} pending today` : 'All caught up! Fully completed.'}
           </p>
         </SpotlightCard>
 
@@ -576,7 +576,10 @@ export const DashboardPage: React.FC = () => {
                     <span>•</span>
                     <span>{post.authorName}</span>
                     {post.solved && (
-                      <span className="text-emerald-400 font-medium">✓ Solved</span>
+                      <span className="text-emerald-400 font-medium inline-flex items-center gap-1">
+                        <Check className="w-3 h-3 stroke-[2.5]" />
+                        <span>Solved</span>
+                      </span>
                     )}
                   </div>
                   <h4 className="text-xs sm:text-sm font-semibold text-white group-hover:text-[#A855F7] transition truncate mt-0.5">
@@ -585,8 +588,14 @@ export const DashboardPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0 text-xs font-mono text-zinc-500">
-                  <span>{post.upvotes} ▲</span>
-                  <span>{post.repliesCount} 💬</span>
+                  <span className="flex items-center gap-1">
+                    <span className="text-lime-400 font-bold">^</span>
+                    <span>{post.upvotes}</span>
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <MessageSquare className="w-3 h-3 text-purple-400" />
+                    <span>{post.repliesCount}</span>
+                  </span>
                   <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-zinc-300" />
                 </div>
               </div>

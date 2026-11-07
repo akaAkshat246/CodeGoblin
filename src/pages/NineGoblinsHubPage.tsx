@@ -12,7 +12,9 @@ import {
   GraduationCap,
   Megaphone,
   CheckCircle2,
-  Users
+  Users,
+  Check,
+  Zap
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
@@ -172,7 +174,7 @@ export const NineGoblinsHubPage: React.FC = () => {
             <div className="space-y-2">
               {selectedGoblin.responsibilities.map((resp, i) => (
                 <div key={i} className="flex items-start gap-2 text-xs text-[#A1A1B5]">
-                  <span className="text-[#A3E635] font-bold">✔</span>
+                  <Check className="w-3.5 h-3.5 text-[#A3E635] shrink-0 stroke-[2.5] mt-0.5" />
                   <span>{resp}</span>
                 </div>
               ))}
@@ -188,7 +190,7 @@ export const NineGoblinsHubPage: React.FC = () => {
             <div className="space-y-2">
               {selectedGoblin.associatedActivities.map((act, i) => (
                 <div key={i} className="flex items-start gap-2 text-xs text-[#A1A1B5]">
-                  <span className="text-[#8B5CF6] font-bold">⚡</span>
+                  <Zap className="w-3.5 h-3.5 text-[#8B5CF6] shrink-0 mt-0.5" />
                   <span>{act}</span>
                 </div>
               ))}

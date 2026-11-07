@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Search, X, MessageSquare, Hammer, Scroll, Trophy, Users, ArrowRight } from 'lucide-react';
+import {
+  Search,
+  X,
+  MessageSquare,
+  Hammer,
+  Scroll,
+  Trophy,
+  Users,
+  ArrowRight,
+  LayoutDashboard,
+  BookOpen,
+  Crown,
+  Heart
+} from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export const GlobalSearchModal: React.FC = () => {
@@ -127,27 +140,30 @@ export const GlobalSearchModal: React.FC = () => {
                 </span>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { label: 'Home / Dashboard', page: 'dashboard' as const, icon: '🏠' },
-                    { label: 'Learning Hub & Roadmaps', page: 'learning_hub' as const, icon: '📚' },
-                    { label: 'Quests & Challenges', page: 'quests' as const, icon: '📜' },
-                    { label: 'Events & Workshops', page: 'hackathons' as const, icon: '🏆' },
-                    { label: 'Project Forge', page: 'projects' as const, icon: '🔨' },
-                    { label: 'Teams & Squads', page: 'squads' as const, icon: '👥' },
-                    { label: 'The Goblin Den Discussions', page: 'discussions' as const, icon: '💬' },
-                    { label: 'Esports Leaderboards', page: 'leaderboards' as const, icon: '👑' },
-                  ].map((nav) => (
-                    <button
-                      key={nav.page}
-                      onClick={() => {
-                        navigateTo(nav.page);
-                        setIsSearchModalOpen(false);
-                      }}
-                      className="flex items-center gap-2.5 p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-xs text-left text-zinc-300 hover:text-white transition-colors"
-                    >
-                      <span className="text-sm">{nav.icon}</span>
-                      <span className="font-medium truncate">{nav.label}</span>
-                    </button>
-                  ))}
+                    { label: 'Home / Dashboard', page: 'dashboard' as const, icon: LayoutDashboard },
+                    { label: 'Learning Hub & Roadmaps', page: 'learning_hub' as const, icon: BookOpen },
+                    { label: 'Quests & Challenges', page: 'quests' as const, icon: Scroll },
+                    { label: 'Events & Workshops', page: 'hackathons' as const, icon: Trophy },
+                    { label: 'Project Forge', page: 'projects' as const, icon: Hammer },
+                    { label: 'Teams & Squads', page: 'squads' as const, icon: Users },
+                    { label: 'The Goblin Den Discussions', page: 'discussions' as const, icon: MessageSquare },
+                    { label: 'Esports Leaderboards', page: 'leaderboards' as const, icon: Crown },
+                  ].map((nav) => {
+                    const NavIcon = nav.icon;
+                    return (
+                      <button
+                        key={nav.page}
+                        onClick={() => {
+                          navigateTo(nav.page);
+                          setIsSearchModalOpen(false);
+                        }}
+                        className="flex items-center gap-2.5 p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.04] text-xs text-left text-zinc-300 hover:text-white transition-colors group"
+                      >
+                        <NavIcon className="w-4 h-4 text-lime-400/80 group-hover:text-lime-400 shrink-0" />
+                        <span className="font-medium truncate">{nav.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -253,7 +269,10 @@ export const GlobalSearchModal: React.FC = () => {
                             {project.tagline}
                           </p>
                         </div>
-                        <span className="text-[11px] text-[#A1A1B5]">{project.likes} ♥</span>
+                        <span className="text-[11px] text-zinc-400 flex items-center gap-1">
+                          <Heart className="w-3 h-3 text-rose-400 fill-rose-400/20" />
+                          <span>{project.likes}</span>
+                        </span>
                       </div>
                     ))}
                   </div>

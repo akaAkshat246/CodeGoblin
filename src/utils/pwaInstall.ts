@@ -96,3 +96,4 @@ export async function promptPWAInstall(): Promise<'accepted' | 'dismissed' | 'io
 
   return 'unavailable';
 }
+

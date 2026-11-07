@@ -47,7 +47,11 @@ export const RunaroundTextWrap: React.FC<RunaroundTextWrapProps> = ({
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
           ) : (
-            <span className="text-3xl">👺</span>
+            <img
+              src="/art/logo.webp"
+              alt="CodeGoblins"
+              className="w-full h-full object-cover"
+            />
           )}
         </div>
       </div>

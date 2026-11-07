@@ -13,7 +13,14 @@ import {
   Hammer,
   Bookmark,
   Layers,
-  Award
+  Award,
+  Zap,
+  Lightbulb,
+  Users,
+  Rocket,
+  BookOpen,
+  Wand2,
+  Heart
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS, INITIAL_ACHIEVEMENTS } from '../data/mockData';
@@ -303,6 +310,30 @@ export const ProfilePage: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {INITIAL_ACHIEVEMENTS.map((ach) => {
             const isUnlocked = targetUser.achievements?.includes(ach.id);
+            const getIcon = () => {
+              switch (ach.icon) {
+                case 'spawn':
+                  return <Sparkles className="w-5 h-5 text-emerald-400" />;
+                case 'zap':
+                  return <Zap className="w-5 h-5 text-amber-400" />;
+                case 'lightbulb':
+                  return <Lightbulb className="w-5 h-5 text-yellow-400" />;
+                case 'users':
+                  return <Users className="w-5 h-5 text-blue-400" />;
+                case 'rocket':
+                  return <Rocket className="w-5 h-5 text-purple-400" />;
+                case 'trophy':
+                  return <Trophy className="w-5 h-5 text-amber-400" />;
+                case 'brain':
+                  return <BookOpen className="w-5 h-5 text-indigo-400" />;
+                case 'flame':
+                  return <Flame className="w-5 h-5 text-rose-400" />;
+                case 'wand':
+                  return <Wand2 className="w-5 h-5 text-lime-400" />;
+                default:
+                  return <Award className="w-5 h-5 text-lime-400" />;
+              }
+            };
             return (
               <div
                 key={ach.id}
@@ -312,11 +343,13 @@ export const ProfilePage: React.FC = () => {
                     : 'bg-[#11111B]/40 border-white/5 text-[#A1A1B5] opacity-50'
                 }`}
               >
-                <span className="text-2xl">{ach.icon}</span>
+                <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/5 flex items-center justify-center shrink-0">
+                  {getIcon()}
+                </div>
                 <div>
                   <div className="flex items-center gap-1.5">
                     <h4 className="text-xs font-bold">{ach.title}</h4>
-                    {isUnlocked && <span className="text-[10px] text-[#A3E635]">✔</span>}
+                    {isUnlocked && <Check className="w-3.5 h-3.5 text-lime-400 stroke-[2.5]" />}
                   </div>
                   <p className="text-[10px] text-[#A1A1B5] leading-snug mt-0.5">{ach.description}</p>
                 </div>
@@ -344,7 +377,10 @@ export const ProfilePage: React.FC = () => {
                   <h4 className="text-sm font-bold text-[#F5F3FF]">{p.title}</h4>
                   <p className="text-xs text-[#A1A1B5] truncate max-w-sm">{p.tagline}</p>
                 </div>
-                <span className="text-xs font-semibold text-[#A3E635]">{p.likes} ♥</span>
+                <span className="text-xs font-semibold text-lime-400 flex items-center gap-1">
+                  <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400/20" />
+                  <span>{p.likes}</span>
+                </span>
               </div>
             ))}
           </div>

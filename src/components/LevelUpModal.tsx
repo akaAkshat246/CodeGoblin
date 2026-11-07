@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Trophy, Flame, ChevronRight, X } from 'lucide-react';
+import { Sparkles, Trophy, ChevronRight, X, Check, Award } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
 
@@ -34,8 +34,9 @@ export const LevelUpModal: React.FC = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full bg-[#A3E635] text-[#09090F] font-black text-xs">
-            ★ LVL {levelUpData.newLevel}
+          <div className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full bg-[#A3E635] text-[#09090F] font-black text-xs flex items-center gap-1 shadow-md">
+            <Award className="w-3 h-3" />
+            <span>LVL {levelUpData.newLevel}</span>
           </div>
         </div>
 
@@ -59,15 +60,15 @@ export const LevelUpModal: React.FC = () => {
             <span>New Goblin Powers Unlocked:</span>
           </div>
           <div className="flex items-center gap-2 text-[#A1A1B5]">
-            <span className="text-[#A3E635]">✔</span>
+            <Check className="w-3.5 h-3.5 text-lime-400 shrink-0 stroke-[2.5]" />
             <span>Increased reputation multiplier on discussion solutions</span>
           </div>
           <div className="flex items-center gap-2 text-[#A1A1B5]">
-            <span className="text-[#A3E635]">✔</span>
+            <Check className="w-3.5 h-3.5 text-lime-400 shrink-0 stroke-[2.5]" />
             <span>Ability to pin priority collaboration requests in Squads</span>
           </div>
           <div className="flex items-center gap-2 text-[#A1A1B5]">
-            <span className="text-[#A3E635]">✔</span>
+            <Check className="w-3.5 h-3.5 text-lime-400 shrink-0 stroke-[2.5]" />
             <span>Eligible for exclusive GoblinHacks 2026 bounty tracks</span>
           </div>
         </div>

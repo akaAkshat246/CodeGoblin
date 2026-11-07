@@ -312,7 +312,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     id: "first_spawn",
     title: "First Spawn",
     description: "Completed onboarding and joined the Goblin Realm.",
-    icon: "🥚",
+    icon: "spawn",
     category: "onboarding",
     xpReward: 100,
     rarity: "Common"
@@ -321,7 +321,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     id: "code_goblin",
     title: "Code Goblin",
     description: "Completed your first interactive programming quest.",
-    icon: "⚡",
+    icon: "zap",
     category: "coding",
     xpReward: 250,
     rarity: "Common"
@@ -330,7 +330,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     id: "idea_gremlin",
     title: "Idea Gremlin",
     description: "Submitted your first project or feature idea to the Forge.",
-    icon: "💡",
+    icon: "lightbulb",
     category: "coding",
     xpReward: 200,
     rarity: "Common"
@@ -339,7 +339,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     id: "squad_builder",
     title: "Squad Builder",
     description: "Formed or joined a collaborative squad with peer builders.",
-    icon: "🤝",
+    icon: "users",
     category: "community",
     xpReward: 300,
     rarity: "Rare"
@@ -348,7 +348,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     id: "ship_it",
     title: "Ship It!",
     description: "Published a live working project with demo URL & GitHub.",
-    icon: "🚀",
+    icon: "rocket",
     category: "coding",
     xpReward: 500,
     rarity: "Epic"
@@ -357,7 +357,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     id: "hackathon_hunter",
     title: "Hackathon Hunter",
     description: "Registered for and formed a team for an official hackathon.",
-    icon: "🏆",
+    icon: "trophy",
     category: "hackathon",
     xpReward: 400,
     rarity: "Rare"
@@ -366,7 +366,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     id: "knowledge_keeper",
     title: "Knowledge Keeper",
     description: "Authored a reply marked as the Accepted Solution in Discussions.",
-    icon: "🧠",
+    icon: "brain",
     category: "community",
     xpReward: 350,
     rarity: "Epic"
@@ -375,7 +375,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     id: "streak_guardian",
     title: "Streak Guardian",
     description: "Maintained a 7-day continuous learning & coding streak.",
-    icon: "🔥",
+    icon: "flame",
     category: "streak",
     xpReward: 450,
     rarity: "Epic"
@@ -384,7 +384,7 @@ export const INITIAL_ACHIEVEMENTS: Achievement[] = [
     id: "vibe_sorcerer",
     title: "Vibe Sorcerer",
     description: "Mastered AI-assisted vibe coding workflows to ship an MVP in under 24 hours.",
-    icon: "✨",
+    icon: "wand",
     category: "coding",
     xpReward: 600,
     rarity: "Legendary"
@@ -754,7 +754,7 @@ export const INITIAL_ACTIVITY_FEED: ActivityFeedItem[] = [
     actorName: "Cadet Builder",
     actorGoblinId: 7,
     actionText: "unlocked achievement badge:",
-    targetText: "Code Goblin (⚡ +250 XP)",
+    targetText: "Code Goblin (+250 XP)",
     timestamp: "3 hours ago"
   },
   {
@@ -1443,21 +1443,21 @@ async def stream_agent(prompt: PromptRequest):
     downloadsCount: 421,
     tags: ["Documentation", "Mermaid", "OpenSource", "GitHub"],
     priceInr: 0,
-    codeSnippet: `# 👾 Project Name
+    codeSnippet: `# Project Name
 
 > High-level single sentence tagline explaining what the project achieves.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 
-## ⚡ Architecture Flow
+## Architecture Flow
 
 \`\`\`mermaid
 flowchart LR
     Client --> API_Gateway --> Worker_Queue --> Database
 \`\`\`
 
-## 🛠️ Quickstart
+## Quickstart
 \`\`\`bash
 npm install && npm run dev
 \`\`\``

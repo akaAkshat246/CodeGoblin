@@ -211,7 +211,7 @@ export const LearningHubPage: React.FC = () => {
                         isStepDone ? 'line-through text-zinc-500' : 'text-white hover:text-[#A3E635]'
                       } transition`}>
                         <span>{step.title}</span>
-                        {isStepDone && <span className="text-emerald-400 text-xs no-underline">✓</span>}
+                        {isStepDone && <Check className="w-3.5 h-3.5 text-emerald-400 stroke-[2.5]" />}
                       </h4>
                       <p className="text-xs text-zinc-400 mt-0.5 line-clamp-1 leading-relaxed">
                         {step.description}

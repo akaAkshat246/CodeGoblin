@@ -205,3 +205,4 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
     </>
   );
 };
+

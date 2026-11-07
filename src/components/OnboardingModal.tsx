@@ -305,14 +305,14 @@ export const OnboardingModal: React.FC = () => {
                         key={interest}
                         type="button"
                         onClick={() => toggleInterest(interest)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition ${
+                        className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold border transition ${
                           active
                             ? 'bg-[#8B5CF6]/20 border-[#8B5CF6] text-[#C084FC] shadow-sm'
                             : 'bg-[#171725] border-white/5 text-[#A1A1B5] hover:text-[#F5F3FF]'
                         }`}
                       >
-                        {active && '✓ '}
-                        {interest}
+                        {active && <Check className="w-3 h-3 stroke-[2.5]" />}
+                        <span>{interest}</span>
                       </button>
                     );
                   })}
@@ -331,14 +331,14 @@ export const OnboardingModal: React.FC = () => {
                         key={skill}
                         type="button"
                         onClick={() => toggleSkill(skill)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition ${
+                        className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold border transition ${
                           active
                             ? 'bg-[#A3E635]/20 border-[#A3E635] text-[#A3E635] shadow-sm'
                             : 'bg-[#171725] border-white/5 text-[#A1A1B5] hover:text-[#F5F3FF]'
                         }`}
                       >
-                        {active && '✓ '}
-                        {skill}
+                        {active && <Check className="w-3 h-3 stroke-[2.5]" />}
+                        <span>{skill}</span>
                       </button>
                     );
                   })}

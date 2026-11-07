@@ -5,7 +5,8 @@ import {
   CheckCircle2,
   Trophy,
   Send,
-  X
+  X,
+  Check
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
@@ -345,9 +346,10 @@ export const SquadsPage: React.FC = () => {
                             <span>{task.assigneeName}</span>
                             <button
                               onClick={() => updateSquadTaskStatus(selectedSquad.id, task.id, 'done')}
-                              className="text-[#A3E635] hover:underline"
+                              className="text-[#A3E635] hover:underline inline-flex items-center gap-1 font-medium"
                             >
-                              Done ✓
+                              <span>Done</span>
+                              <Check className="w-3 h-3 stroke-[2.5]" />
                             </button>
                           </div>
                         </div>

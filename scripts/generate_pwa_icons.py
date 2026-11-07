@@ -43,3 +43,4 @@ def generate_icons():
 
 if __name__ == '__main__':
     generate_icons()
+

@@ -270,7 +270,7 @@ const TerminalSandbox: React.FC<{
   const [lines, setLines] = useState<TerminalLine[]>([
     { type: 'system', text: 'CodeGoblins terminal sandbox · type help to begin.' },
     { type: 'command', text: 'goblin init --future' },
-    { type: 'success', text: '✓ Curiosity detected. Your next chapter is ready.' },
+    { type: 'success', text: 'Curiosity detected. Your next chapter is ready.' },
   ]);
   const [inputVal, setInputVal] = useState('');
   const [history, setHistory] = useState<string[]>([]);
@@ -672,7 +672,7 @@ export const LandingPage: React.FC = () => {
                 <br />
                 <em>what’s next.</em>
                 <span className="headline-star" aria-hidden="true">
-                  ✳
+                  <Sparkles className="w-8 h-8 text-[#b5ed72]" />
                 </span>
               </h1>
 
@@ -791,9 +791,9 @@ export const LandingPage: React.FC = () => {
 
         {/* Marquee Banner */}
         <div className="story-marquee" aria-hidden="true">
-          <span>GOOD CODE.</span> BETTER PEOPLE. <i>✳</i>
-          <span>SMALL GOBLINS.</span> BIG IDEAS. <i>✳</i>
-          <span>BUILD BEYOND CODE.</span> <i>✳</i>
+          <span>GOOD CODE.</span> BETTER PEOPLE. <i>•</i>
+          <span>SMALL GOBLINS.</span> BIG IDEAS. <i>•</i>
+          <span>BUILD BEYOND CODE.</span> <i>•</i>
         </div>
 
         {/* ================= CHAPTER 02 / THE CRAFT ================= */}
@@ -929,7 +929,7 @@ V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design,
                 Activities <span>CodeGoblins Desktop</span>
               </span>
               <span>Sandbox session</span>
-              <span>⌁ &nbsp; ◉ &nbsp; ⏻</span>
+              <span>System Ready</span>
             </div>
 
             <div className="desktop-dock">
@@ -1415,20 +1415,20 @@ V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design,
           <div className="py-2">
             <Marquee speed={32} pauseOnHover={true}>
               {[
-                '⚛️ React 19',
-                '⚡ Next.js 15',
-                '🟦 TypeScript',
-                '🐍 Python & PyTorch',
-                '⚡ FastAPI',
-                '🐳 Docker',
-                '🟢 Supabase',
-                '☁️ Cloudflare Workers',
-                '🤖 LangChain & LLM Agents',
-                '🏛️ IIT Delhi',
-                '🏛️ BITS Pilani',
-                '🏛️ VIT Vellore',
-                '🏛️ NIT Trichy',
-                '🚀 Tier-3 Hackers',
+                'React 19',
+                'Next.js 15',
+                'TypeScript',
+                'Python & PyTorch',
+                'FastAPI',
+                'Docker',
+                'Supabase',
+                'Cloudflare Workers',
+                'LangChain & LLM Agents',
+                'IIT Delhi',
+                'BITS Pilani',
+                'VIT Vellore',
+                'NIT Trichy',
+                'Tier-3 Hackers',
               ].map((badge, idx) => (
                 <div
                   key={idx}

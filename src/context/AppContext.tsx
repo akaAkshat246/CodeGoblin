@@ -408,7 +408,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setAllUsers((prev) => prev.map((u) => (u.id === updated.id ? updated : u)));
         addToast({
           type: 'success',
-          title: `Streak Extended: ${newStreak} Days! 🔥`,
+          title: `Streak Extended: ${newStreak} Days!`,
           description: 'Keep the momentum going in Asia/Kolkata timezone.'
         });
       }
@@ -514,7 +514,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     addToast({
       type: 'achievement',
-      title: 'Achievement Unlocked: First Spawn! 🥚',
+      title: 'Achievement Unlocked: First Spawn!',
       description: 'Welcome to Code Goblins! Your journey begins now. +150 XP awarded.'
     });
 
@@ -599,7 +599,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     const winningReply = replies.find((r) => r.id === replyId);
     if (winningReply && winningReply.authorId === currentUser?.id) {
-      awardXP(100, 'Your answer was marked as the Accepted Solution! 🧠');
+      awardXP(100, 'Your answer was marked as the Accepted Solution!');
     }
 
     addToast({
@@ -702,7 +702,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     awardXP(80, 'Registered for official community event/hackathon!');
     addToast({
       type: 'success',
-      title: 'Registration Confirmed! 🏆',
+      title: 'Registration Confirmed!',
       description: 'You are registered. Check Teams & Collaboration to form your squad.'
     });
   };
@@ -755,7 +755,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     awardXP(80, 'Joined a collaboration squad!');
     addToast({
       type: 'success',
-      title: 'Joined Squad! 🤝',
+      title: 'Joined Squad!',
       description: 'You have been added to the squad roster.'
     });
   };
@@ -812,7 +812,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const applyToRecruitment = (listingId: string) => {
     addToast({
       type: 'success',
-      title: 'Application Dispatched! 🚀',
+      title: 'Application Dispatched!',
       description: 'Your profile was forwarded to the squad leader.'
     });
   };
@@ -941,10 +941,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return { ...h, registeredUserIds: [...h.registeredUserIds, currentUser.id] };
       })
     );
-    awardXP(isPaid ? 150 : 75, isPaid ? 'Registered for Masterclass Workshop! 🚀' : 'Secured seat in Community Workshop!');
+    awardXP(isPaid ? 150 : 75, isPaid ? 'Registered for Masterclass Workshop!' : 'Secured seat in Community Workshop!');
     addToast({
       type: 'achievement',
-      title: isPaid ? 'Payment Confirmed & Seat Locked! 🎟️' : 'Workshop Seat Reserved!',
+      title: isPaid ? 'Payment Confirmed & Seat Locked!' : 'Workshop Seat Reserved!',
       description: `Order #CG-${Date.now().toString().slice(-6)} verified. Digital pass generated.`
     });
     addAuditLog('WORKSHOP_REGISTRATION', `User: ${currentUser.displayName} -> ${eventId} (${isPaid ? `₹${amountInr} Paid` : 'Free'})`, 'success');

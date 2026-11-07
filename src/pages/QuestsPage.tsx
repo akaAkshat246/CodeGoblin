@@ -15,7 +15,8 @@ import {
   GitPullRequest,
   Palette,
   Trophy,
-  X
+  X,
+  Check
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { LEARNING_TRACKS } from '../data/mockData';
@@ -189,7 +190,7 @@ export const QuestsPage: React.FC = () => {
                   </p>
                   {quest.objectives.map((obj, i) => (
                     <div key={i} className="flex items-start gap-2">
-                      <span className="text-lime-400 text-xs mt-0.5">✓</span>
+                      <Check className="w-3.5 h-3.5 text-lime-400 shrink-0 stroke-[2.5] mt-0.5" />
                       <span className="text-xs text-zinc-300">{obj}</span>
                     </div>
                   ))}
