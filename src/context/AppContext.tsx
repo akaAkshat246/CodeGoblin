@@ -40,6 +40,8 @@ import {
 
 export type NavigationPage =
   | 'landing'
+  | 'login'
+  | 'admin_login'
   | 'dashboard'
   | 'discover'
   | 'discussions'
@@ -193,6 +195,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const path = window.location.pathname;
       const hash = window.location.hash;
       const savedUser = loadStored<UserProfile | null>('currentUser', null);
+      if (path === '/admin-login' || hash === '#admin-login' || hash.startsWith('#admin-login')) {
+        return 'admin_login';
+      }
+      if (path === '/login' || hash === '#login' || hash.startsWith('#login')) {
+        return 'login';
+      }
       if ((path === '/hq' || hash === '#hq' || hash.startsWith('#hq')) && savedUser) {
         return 'dashboard';
       }
@@ -207,7 +215,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const handleUrlChange = () => {
       const path = window.location.pathname;
       const hash = window.location.hash;
-      if (path === '/hq' || hash === '#hq' || hash.startsWith('#hq')) {
+      if (path === '/admin-login' || hash === '#admin-login' || hash.startsWith('#admin-login')) {
+        setActivePage('admin_login');
+      } else if (path === '/login' || hash === '#login' || hash.startsWith('#login')) {
+        setActivePage('login');
+      } else if (path === '/hq' || hash === '#hq' || hash.startsWith('#hq')) {
         setActivePage('dashboard');
       } else if (path === '/' && (!hash || hash === '#' || hash === '#spawn')) {
         setActivePage('landing');

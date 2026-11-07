@@ -9,7 +9,9 @@ import {
   KeyRound,
   CheckCircle2,
   Lock,
-  Zap
+  Zap,
+  AlertTriangle,
+  ExternalLink
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { GOBLIN_CHARACTERS } from '../data/mockData';
@@ -34,6 +36,7 @@ export const AuthModal: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [adminPasscode, setAdminPasscode] = useState('');
+  const [adminError, setAdminError] = useState('');
 
   if (!isAuthModalOpen) return null;
 
@@ -41,8 +44,16 @@ export const AuthModal: React.FC = () => {
 
   const handleCustomLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    setAdminError('');
 
-    if (clearance.isAdmin) {
+    if (authMode === 'admin') {
+      if (!clearance.isAdmin) {
+        setAdminError(
+          'Access Denied: This email does not possess administrator clearance. Only authorized @codegoblins.dev credentials can access the Admin console. Please switch to Clan Member login.'
+        );
+        return;
+      }
+
       // Find matching admin user
       const matchedUser = allUsers.find(
         (u) => u.email.toLowerCase() === email.trim().toLowerCase()
@@ -60,6 +71,7 @@ export const AuthModal: React.FC = () => {
     );
     loginAs(foundUser?.id || allUsers[0]?.id || 'user_current');
     setIsAuthModalOpen(false);
+    navigateTo('dashboard');
   };
 
   const handleAdminFastTrack = (userId: string) => {
@@ -242,6 +254,21 @@ export const AuthModal: React.FC = () => {
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
+
+            {/* Link to Dedicated Full Member Login Page */}
+            <div className="pt-2 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsAuthModalOpen(false);
+                  navigateTo('login');
+                }}
+                className="inline-flex items-center gap-1.5 text-xs text-[#A1A1B5] hover:text-[#A3E635] transition font-medium"
+              >
+                <span>Open Dedicated Member Login Page</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         )}
 
@@ -302,6 +329,13 @@ export const AuthModal: React.FC = () => {
                 />
               </div>
 
+              {adminError && (
+                <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-start gap-2.5 text-xs text-rose-300 animate-in fade-in">
+                  <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                  <span className="leading-relaxed">{adminError}</span>
+                </div>
+              )}
+
               {clearance.isAdmin && (
                 <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center gap-2 text-xs text-emerald-300">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -321,6 +355,21 @@ export const AuthModal: React.FC = () => {
                 <span>Verify Admin Clearance & Open Console</span>
               </button>
             </form>
+
+            {/* Link to Dedicated Full Admin Security Terminal */}
+            <div className="pt-2 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsAuthModalOpen(false);
+                  navigateTo('admin_login');
+                }}
+                className="inline-flex items-center gap-1.5 text-xs text-amber-400/80 hover:text-amber-300 transition font-medium"
+              >
+                <span>Open Dedicated Admin Security Terminal Page</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         )}
 

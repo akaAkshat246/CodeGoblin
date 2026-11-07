@@ -10,6 +10,8 @@ import { GlobalSearchModal } from './components/GlobalSearchModal';
 
 // Pages
 import { LandingPage } from './pages/LandingPage';
+import { LoginPage } from './pages/LoginPage';
+import { AdminLoginPage } from './pages/AdminLoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { DiscoverPage } from './pages/DiscoverPage';
 import { DiscussionsPage } from './pages/DiscussionsPage';
@@ -27,6 +29,7 @@ import { AdminPage } from './pages/AdminPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { AppleDockNavigation } from './components/framer';
+import { isAdminEmail } from './utils/adminAuth';
 
 export const AppContent: React.FC = () => {
   const { activePage, navigateTo, currentUser, setIsAuthModalOpen } = useApp();
@@ -40,11 +43,21 @@ export const AppContent: React.FC = () => {
 
   // Hard Route Guard: No user is permitted into the Den without logging in
   React.useEffect(() => {
-    if (!currentUser && activePage !== 'landing') {
+    if (!currentUser && activePage !== 'landing' && activePage !== 'login' && activePage !== 'admin_login') {
       navigateTo('landing');
       setIsAuthModalOpen(true);
     }
   }, [currentUser, activePage, navigateTo, setIsAuthModalOpen]);
+
+  // Strict Admin Route Guard: Regular users cannot access the Admin Portal
+  React.useEffect(() => {
+    if (activePage === 'admin') {
+      const isUserAdmin = currentUser?.role === 'Administrator' || isAdminEmail(currentUser?.email);
+      if (!isUserAdmin) {
+        navigateTo('dashboard');
+      }
+    }
+  }, [currentUser, activePage, navigateTo]);
 
   // Global Keyboard Shortcuts
   React.useEffect(() => {
@@ -80,10 +93,16 @@ export const AppContent: React.FC = () => {
       <GlobalSearchModal />
       <ShortcutsModal isOpen={isShortcutsOpen} onClose={() => setIsShortcutsOpen(false)} />
 
-      {/* Landing Page (Full Width View) */}
+      {/* Landing / Dedicated Login Pages (Full Width View) */}
       {isLanding ? (
         <main className="flex-1">
-          <LandingPage />
+          {activePage === 'login' ? (
+            <LoginPage />
+          ) : activePage === 'admin_login' ? (
+            <AdminLoginPage />
+          ) : (
+            <LandingPage />
+          )}
         </main>
       ) : (
         /* Authenticated & Community Layout (Sidebar + Main Area) */
