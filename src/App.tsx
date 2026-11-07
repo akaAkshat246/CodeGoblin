@@ -18,6 +18,7 @@ import { QuestsPage } from './pages/QuestsPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { HackathonsPage } from './pages/HackathonsPage';
+import { BuildWinPage } from './pages/BuildWinPage';
 import { SquadsPage } from './pages/SquadsPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { MembersPage } from './pages/MembersPage';
@@ -116,6 +117,7 @@ export const AppContent: React.FC = () => {
             {activePage === 'projects' && <ProjectsPage />}
             {activePage === 'project_detail' && <ProjectDetailPage />}
             {activePage === 'hackathons' && <HackathonsPage />}
+            {activePage === 'build_win' && <BuildWinPage />}
             {activePage === 'squads' && <SquadsPage />}
             {activePage === 'learning_hub' && <LearningHubPage />}
             {activePage === 'resources_store' && <ResourcesStorePage />}

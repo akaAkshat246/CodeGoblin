@@ -48,6 +48,7 @@ export type NavigationPage =
   | 'projects'
   | 'project_detail'
   | 'hackathons'
+  | 'build_win'
   | 'squads'
   | 'leaderboards'
   | 'learning_hub'

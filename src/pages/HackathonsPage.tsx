@@ -10,7 +10,10 @@ import {
   X,
   Lock,
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  Zap,
+  Trophy,
+  Flame
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useApp } from '../context/AppContext';
@@ -112,21 +115,66 @@ END:VCALENDAR`;
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-            Events & Workshops
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-lime-400" />
+            <span>Events &amp; Workshops</span>
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
             Discover hackathons, masterclasses, and sprint challenges.
           </p>
         </div>
 
-        <button
-          onClick={() => navigateTo('squads')}
-          className="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-zinc-200 transition flex items-center gap-1.5 self-start sm:self-auto"
-        >
-          <Users className="w-3.5 h-3.5 text-zinc-400" />
-          <span>Assemble Squad</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={() => navigateTo('build_win')}
+            className="px-3.5 py-2 rounded-xl bg-lime-400/10 hover:bg-lime-400/20 border border-lime-400/30 text-xs font-semibold text-lime-400 transition flex items-center gap-1.5"
+          >
+            <Zap className="w-3.5 h-3.5 text-lime-400" />
+            <span>Build &amp; Win Circuit</span>
+          </button>
+          <button
+            onClick={() => navigateTo('squads')}
+            className="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-zinc-200 transition flex items-center gap-1.5"
+          >
+            <Users className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Assemble Squad</span>
+          </button>
+        </div>
+      </div>
+
+      {/* ABES Event Nexus: Build & Win Circuit Hero Capsule */}
+      <div
+        onClick={() => navigateTo('build_win')}
+        className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-[#171526] via-[#111118] to-[#121A16] border border-lime-400/20 hover:border-lime-400/50 transition cursor-pointer group shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4"
+      >
+        <div className="flex items-start sm:items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-lime-400/10 border border-lime-400/30 text-lime-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+            <Zap className="w-6 h-6" />
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-lime-400/15 text-lime-400 uppercase tracking-wider">
+                Official Competitive Framework
+              </span>
+              <span className="text-[10px] font-mono text-zinc-400">
+                19 Societies • ₹5,00,000+ Prizes
+              </span>
+            </div>
+            <h2 className="text-base sm:text-lg font-bold text-white group-hover:text-lime-400 transition">
+              Build. Compete. Win. — The Innovation Circuit
+            </h2>
+            <p className="text-xs text-zinc-400 max-w-2xl leading-relaxed">
+              Explore the structured engineering sprint lifecycle: dedicated hardware labs, national stage defense in the 1,200-seat auditorium, and seed grant incubation.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 self-end md:self-auto shrink-0">
+          <span className="text-xs font-bold text-lime-400 group-hover:underline flex items-center gap-1">
+            <span>Explore Circuit</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+          </span>
+        </div>
       </div>
 
       {/* Search & Filters */}

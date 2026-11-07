@@ -15,7 +15,8 @@ import {
   Settings,
   ShieldCheck,
   PanelLeftClose,
-  Globe
+  Globe,
+  Zap
 } from 'lucide-react';
 import { useApp, NavigationPage } from '../context/AppContext';
 import { isAdminEmail } from '../utils/adminAuth';
@@ -39,6 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
     { id: 'learning_hub', label: 'Learning Hub', icon: BookOpen },
     { id: 'hackathons', label: 'Events & Workshops', icon: Trophy },
+    { id: 'build_win', label: 'Build & Win Circuit', icon: Zap },
     { id: 'resources_store', label: 'Resources Store', icon: PackageOpen },
     { id: 'projects', label: 'Project Forge', icon: Hammer },
     { id: 'squads', label: 'Teams & Squads', icon: Users2 },
