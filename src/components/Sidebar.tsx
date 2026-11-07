@@ -15,8 +15,7 @@ import {
   Settings,
   ShieldCheck,
   PanelLeftClose,
-  Globe,
-  Download
+  Globe
 } from 'lucide-react';
 import { useApp, NavigationPage } from '../context/AppContext';
 import { isAdminEmail } from '../utils/adminAuth';
@@ -24,7 +23,6 @@ import { isAdminEmail } from '../utils/adminAuth';
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  onOpenInstallModal?: () => void;
 }
 
 interface NavItem {
@@ -34,7 +32,7 @@ interface NavItem {
   requiresAdmin?: boolean;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onOpenInstallModal }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { activePage, navigateTo, currentUser } = useApp();
 
   const navItems: NavItem[] = [
@@ -171,20 +169,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, onOpenInstall
                 </button>
               );
             })}
-
-          <button
-            onClick={() => onOpenInstallModal?.()}
-            className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors group mt-1"
-            title="Download & Install CodeGoblins on this device"
-          >
-            <div className="flex items-center gap-2.5">
-              <Download className="w-4 h-4 text-lime-400/80 group-hover:text-lime-400" />
-              <span>Install App</span>
-            </div>
-            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-lime-400/15 text-lime-400 border border-lime-400/20">
-              PWA
-            </span>
-          </button>
         </div>
       </aside>
     </>
