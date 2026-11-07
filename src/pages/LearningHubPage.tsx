@@ -6,15 +6,21 @@ import {
   Terminal,
   X,
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  BookOpen,
+  GraduationCap,
+  ShieldCheck,
+  Sparkles,
+  Plus
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useApp } from '../context/AppContext';
 import { LearningStep } from '../types';
 import { SEOHead } from '../components/SEOHead';
+import { isAdminEmail } from '../utils/adminAuth';
 
 export const LearningHubPage: React.FC = () => {
-  const { roadmaps, completedLessonIds, toggleCompleteLesson } = useApp();
+  const { roadmaps, completedLessonIds, toggleCompleteLesson, currentUser, navigateTo } = useApp();
   const [selectedRoadmapId, setSelectedRoadmapId] = useState<string>(roadmaps[0]?.id || 'vibe_coding');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLevel, setSelectedLevel] = useState<string>('All');
@@ -51,23 +57,59 @@ export const LearningHubPage: React.FC = () => {
     setActiveGuideStep(null);
   };
 
+  const isUserAdmin = currentUser?.role === 'Administrator' || isAdminEmail(currentUser?.email);
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 animate-in fade-in duration-200">
       <SEOHead
-        title="Learning Hub — Roadmaps"
-        description="Structured developer learning tracks, vibe coding tutorials, Git workflows, and hackathon victory playbooks."
+        title="Learning Hub — Official Study Tracks"
+        description="Official developer learning tracks and study materials curated and provided by CodeGoblins Admins."
         canonicalPath="/learn"
         pageId="learning_hub"
       />
 
+      {/* Admin Provided Learning Materials Banner */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-purple-950/40 via-[#111118] to-lime-950/20 border border-lime-400/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-start sm:items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-lime-400/10 border border-lime-400/30 flex items-center justify-center shrink-0 text-lime-400">
+            <GraduationCap className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-bold text-lime-400 uppercase tracking-wider flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                Official Admin Curriculum
+              </span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-zinc-400 font-mono">
+                Study Portal
+              </span>
+            </div>
+            <p className="text-xs text-zinc-300 mt-0.5">
+              Curated and maintained directly by CodeGoblins administrators. Work through each syllabus chapter, complete self-study directives, and earn XP.
+            </p>
+          </div>
+        </div>
+
+        {isUserAdmin && (
+          <button
+            onClick={() => navigateTo('admin')}
+            className="self-start sm:self-auto px-3.5 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-black text-xs font-bold transition flex items-center gap-1.5 shrink-0 shadow-lg shadow-lime-400/10"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Admin: Manage Curriculum</span>
+          </button>
+        )}
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-            Learning Roadmaps
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-lime-400" />
+            <span>Curriculum &amp; Study Tracks</span>
           </h1>
           <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
-            Structured milestone roadmaps and actionable developer guides.
+            Admin-provided syllabus modules, step-by-step reading materials, and actionable study guides.
           </p>
         </div>
 
@@ -164,6 +206,9 @@ export const LearningHubPage: React.FC = () => {
                   Active Track
                 </span>
                 <span className="text-xs text-zinc-400 font-mono">{selectedRoadmap.estimatedHours}</span>
+                <span className="text-xs text-lime-400 font-mono font-medium">
+                  • Curated by {selectedRoadmap.publishedBy || 'Admin Akshat Vats'}
+                </span>
               </div>
               <h2 className="text-lg sm:text-xl font-bold text-white mt-1">
                 {selectedRoadmap.title}
@@ -271,24 +316,44 @@ export const LearningHubPage: React.FC = () => {
 
             {/* Content Body */}
             <div className="space-y-3.5 text-xs text-zinc-300 leading-relaxed">
-              <p>{activeGuideStep.step.description}</p>
+              <p className="text-zinc-200 text-xs sm:text-sm leading-relaxed">{activeGuideStep.step.description}</p>
+
+              {activeGuideStep.step.readingMaterial && (
+                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] space-y-1.5">
+                  <h4 className="text-[11px] font-semibold text-lime-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    <span>Admin Study Notes &amp; Syllabus Text</span>
+                  </h4>
+                  <div className="text-zinc-300 text-xs whitespace-pre-wrap leading-relaxed font-sans">
+                    {activeGuideStep.step.readingMaterial}
+                  </div>
+                </div>
+              )}
 
               <div className="p-3.5 rounded-xl bg-[#171725] border border-white/[0.06] space-y-2">
                 <h4 className="text-[11px] font-semibold text-zinc-200 uppercase tracking-wider flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-[#A3E635]" />
-                  <span>Key Directives</span>
+                  <span>Admin Directives &amp; Action Items</span>
                 </h4>
                 <ul className="list-disc list-inside space-y-1 text-zinc-400 text-xs">
-                  <li>Define explicit inputs, data types, and edge failure cases before logic.</li>
-                  <li>Verify build with <code>npm run build</code> or test suite at each step.</li>
-                  <li>Check live API contracts before production deployment.</li>
+                  {activeGuideStep.step.studyDirectives && activeGuideStep.step.studyDirectives.length > 0 ? (
+                    activeGuideStep.step.studyDirectives.map((dir, i) => (
+                      <li key={i}>{dir}</li>
+                    ))
+                  ) : (
+                    <>
+                      <li>Review the official documentation and study concepts deeply before writing code.</li>
+                      <li>Run local experiments, test edge cases, and ensure clean architecture.</li>
+                      <li>Validate understanding with practice problems and peer reviews in the Clan.</li>
+                    </>
+                  )}
                 </ul>
               </div>
 
               {activeGuideStep.step.resourceTitle && (
                 <div className="p-3 bg-white/[0.03] border border-white/[0.06] rounded-xl flex items-center justify-between text-xs">
                   <div>
-                    <span className="text-zinc-500">Resource: </span>
+                    <span className="text-zinc-500">Official Reading Reference: </span>
                     <strong className="text-zinc-200">{activeGuideStep.step.resourceTitle}</strong>
                   </div>
                   <a
@@ -297,7 +362,7 @@ export const LearningHubPage: React.FC = () => {
                     rel="noreferrer"
                     className="text-[#A3E635] hover:underline flex items-center gap-1 font-medium"
                   >
-                    <span>Docs</span>
+                    <span>Read Docs</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
@@ -307,7 +372,7 @@ export const LearningHubPage: React.FC = () => {
             {/* Footer Buttons */}
             <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between gap-4">
               <span className="text-xs text-zinc-400">
-                Reward: <strong className="text-[#A3E635]">+50 XP</strong>
+                Study Completion Reward: <strong className="text-[#A3E635]">+50 XP</strong>
               </span>
 
               <div className="flex items-center gap-2">
@@ -322,7 +387,7 @@ export const LearningHubPage: React.FC = () => {
                   className="px-4 py-1.5 rounded-lg bg-[#A3E635] hover:bg-[#bef264] text-[#09090F] text-xs font-bold flex items-center gap-1.5"
                 >
                   <Check className="w-3.5 h-3.5" />
-                  <span>Complete</span>
+                  <span>Mark Chapter as Studied</span>
                 </button>
               </div>
             </div>

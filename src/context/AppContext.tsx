@@ -15,6 +15,7 @@ import {
   ActivityFeedItem,
   TeamRecruitmentListing,
   LearningRoadmap,
+  LearningStep,
   DigitalResource,
   AuditLogEntry
 } from '../types';
@@ -155,6 +156,12 @@ interface AppContextType {
   updateUserRole: (userId: string, newRole: UserRole) => void;
   deletePost: (postId: string) => void;
   toggleFeatureProject: (projectId: string) => void;
+
+  // Curriculum & Learning Materials (Provided by Admin for Users to Study)
+  createRoadmap: (roadmap: Omit<LearningRoadmap, 'id'>) => void;
+  deleteRoadmap: (roadmapId: string) => void;
+  addRoadmapStep: (roadmapId: string, step: LearningStep) => void;
+  updateRoadmap: (roadmapId: string, updated: Partial<LearningRoadmap>) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -178,13 +185,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() =>
-    loadStored<UserProfile | null>('currentUser', INITIAL_MEMBERS[0])
+    loadStored<UserProfile | null>('currentUser', null)
   );
   const [activePage, setActivePage] = useState<NavigationPage>(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
       const hash = window.location.hash;
-      if (path === '/hq' || hash === '#hq' || hash.startsWith('#hq')) {
+      const savedUser = loadStored<UserProfile | null>('currentUser', null);
+      if ((path === '/hq' || hash === '#hq' || hash.startsWith('#hq')) && savedUser) {
         return 'dashboard';
       }
     }
@@ -257,6 +265,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   );
   const [auditLogs, setAuditLogs] = useState<AuditLogEntry[]>(() =>
     loadStored<AuditLogEntry[]>('auditLogs', INITIAL_AUDIT_LOGS)
+  );
+  const [roadmaps, setRoadmaps] = useState<LearningRoadmap[]>(() =>
+    loadStored<LearningRoadmap[]>('roadmaps', LEARNING_ROADMAPS)
   );
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -950,6 +961,69 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     addAuditLog('WORKSHOP_REGISTRATION', `User: ${currentUser.displayName} -> ${eventId} (${isPaid ? `₹${amountInr} Paid` : 'Free'})`, 'success');
   };
 
+  const createRoadmap = (roadmapData: Omit<LearningRoadmap, 'id'>) => {
+    const newRoadmap: LearningRoadmap = {
+      ...roadmapData,
+      id: `roadmap_${Date.now()}`,
+      publishedBy: currentUser?.displayName || 'Admin Akshat Vats',
+      createdAt: new Date().toISOString()
+    };
+    setRoadmaps((prev) => {
+      const updated = [newRoadmap, ...prev];
+      saveStored('roadmaps', updated);
+      return updated;
+    });
+    addAuditLog('ROADMAP_CREATED', `Admin published study track: ${roadmapData.title}`, 'success');
+    addToast({
+      type: 'success',
+      title: 'Study Track Published!',
+      description: `"${roadmapData.title}" is now available for all students to study.`
+    });
+  };
+
+  const deleteRoadmap = (roadmapId: string) => {
+    setRoadmaps((prev) => {
+      const updated = prev.filter((r) => r.id !== roadmapId);
+      saveStored('roadmaps', updated);
+      return updated;
+    });
+    addAuditLog('ROADMAP_DELETED', `Deleted study track #${roadmapId}`, 'warning');
+    addToast({
+      type: 'info',
+      title: 'Study Track Removed',
+      description: 'The roadmap was archived from the curriculum.'
+    });
+  };
+
+  const addRoadmapStep = (roadmapId: string, step: LearningStep) => {
+    setRoadmaps((prev) => {
+      const updated = prev.map((r) =>
+        r.id === roadmapId ? { ...r, steps: [...r.steps, step] } : r
+      );
+      saveStored('roadmaps', updated);
+      return updated;
+    });
+    addAuditLog('ROADMAP_STEP_ADDED', `Added module "${step.title}" to track #${roadmapId}`, 'success');
+    addToast({
+      type: 'success',
+      title: 'Study Chapter Added!',
+      description: `Added "${step.title}" to study material.`
+    });
+  };
+
+  const updateRoadmap = (roadmapId: string, updated: Partial<LearningRoadmap>) => {
+    setRoadmaps((prev) => {
+      const next = prev.map((r) => (r.id === roadmapId ? { ...r, ...updated } : r));
+      saveStored('roadmaps', next);
+      return next;
+    });
+    addToast({
+      type: 'success',
+      title: 'Curriculum Updated',
+      description: 'Changes to study material saved successfully.'
+    });
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -972,7 +1046,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         announcements,
         activityFeed,
         recruitmentListings,
-        roadmaps: LEARNING_ROADMAPS,
+        roadmaps,
         quests: INITIAL_QUESTS,
         achievements: INITIAL_ACHIEVEMENTS,
         isSearchModalOpen,
@@ -1019,7 +1093,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         rejectProject,
         updateUserRole,
         deletePost,
-        toggleFeatureProject
+        toggleFeatureProject,
+        createRoadmap,
+        deleteRoadmap,
+        addRoadmapStep,
+        updateRoadmap
       }}
     >
       {children}

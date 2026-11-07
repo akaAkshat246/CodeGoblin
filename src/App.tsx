@@ -33,7 +33,7 @@ import { ShortcutsModal } from './components/ShortcutsModal';
 import { AppleDockNavigation } from './components/framer';
 
 export const AppContent: React.FC = () => {
-  const { activePage, navigateTo } = useApp();
+  const { activePage, navigateTo, currentUser, setIsAuthModalOpen } = useApp();
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth >= 1024;
@@ -41,6 +41,14 @@ export const AppContent: React.FC = () => {
     return true;
   });
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+
+  // Hard Route Guard: No user is permitted into the Den without logging in
+  React.useEffect(() => {
+    if (!currentUser && activePage !== 'landing') {
+      navigateTo('landing');
+      setIsAuthModalOpen(true);
+    }
+  }, [currentUser, activePage, navigateTo, setIsAuthModalOpen]);
 
   // Global Keyboard Shortcuts
   React.useEffect(() => {
@@ -64,7 +72,7 @@ export const AppContent: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const isLanding = activePage === 'landing';
+  const isLanding = activePage === 'landing' || !currentUser;
 
   return (
     <div className="min-h-screen bg-[#09090F] text-[#F5F3FF] flex flex-col font-sans selection:bg-[#8B5CF6]/30 selection:text-[#A3E635]">

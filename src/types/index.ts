@@ -91,6 +91,8 @@ export interface LearningStep {
   description: string;
   resourceTitle?: string;
   resourceUrl?: string;
+  studyDirectives?: string[];
+  readingMaterial?: string;
 }
 
 export interface LearningRoadmap {
@@ -104,6 +106,8 @@ export interface LearningRoadmap {
   estimatedHours: string;
   steps: LearningStep[];
   tags: string[];
+  publishedBy?: string;
+  createdAt?: string;
 }
 
 export interface DiscussionPost {

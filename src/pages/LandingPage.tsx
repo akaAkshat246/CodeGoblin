@@ -448,7 +448,7 @@ Sign in to create your own goblin identity.`;
 };
 
 export const LandingPage: React.FC = () => {
-  const { navigateTo, setIsAuthModalOpen } = useApp();
+  const { navigateTo, setIsAuthModalOpen, currentUser } = useApp();
   const [currentChapter, setCurrentChapter] = useState('spawn');
   const [selectedRole, setSelectedRole] = useState(1); // Default to Technical (02)
   const [isEmailComposerOpen, setIsEmailComposerOpen] = useState(false);
@@ -562,7 +562,20 @@ export const LandingPage: React.FC = () => {
   };
 
   const handleEnterDen = () => {
+    if (!currentUser) {
+      setIsAuthModalOpen(true);
+      return;
+    }
     navigateTo('dashboard');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleProtectedNavigate = (page: any) => {
+    if (!currentUser) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    navigateTo(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -823,10 +836,7 @@ export const LandingPage: React.FC = () => {
                 <button
                   type="button"
                   className="w-full text-left cursor-pointer"
-                  onClick={() => {
-                    navigateTo('learning_hub');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
+                  onClick={() => handleProtectedNavigate('learning_hub')}
                 >
                   <span>01</span>
                   <div>
@@ -848,10 +858,7 @@ export const LandingPage: React.FC = () => {
                 <button
                   type="button"
                   className="w-full text-left cursor-pointer"
-                  onClick={() => {
-                    navigateTo('projects');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
+                  onClick={() => handleProtectedNavigate('projects')}
                 >
                   <span>03</span>
                   <div>
@@ -946,10 +953,7 @@ V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design,
               <button
                 type="button"
                 aria-label="Open Project Forge"
-                onClick={() => {
-                  navigateTo('projects');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onClick={() => handleProtectedNavigate('projects')}
               >
                 <FolderGit2 size={19} />
               </button>
@@ -1149,10 +1153,7 @@ V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design,
             <button
               type="button"
               className="impact-card text-left cursor-pointer"
-              onClick={() => {
-                navigateTo('projects');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+              onClick={() => handleProtectedNavigate('projects')}
             >
               <div>
                 <span>01</span>
@@ -1168,10 +1169,7 @@ V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design,
             <button
               type="button"
               className="impact-card text-left cursor-pointer"
-              onClick={() => {
-                navigateTo('discussions');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+              onClick={() => handleProtectedNavigate('discussions')}
             >
               <div>
                 <span>02</span>
@@ -1187,10 +1185,7 @@ V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design,
             <button
               type="button"
               className="impact-card text-left cursor-pointer"
-              onClick={() => {
-                navigateTo('squads');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+              onClick={() => handleProtectedNavigate('squads')}
             >
               <div>
                 <span>03</span>
@@ -1282,10 +1277,7 @@ V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design,
               </div>
               <button
                 type="button"
-                onClick={() => {
-                  navigateTo('hackathons');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onClick={() => handleProtectedNavigate('hackathons')}
                 className="px-3.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black text-xs font-bold transition-colors shrink-0"
               >
                 Claim Free Pass
@@ -1374,10 +1366,7 @@ V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design,
 
                     <ShimmerButton
                       type="button"
-                      onClick={() => {
-                        navigateTo('learning_hub');
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
+                      onClick={() => handleProtectedNavigate('learning_hub')}
                       className="w-full py-2.5 px-4 flex items-center justify-center gap-2"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
@@ -1618,22 +1607,22 @@ V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design,
             <h4 className="font-semibold text-white text-xs uppercase tracking-wider mb-3">Ecosystem</h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <button type="button" onClick={() => navigateTo('dashboard')} className="hover:text-white transition-colors">
+                <button type="button" onClick={() => handleProtectedNavigate('dashboard')} className="hover:text-white transition-colors">
                   Clan Dashboard
                 </button>
               </li>
               <li>
-                <button type="button" onClick={() => navigateTo('projects')} className="hover:text-white transition-colors">
+                <button type="button" onClick={() => handleProtectedNavigate('projects')} className="hover:text-white transition-colors">
                   Project Forge
                 </button>
               </li>
               <li>
-                <button type="button" onClick={() => navigateTo('hackathons')} className="hover:text-white transition-colors">
+                <button type="button" onClick={() => handleProtectedNavigate('hackathons')} className="hover:text-white transition-colors">
                   Hackathons & Events
                 </button>
               </li>
               <li>
-                <button type="button" onClick={() => navigateTo('resources_store')} className="hover:text-white transition-colors">
+                <button type="button" onClick={() => handleProtectedNavigate('resources_store')} className="hover:text-white transition-colors">
                   Resources Store
                 </button>
               </li>
@@ -1644,22 +1633,22 @@ V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design,
             <h4 className="font-semibold text-white text-xs uppercase tracking-wider mb-3">Community</h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <button type="button" onClick={() => navigateTo('discussions')} className="hover:text-white transition-colors">
+                <button type="button" onClick={() => handleProtectedNavigate('discussions')} className="hover:text-white transition-colors">
                   The Goblin Den
                 </button>
               </li>
               <li>
-                <button type="button" onClick={() => navigateTo('squads')} className="hover:text-white transition-colors">
+                <button type="button" onClick={() => handleProtectedNavigate('squads')} className="hover:text-white transition-colors">
                   Teams & Squads
                 </button>
               </li>
               <li>
-                <button type="button" onClick={() => navigateTo('leaderboards')} className="hover:text-white transition-colors">
+                <button type="button" onClick={() => handleProtectedNavigate('leaderboards')} className="hover:text-white transition-colors">
                   Esports Leaderboard
                 </button>
               </li>
               <li>
-                <button type="button" onClick={() => navigateTo('members')} className="hover:text-white transition-colors">
+                <button type="button" onClick={() => handleProtectedNavigate('members')} className="hover:text-white transition-colors">
                   Member Directory
                 </button>
               </li>

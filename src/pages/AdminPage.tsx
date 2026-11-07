@@ -24,7 +24,9 @@ import {
   KeyRound,
   Shield,
   Zap,
-  Fingerprint
+  Fingerprint,
+  BookOpen,
+  GraduationCap
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { UserRole, HackathonEvent } from '../types';
@@ -53,10 +55,14 @@ export const AdminPage: React.FC = () => {
     rejectProject,
     createEvent,
     loginAs,
-    navigateTo
+    navigateTo,
+    roadmaps,
+    createRoadmap,
+    deleteRoadmap,
+    addRoadmapStep
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'members' | 'projects' | 'events' | 'discussions' | 'audit_logs'>('projects');
+  const [activeTab, setActiveTab] = useState<'members' | 'projects' | 'events' | 'learning' | 'discussions' | 'audit_logs'>('projects');
   
   // Gatekeeper Special Mail State
   const [adminMailInput, setAdminMailInput] = useState('');
@@ -73,6 +79,25 @@ export const AdminPage: React.FC = () => {
   const [instructorRole, setInstructorRole] = useState('Technical Steward');
   const [eventDescription, setEventDescription] = useState('');
   const [eventStartDate, setEventStartDate] = useState('2026-11-20T18:00');
+
+  // Study Material & Curriculum Creator Modal State
+  const [isRoadmapModalOpen, setIsRoadmapModalOpen] = useState(false);
+  const [newRoadmapTitle, setNewRoadmapTitle] = useState('');
+  const [newRoadmapDescription, setNewRoadmapDescription] = useState('');
+  const [newRoadmapLevel, setNewRoadmapLevel] = useState<'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels'>('Beginner');
+  const [newRoadmapHours, setNewRoadmapHours] = useState('15 Hours');
+  const [newRoadmapTags, setNewRoadmapTags] = useState('React, TypeScript, Vibe Coding');
+  const [newFirstStepTitle, setNewFirstStepTitle] = useState('Foundations & Core Setup');
+  const [newFirstStepDesc, setNewFirstStepDesc] = useState('Study core concepts, architecture patterns, and initialize local development environment.');
+  const [newFirstStepResourceTitle, setNewFirstStepResourceTitle] = useState('Official Documentation & Reference Manual');
+  const [newFirstStepResourceUrl, setNewFirstStepResourceUrl] = useState('https://developer.mozilla.org/');
+
+  // Add Chapter to Existing Roadmap Modal State
+  const [selectedRoadmapForStep, setSelectedRoadmapForStep] = useState<string | null>(null);
+  const [newStepTitle, setNewStepTitle] = useState('');
+  const [newStepDesc, setNewStepDesc] = useState('');
+  const [newStepResourceTitle, setNewStepResourceTitle] = useState('Reference Documentation');
+  const [newStepResourceUrl, setNewStepResourceUrl] = useState('https://react.dev');
 
   const hasAdminMail = isAdminEmail(currentUser?.email);
   const isAdmin = currentUser?.role === 'Administrator' || currentUser?.role === 'Moderator' || hasAdminMail;
@@ -248,6 +273,50 @@ export const AdminPage: React.FC = () => {
     setIsEventModalOpen(false);
     setEventTitle('');
     setEventDescription('');
+  };
+
+  const handleCreateRoadmapSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newRoadmapTitle.trim()) return;
+
+    createRoadmap({
+      title: newRoadmapTitle.trim(),
+      description: newRoadmapDescription.trim() || 'Comprehensive study track provided by CodeGoblins Academic Council.',
+      level: newRoadmapLevel,
+      estimatedHours: newRoadmapHours,
+      tags: newRoadmapTags.split(',').map((t) => t.trim()).filter(Boolean),
+      goblinRoleId: 2,
+      archetype: 'Architect',
+      icon: 'BookOpen',
+      steps: [
+        {
+          title: newFirstStepTitle.trim() || 'Core Foundations',
+          description: newFirstStepDesc.trim() || 'Initial study material and setup.',
+          resourceTitle: newFirstStepResourceTitle.trim() || 'Official Docs',
+          resourceUrl: newFirstStepResourceUrl.trim() || 'https://developer.mozilla.org/'
+        }
+      ]
+    });
+
+    setIsRoadmapModalOpen(false);
+    setNewRoadmapTitle('');
+    setNewRoadmapDescription('');
+  };
+
+  const handleAddStepSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedRoadmapForStep || !newStepTitle.trim()) return;
+
+    addRoadmapStep(selectedRoadmapForStep, {
+      title: newStepTitle.trim(),
+      description: newStepDesc.trim() || 'Study directives and concepts provided by admin.',
+      resourceTitle: newStepResourceTitle.trim() || 'Documentation',
+      resourceUrl: newStepResourceUrl.trim() || 'https://developer.mozilla.org/'
+    });
+
+    setSelectedRoadmapForStep(null);
+    setNewStepTitle('');
+    setNewStepDesc('');
   };
 
   const totalRegisteredSeats = hackathons.reduce((acc, h) => acc + h.registeredUserIds.length, 0);
@@ -445,6 +514,18 @@ export const AdminPage: React.FC = () => {
         </button>
 
         <button
+          onClick={() => setActiveTab('learning')}
+          className={`px-4 py-2 rounded-xl transition flex items-center gap-1.5 ${
+            activeTab === 'learning'
+              ? 'bg-[#171725] text-[#A3E635] border border-[#A3E635]/40 font-bold'
+              : 'text-[#A1A1B5] hover:text-[#F5F3FF]'
+          }`}
+        >
+          <BookOpen className="w-3.5 h-3.5" />
+          <span>Curriculum & Study Tracks ({roadmaps.length})</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab('members')}
           className={`px-4 py-2 rounded-xl transition ${
             activeTab === 'members'
@@ -609,6 +690,123 @@ export const AdminPage: React.FC = () => {
                     <span>View Page</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* TAB: CURRICULUM & STUDY MATERIALS (ADMIN PROVIDED) */}
+      {activeTab === 'learning' && (
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-[#171725] border border-white/5">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#A3E635]/20 text-[#A3E635] border border-[#A3E635]/30">
+                  ADMIN ACADEMIC STEWARD
+                </span>
+                <span className="text-xs text-zinc-400 font-mono">{roadmaps.length} Tracks Published</span>
+              </div>
+              <h3 className="text-lg font-bold text-[#F5F3FF] mt-1">
+                Study Materials & Curriculum Manager
+              </h3>
+              <p className="text-xs text-[#A1A1B5] mt-0.5 max-w-xl">
+                As administrators, you provide official learning tracks, syllabus chapters, tutorials, and reading materials for students to study.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setIsRoadmapModalOpen(true)}
+              className="goblin-btn-green px-4 py-2 text-xs font-bold flex items-center gap-2 shrink-0 shadow-[0_0_15px_rgba(163,230,53,0.2)]"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Publish New Study Track</span>
+            </button>
+          </div>
+
+          {/* List of Study Tracks */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {roadmaps.map((map) => (
+              <div key={map.id} className="p-5 rounded-2xl bg-[#111118] border border-white/[0.08] flex flex-col justify-between space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] text-zinc-300">
+                      {map.level}
+                    </span>
+                    <span className="text-[11px] font-mono text-zinc-400 flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-zinc-500" />
+                      {map.estimatedHours}
+                    </span>
+                  </div>
+
+                  <h4 className="text-base font-bold text-white">{map.title}</h4>
+                  <p className="text-xs text-zinc-400 leading-relaxed">{map.description}</p>
+
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {map.tags.map((t, idx) => (
+                      <span key={idx} className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.04] text-zinc-400 border border-white/[0.06]">
+                        #{t}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Chapters List */}
+                  <div className="pt-2 border-t border-white/[0.06] space-y-2">
+                    <div className="flex items-center justify-between text-xs font-semibold text-zinc-300">
+                      <span>Study Chapters ({map.steps.length})</span>
+                      <button
+                        onClick={() => {
+                          setSelectedRoadmapForStep(map.id);
+                          setNewStepTitle('');
+                          setNewStepDesc('');
+                        }}
+                        className="text-[11px] text-[#A3E635] hover:underline flex items-center gap-1"
+                      >
+                        <Plus className="w-3 h-3" />
+                        <span>Add Chapter</span>
+                      </button>
+                    </div>
+
+                    <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                      {map.steps.map((step, sIdx) => (
+                        <div key={sIdx} className="p-2 rounded-lg bg-white/[0.02] border border-white/[0.04] text-xs flex items-center justify-between gap-2">
+                          <span className="text-zinc-300 truncate">
+                            <strong className="text-zinc-500 mr-1.5 font-mono">{sIdx + 1}.</strong>
+                            {step.title}
+                          </span>
+                          {step.resourceUrl && (
+                            <a
+                              href={step.resourceUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-[10px] text-zinc-400 hover:text-white shrink-0 flex items-center gap-0.5"
+                            >
+                              <span>Docs</span>
+                              <ExternalLink className="w-2.5 h-2.5" />
+                            </a>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between">
+                  <span className="text-[10px] text-zinc-500 font-mono">
+                    ID: {map.id} • {map.publishedBy || 'Admin Curated'}
+                  </span>
+                  <button
+                    onClick={() => {
+                      if (confirm(`Archive and remove study track "${map.title}"?`)) {
+                        deleteRoadmap(map.id);
+                      }
+                    }}
+                    className="p-1.5 rounded-lg text-rose-400 hover:bg-rose-500/10 transition"
+                    title="Delete Track"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             ))}
@@ -857,6 +1055,235 @@ export const AdminPage: React.FC = () => {
                   className="goblin-btn-primary py-2 px-5 text-xs font-bold"
                 >
                   Publish Event
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Publish New Study Track / Curriculum Modal */}
+      {isRoadmapModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#11111B] border border-lime-400/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl relative animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <h3 className="text-lg font-black text-[#F5F3FF] flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-lime-400" />
+                <span>Publish Official Study Track</span>
+              </h3>
+              <button
+                onClick={() => setIsRoadmapModalOpen(false)}
+                className="p-1 rounded-lg text-[#A1A1B5] hover:text-[#F5F3FF]"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateRoadmapSubmit} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-[#A1A1B5] font-semibold mb-1">Study Track Title</label>
+                <input
+                  type="text"
+                  required
+                  value={newRoadmapTitle}
+                  onChange={(e) => setNewRoadmapTitle(e.target.value)}
+                  placeholder="e.g. Full-Stack AI Engineering & Agents 2026"
+                  className="w-full px-3.5 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:border-lime-400 focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[#A1A1B5] font-semibold mb-1">Study Level</label>
+                  <select
+                    value={newRoadmapLevel}
+                    onChange={(e) => setNewRoadmapLevel(e.target.value as any)}
+                    className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none"
+                  >
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                    <option value="All Levels">All Levels</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[#A1A1B5] font-semibold mb-1">Estimated Hours</label>
+                  <input
+                    type="text"
+                    value={newRoadmapHours}
+                    onChange={(e) => setNewRoadmapHours(e.target.value)}
+                    placeholder="e.g. 18 Hours"
+                    className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[#A1A1B5] font-semibold mb-1">Syllabus Overview & Description</label>
+                <textarea
+                  rows={2}
+                  required
+                  value={newRoadmapDescription}
+                  onChange={(e) => setNewRoadmapDescription(e.target.value)}
+                  placeholder="What will the student study and learn in this curriculum track?"
+                  className="w-full px-3.5 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[#A1A1B5] font-semibold mb-1">Topic Tags (comma-separated)</label>
+                <input
+                  type="text"
+                  value={newRoadmapTags}
+                  onChange={(e) => setNewRoadmapTags(e.target.value)}
+                  placeholder="React, TypeScript, Next.js, AI"
+                  className="w-full px-3.5 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-[#F5F3FF] focus:outline-none"
+                />
+              </div>
+
+              {/* Initial Chapter */}
+              <div className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-3">
+                <p className="text-[11px] font-bold text-lime-400 uppercase tracking-wider">
+                  Initial Chapter 1 Study Content
+                </p>
+                <div>
+                  <label className="block text-zinc-400 font-semibold mb-1">Chapter 1 Title</label>
+                  <input
+                    type="text"
+                    required
+                    value={newFirstStepTitle}
+                    onChange={(e) => setNewFirstStepTitle(e.target.value)}
+                    placeholder="e.g. Chapter 1: Core Architecture & Setup"
+                    className="w-full px-3 py-1.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-zinc-400 font-semibold mb-1">Study Notes & Directives</label>
+                  <textarea
+                    rows={2}
+                    value={newFirstStepDesc}
+                    onChange={(e) => setNewFirstStepDesc(e.target.value)}
+                    placeholder="Reading instructions and key focus points for students..."
+                    className="w-full px-3 py-1.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none resize-none"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    value={newFirstStepResourceTitle}
+                    onChange={(e) => setNewFirstStepResourceTitle(e.target.value)}
+                    placeholder="Docs Title"
+                    className="px-3 py-1.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none"
+                  />
+                  <input
+                    type="url"
+                    value={newFirstStepResourceUrl}
+                    onChange={(e) => setNewFirstStepResourceUrl(e.target.value)}
+                    placeholder="https://docs..."
+                    className="px-3 py-1.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsRoadmapModalOpen(false)}
+                  className="px-4 py-2 rounded-xl border border-white/10 text-xs font-semibold text-[#A1A1B5]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="goblin-btn-green py-2 px-5 text-xs font-bold"
+                >
+                  Publish Track
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Add Study Chapter Modal */}
+      {selectedRoadmapForStep && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#11111B] border border-lime-400/40 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl relative animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <Plus className="w-4 h-4 text-lime-400" />
+                <span>Add Study Chapter</span>
+              </h3>
+              <button
+                onClick={() => setSelectedRoadmapForStep(null)}
+                className="p-1 rounded-lg text-zinc-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddStepSubmit} className="space-y-3.5 text-xs">
+              <div>
+                <label className="block text-zinc-400 font-semibold mb-1">Chapter Title</label>
+                <input
+                  type="text"
+                  required
+                  value={newStepTitle}
+                  onChange={(e) => setNewStepTitle(e.target.value)}
+                  placeholder="e.g. Next.js App Router & Server Components"
+                  className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none focus:border-lime-400"
+                />
+              </div>
+
+              <div>
+                <label className="block text-zinc-400 font-semibold mb-1">Study Guide & Instructions</label>
+                <textarea
+                  rows={3}
+                  required
+                  value={newStepDesc}
+                  onChange={(e) => setNewStepDesc(e.target.value)}
+                  placeholder="Explain concepts, coding patterns, and self-study directives..."
+                  className="w-full px-3 py-2 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none resize-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-zinc-400 font-semibold mb-1">Resource Title</label>
+                  <input
+                    type="text"
+                    value={newStepResourceTitle}
+                    onChange={(e) => setNewStepResourceTitle(e.target.value)}
+                    placeholder="Documentation"
+                    className="w-full px-3 py-1.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-zinc-400 font-semibold mb-1">Resource Link</label>
+                  <input
+                    type="url"
+                    value={newStepResourceUrl}
+                    onChange={(e) => setNewStepResourceUrl(e.target.value)}
+                    placeholder="https://..."
+                    className="w-full px-3 py-1.5 rounded-xl bg-[#171725] border border-white/10 text-xs text-white focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSelectedRoadmapForStep(null)}
+                  className="px-3.5 py-1.5 rounded-xl border border-white/10 text-xs font-semibold text-zinc-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="goblin-btn-green py-1.5 px-4 text-xs font-bold"
+                >
+                  Add Chapter
                 </button>
               </div>
             </form>
