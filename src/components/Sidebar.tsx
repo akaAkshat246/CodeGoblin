@@ -1,22 +1,17 @@
 import React from 'react';
 import {
   LayoutDashboard,
-  BookOpen,
   Trophy,
-  PackageOpen,
   Hammer,
   Users2,
-  Scroll,
   MessageSquare,
   Crown,
-  UserCheck,
   Megaphone,
   User,
   Settings,
   ShieldCheck,
   PanelLeftClose,
-  Globe,
-  Zap
+  Globe
 } from 'lucide-react';
 import { useApp, NavigationPage } from '../context/AppContext';
 import { isAdminEmail } from '../utils/adminAuth';
@@ -38,16 +33,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
   const navItems: NavItem[] = [
     { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
-    { id: 'learning_hub', label: 'Learning Hub', icon: BookOpen },
     { id: 'hackathons', label: 'Events & Workshops', icon: Trophy },
-    { id: 'build_win', label: 'Build & Win Circuit', icon: Zap },
-    { id: 'resources_store', label: 'Resources Store', icon: PackageOpen },
     { id: 'projects', label: 'Project Forge', icon: Hammer },
     { id: 'squads', label: 'Teams & Squads', icon: Users2 },
-    { id: 'quests', label: 'Quests', icon: Scroll },
     { id: 'discussions', label: 'The Goblin Den', icon: MessageSquare },
     { id: 'leaderboards', label: 'Leaderboards', icon: Crown },
-    { id: 'members', label: 'Goblin Directory', icon: UserCheck },
     { id: 'announcements', label: 'Announcements', icon: Megaphone },
   ];
 

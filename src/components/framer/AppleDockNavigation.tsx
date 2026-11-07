@@ -1,12 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { 
   Home, 
-  BookOpen, 
   Swords, 
   Hammer, 
   MessageSquare, 
   Trophy, 
-  FolderDown, 
+  Crown,
   Layers
 } from 'lucide-react';
 
@@ -45,19 +44,11 @@ export const AppleDockNavigation: React.FC<AppleDockNavigationProps> = ({
       isActive: activeId === 'dashboard',
     },
     {
-      id: 'learning',
-      label: 'Learning',
-      icon: <BookOpen className="w-5 h-5" />,
-      onClick: () => onNavigate('learning'),
-      isActive: activeId === 'learning',
-    },
-    {
-      id: 'quests',
-      label: 'Quests',
-      icon: <Swords className="w-5 h-5" />,
-      badge: '3',
-      onClick: () => onNavigate('quests'),
-      isActive: activeId === 'quests',
+      id: 'events',
+      label: 'Events',
+      icon: <Trophy className="w-5 h-5" />,
+      onClick: () => onNavigate('events'),
+      isActive: activeId === 'events',
     },
     {
       id: 'forge',
@@ -65,6 +56,13 @@ export const AppleDockNavigation: React.FC<AppleDockNavigationProps> = ({
       icon: <Hammer className="w-5 h-5" />,
       onClick: () => onNavigate('forge'),
       isActive: activeId === 'forge',
+    },
+    {
+      id: 'squads',
+      label: 'Squads',
+      icon: <Swords className="w-5 h-5" />,
+      onClick: () => onNavigate('squads'),
+      isActive: activeId === 'squads',
     },
     {
       id: 'den',
@@ -77,16 +75,9 @@ export const AppleDockNavigation: React.FC<AppleDockNavigationProps> = ({
     {
       id: 'leaderboard',
       label: 'Ranks',
-      icon: <Trophy className="w-5 h-5" />,
+      icon: <Crown className="w-5 h-5" />,
       onClick: () => onNavigate('leaderboard'),
       isActive: activeId === 'leaderboard',
-    },
-    {
-      id: 'resources',
-      label: 'Store',
-      icon: <FolderDown className="w-5 h-5" />,
-      onClick: () => onNavigate('resources'),
-      isActive: activeId === 'resources',
     },
   ];
 

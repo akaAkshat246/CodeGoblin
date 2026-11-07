@@ -18,8 +18,7 @@ export const ShortcutsModal: React.FC<ShortcutsModalProps> = ({ isOpen, onClose 
 
   const navigations = [
     { key: 'G then D', desc: 'Jump to Home / Dashboard' },
-    { key: 'G then L', desc: 'Jump to Learning Hub & Roadmaps' },
-    { key: 'G then Q', desc: 'Jump to Quests & Challenges' },
+    { key: 'G then E', desc: 'Jump to Events & Workshops' },
     { key: 'G then P', desc: 'Jump to Project Forge' },
     { key: 'G then S', desc: 'Jump to Teams & Squads' },
   ];

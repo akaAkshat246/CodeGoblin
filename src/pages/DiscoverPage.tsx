@@ -139,10 +139,10 @@ export const DiscoverPage: React.FC = () => {
             </p>
           </div>
           <button
-            onClick={() => navigateTo('members')}
+            onClick={() => navigateTo('squads')}
             className="mt-5 w-full py-2 px-3 rounded-xl bg-[#171725] border border-white/10 hover:border-sky-400 text-xs font-semibold text-[#F5F3FF] transition"
           >
-            Find a Mentor →
+            Find a Squad →
           </button>
         </div>
       </div>

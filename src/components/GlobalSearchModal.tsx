@@ -22,9 +22,7 @@ export const GlobalSearchModal: React.FC = () => {
     navigateTo,
     posts,
     projects,
-    quests,
-    hackathons,
-    allUsers
+    hackathons
   } = useApp();
 
   const [query, setQuery] = useState('');
@@ -66,15 +64,6 @@ export const GlobalSearchModal: React.FC = () => {
       )
     : [];
 
-  const matchedQuests = q
-    ? quests.filter(
-        (quest) =>
-          quest.title.toLowerCase().includes(q) ||
-          quest.description.toLowerCase().includes(q) ||
-          quest.category.toLowerCase().includes(q)
-      )
-    : [];
-
   const matchedEvents = q
     ? hackathons.filter(
         (e) =>
@@ -84,21 +73,10 @@ export const GlobalSearchModal: React.FC = () => {
       )
     : [];
 
-  const matchedMembers = q
-    ? allUsers.filter(
-        (u) =>
-          u.displayName.toLowerCase().includes(q) ||
-          u.username.toLowerCase().includes(q) ||
-          u.skills.some((s) => s.toLowerCase().includes(q))
-      )
-    : [];
-
   const totalResults =
     matchedPosts.length +
     matchedProjects.length +
-    matchedQuests.length +
-    matchedEvents.length +
-    matchedMembers.length;
+    matchedEvents.length;
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 sm:pt-20 bg-black/80 backdrop-blur-md animate-in fade-in duration-150">
@@ -111,7 +89,7 @@ export const GlobalSearchModal: React.FC = () => {
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search discussions, projects, quests, hackathons, members..."
+            placeholder="Search discussions, projects, hackathons..."
             className="w-full bg-transparent text-sm text-[#F5F3FF] placeholder-[#A1A1B5] focus:outline-none font-medium"
           />
           {query && (
@@ -141,8 +119,6 @@ export const GlobalSearchModal: React.FC = () => {
                 <div className="grid grid-cols-2 gap-2">
                   {[
                     { label: 'Home / Dashboard', page: 'dashboard' as const, icon: LayoutDashboard },
-                    { label: 'Learning Hub & Roadmaps', page: 'learning_hub' as const, icon: BookOpen },
-                    { label: 'Quests & Challenges', page: 'quests' as const, icon: Scroll },
                     { label: 'Events & Workshops', page: 'hackathons' as const, icon: Trophy },
                     { label: 'Project Forge', page: 'projects' as const, icon: Hammer },
                     { label: 'Teams & Squads', page: 'squads' as const, icon: Users },
@@ -178,40 +154,6 @@ export const GlobalSearchModal: React.FC = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {/* Quests */}
-              {matchedQuests.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#A3E635] uppercase tracking-wider mb-2">
-                    <Scroll className="w-3.5 h-3.5" />
-                    <span>Quests & Learning ({matchedQuests.length})</span>
-                  </div>
-                  <div className="space-y-1.5">
-                    {matchedQuests.map((quest) => (
-                      <div
-                        key={quest.id}
-                        onClick={() => {
-                          navigateTo('quests');
-                          setIsSearchModalOpen(false);
-                        }}
-                        className="p-2.5 rounded-xl bg-[#171725] hover:bg-[#1E1E32] border border-white/5 cursor-pointer flex items-center justify-between group transition"
-                      >
-                        <div>
-                          <p className="text-xs font-bold text-[#F5F3FF] group-hover:text-[#A3E635] transition">
-                            {quest.title}
-                          </p>
-                          <p className="text-[11px] text-[#A1A1B5] truncate max-w-md">
-                            {quest.description}
-                          </p>
-                        </div>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#A3E635]/15 text-[#A3E635]">
-                          +{quest.xpReward} XP
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               {/* Discussions */}
               {matchedPosts.length > 0 && (
                 <div>
@@ -307,39 +249,6 @@ export const GlobalSearchModal: React.FC = () => {
                         <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-500/15 text-emerald-400 font-semibold">
                           {evt.status}
                         </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Members */}
-              {matchedMembers.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-sky-400 uppercase tracking-wider mb-2">
-                    <Users className="w-3.5 h-3.5" />
-                    <span>Builders & Mentors ({matchedMembers.length})</span>
-                  </div>
-                  <div className="space-y-1.5">
-                    {matchedMembers.map((member) => (
-                      <div
-                        key={member.id}
-                        onClick={() => {
-                          navigateTo('profile', member.id);
-                          setIsSearchModalOpen(false);
-                        }}
-                        className="p-2.5 rounded-xl bg-[#171725] hover:bg-[#1E1E32] border border-white/5 cursor-pointer flex items-center justify-between group transition"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-xs text-[#F5F3FF] group-hover:text-sky-400 transition">
-                            {member.displayName}
-                          </span>
-                          <span className="text-[10px] text-[#A1A1B5]">@{member.username}</span>
-                          <span className="px-1.5 py-0.2 rounded text-[10px] bg-[#8B5CF6]/20 text-[#C084FC]">
-                            Lvl {member.level}
-                          </span>
-                        </div>
-                        <span className="text-[10px] text-[#A1A1B5]">{member.college}</span>
                       </div>
                     ))}
                   </div>

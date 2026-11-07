@@ -14,21 +14,16 @@ import { DashboardPage } from './pages/DashboardPage';
 import { DiscoverPage } from './pages/DiscoverPage';
 import { DiscussionsPage } from './pages/DiscussionsPage';
 import { DiscussionDetailPage } from './pages/DiscussionDetailPage';
-import { QuestsPage } from './pages/QuestsPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { HackathonsPage } from './pages/HackathonsPage';
-import { BuildWinPage } from './pages/BuildWinPage';
 import { SquadsPage } from './pages/SquadsPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
-import { MembersPage } from './pages/MembersPage';
 import { NineGoblinsHubPage } from './pages/NineGoblinsHubPage';
-import { LearningHubPage } from './pages/LearningHubPage';
 import { AnnouncementsPage } from './pages/AnnouncementsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AdminPage } from './pages/AdminPage';
-import { ResourcesStorePage } from './pages/ResourcesStorePage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { AppleDockNavigation } from './components/framer';
@@ -113,16 +108,11 @@ export const AppContent: React.FC = () => {
             {activePage === 'discover' && <DiscoverPage />}
             {activePage === 'discussions' && <DiscussionsPage />}
             {activePage === 'discussion_detail' && <DiscussionDetailPage />}
-            {activePage === 'quests' && <QuestsPage />}
             {activePage === 'projects' && <ProjectsPage />}
             {activePage === 'project_detail' && <ProjectDetailPage />}
             {activePage === 'hackathons' && <HackathonsPage />}
-            {activePage === 'build_win' && <BuildWinPage />}
             {activePage === 'squads' && <SquadsPage />}
-            {activePage === 'learning_hub' && <LearningHubPage />}
-            {activePage === 'resources_store' && <ResourcesStorePage />}
             {activePage === 'leaderboards' && <LeaderboardPage />}
-            {activePage === 'members' && <MembersPage />}
             {activePage === 'announcements' && <AnnouncementsPage />}
             {activePage === 'nine_goblins' && <NineGoblinsHubPage />}
             {activePage === 'profile' && <ProfilePage />}
@@ -134,26 +124,25 @@ export const AppContent: React.FC = () => {
           <div className="md:hidden">
             <AppleDockNavigation
               activeId={
-                activePage === 'learning_hub'
-                  ? 'learning'
+                activePage === 'hackathons'
+                  ? 'events'
                   : activePage === 'projects' || activePage === 'project_detail'
                   ? 'forge'
+                  : activePage === 'squads'
+                  ? 'squads'
                   : activePage === 'discussions' || activePage === 'discussion_detail'
                   ? 'den'
                   : activePage === 'leaderboards'
                   ? 'leaderboard'
-                  : activePage === 'resources_store'
-                  ? 'resources'
                   : activePage
               }
               onNavigate={(pageId) => {
                 let target: NavigationPage = 'dashboard';
-                if (pageId === 'learning') target = 'learning_hub';
+                if (pageId === 'events') target = 'hackathons';
                 else if (pageId === 'forge') target = 'projects';
+                else if (pageId === 'squads') target = 'squads';
                 else if (pageId === 'den') target = 'discussions';
                 else if (pageId === 'leaderboard') target = 'leaderboards';
-                else if (pageId === 'resources') target = 'resources_store';
-                else if (pageId === 'quests') target = 'quests';
                 else if (pageId === 'dashboard') target = 'dashboard';
                 navigateTo(target);
                 window.scrollTo({ top: 0, behavior: 'smooth' });

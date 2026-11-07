@@ -31,31 +31,21 @@ export const DashboardPage: React.FC = () => {
   const {
     currentUser,
     navigateTo,
-    quests,
-    completedQuestIds,
-    completeQuest,
     posts,
+    projects,
     hackathons,
     allUsers,
-    roadmaps,
-    completedLessonIds
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'tasks' | 'events' | 'discussions'>('tasks');
+  const [activeTab, setActiveTab] = useState<'events' | 'projects' | 'discussions'>('events');
 
   if (!currentUser) return null;
 
   const activeGoblin = GOBLIN_CHARACTERS.find((g) => g.id === currentUser.avatarGoblinId) || GOBLIN_CHARACTERS[1];
-  const dailyQuests = quests.filter((q) => q.isDailyQuest);
-  const pendingQuests = dailyQuests.filter((q) => !completedQuestIds.includes(q.id));
   const upcomingHackathon = hackathons.find((h) => h.status === 'Upcoming') || hackathons[0];
   const trendingPosts = [...posts].sort((a, b) => b.upvotes - a.upvotes).slice(0, 3);
   const sortedMembers = [...allUsers].sort((a, b) => b.xp - a.xp);
   const userRank = sortedMembers.findIndex((m) => m.id === currentUser.id) + 1;
-
-  // Next roadmap step focus
-  const currentRoadmap = roadmaps[0];
-  const nextStep = currentRoadmap?.steps.find((s) => !completedLessonIds.includes(s.title)) || currentRoadmap?.steps[0];
 
   // XP & Level calculations
   const currentXP = currentUser.xp;
@@ -118,7 +108,7 @@ export const DashboardPage: React.FC = () => {
   // Daily Builder Target
   const [dailyGoalClaimed, setDailyGoalClaimed] = useState(false);
   const dailyTargetXP = 200;
-  const todayEarnedXP = 160 + (completedQuestIds.length * 20);
+  const todayEarnedXP = 160;
   const isGoalReached = todayEarnedXP >= dailyTargetXP;
 
   const handleClaimDailyGoal = () => {
@@ -130,17 +120,6 @@ export const DashboardPage: React.FC = () => {
       spread: 60,
       origin: { y: 0.7 },
       colors: ['#A3E635', '#F59E0B']
-    });
-  };
-
-  const handleClaimQuest = (questId: string) => {
-    completeQuest(questId);
-    playSuccessChime();
-    confetti({
-      particleCount: 35,
-      spread: 55,
-      origin: { y: 0.8 },
-      colors: ['#A3E635', '#8B5CF6']
     });
   };
 
@@ -187,11 +166,11 @@ export const DashboardPage: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => navigateTo('learning_hub')}
+            onClick={() => navigateTo('hackathons')}
             className="px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-zinc-200 transition flex items-center gap-1.5"
           >
-            <BookOpen className="w-3.5 h-3.5 text-zinc-400" />
-            <span>Roadmaps</span>
+            <Trophy className="w-3.5 h-3.5 text-lime-400" />
+            <span>Hackathons</span>
           </button>
           <button
             onClick={() => navigateTo('projects')}
@@ -236,18 +215,18 @@ export const DashboardPage: React.FC = () => {
           <p className="text-[11px] text-zinc-500">Best: {currentUser.longestStreak} days</p>
         </SpotlightCard>
 
-        {/* Metric 3: Quests Pending */}
+        {/* Metric 3: Active Competitions */}
         <SpotlightCard className="p-4 space-y-2" spotlightColor="rgba(163, 230, 53, 0.15)">
           <div className="flex items-center justify-between text-xs text-zinc-400">
-            <span>Daily Quests</span>
-            <Check className="w-3.5 h-3.5 text-[#A3E635]" />
+            <span>Competitions</span>
+            <Trophy className="w-3.5 h-3.5 text-[#A3E635]" />
           </div>
           <div className="text-lg font-bold font-mono text-white">
-            {dailyQuests.length - pendingQuests.length}{' '}
-            <span className="text-xs font-normal text-zinc-500">/ {dailyQuests.length}</span>
+            {hackathons.length}{' '}
+            <span className="text-xs font-normal text-zinc-500">active</span>
           </div>
           <p className="text-[11px] text-zinc-500">
-            {pendingQuests.length > 0 ? `${pendingQuests.length} pending today` : 'All caught up! Fully completed.'}
+            {upcomingHackathon ? `Next: ${upcomingHackathon.title}` : 'Sprint ready'}
           </p>
         </SpotlightCard>
 
@@ -265,30 +244,30 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* 3. CURRENT FOCUS BANNER (Direct, Action-oriented) */}
-      {currentRoadmap && nextStep && (
+      {upcomingHackathon && (
         <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#171725] to-[#111118] border border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#8B5CF6]/20 text-[#C084FC]">
-                Current Roadmap
+                Featured Hackathon
               </span>
-              <span className="text-xs text-zinc-400 font-medium">
-                {currentRoadmap.title}
+              <span className="text-xs text-amber-400 font-mono font-medium">
+                {upcomingHackathon.prizePool}
               </span>
             </div>
             <h2 className="text-sm sm:text-base font-bold text-white">
-              Next Up: {nextStep.title}
+              {upcomingHackathon.title}
             </h2>
             <p className="text-xs text-zinc-400 line-clamp-1">
-              {nextStep.description}
+              {upcomingHackathon.description}
             </p>
           </div>
 
           <button
-            onClick={() => navigateTo('learning_hub')}
+            onClick={() => navigateTo('hackathons')}
             className="px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.1] text-xs font-semibold text-white transition flex items-center gap-1.5 shrink-0 self-start sm:self-auto"
           >
-            <span>Continue Learning</span>
+            <span>View Events</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -408,8 +387,8 @@ export const DashboardPage: React.FC = () => {
           height={150}
         />
         <BarGraph
-          title="Daily Quests & Forge Activity"
-          subtitle="Completed challenges and commits per day"
+          title="Project Forge &amp; Sprint Activity"
+          subtitle="Hackathon commits and builds per day"
           data={[
             { label: 'Mon', value: 25 },
             { label: 'Tue', value: 45 },
@@ -427,16 +406,6 @@ export const DashboardPage: React.FC = () => {
       <div className="space-y-4 pt-2">
         <div className="flex items-center gap-2 border-b border-white/[0.06] pb-2 text-xs font-medium">
           <button
-            onClick={() => setActiveTab('tasks')}
-            className={`px-3 py-1.5 rounded-lg transition ${
-              activeTab === 'tasks'
-                ? 'bg-white/[0.08] text-white font-semibold'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            Daily Tasks ({dailyQuests.length})
-          </button>
-          <button
             onClick={() => setActiveTab('events')}
             className={`px-3 py-1.5 rounded-lg transition ${
               activeTab === 'events'
@@ -445,6 +414,16 @@ export const DashboardPage: React.FC = () => {
             }`}
           >
             Upcoming Events ({hackathons.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('projects')}
+            className={`px-3 py-1.5 rounded-lg transition ${
+              activeTab === 'projects'
+                ? 'bg-white/[0.08] text-white font-semibold'
+                : 'text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            Project Forge ({projects.length})
           </button>
           <button
             onClick={() => setActiveTab('discussions')}
@@ -458,67 +437,7 @@ export const DashboardPage: React.FC = () => {
           </button>
         </div>
 
-        {/* TAB 1: DAILY TASKS (MINIMAL CHECKLIST) */}
-        {activeTab === 'tasks' && (
-          <div className="space-y-2.5">
-            {dailyQuests.map((quest) => {
-              const isDone = completedQuestIds.includes(quest.id);
-
-              return (
-                <div
-                  key={quest.id}
-                  className={`p-3.5 rounded-xl border transition flex items-center justify-between gap-4 ${
-                    isDone
-                      ? 'bg-white/[0.01] border-white/[0.04] text-zinc-500'
-                      : 'bg-[#111118] border-white/[0.06] hover:border-white/[0.12] text-zinc-200'
-                  }`}
-                >
-                  <div className="flex items-center gap-3 overflow-hidden">
-                    <div
-                      className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
-                        isDone
-                          ? 'bg-emerald-500/10 text-emerald-400'
-                          : 'bg-white/[0.04] text-zinc-500 border border-white/[0.06]'
-                      }`}
-                    >
-                      {isDone ? <Check className="w-3.5 h-3.5" /> : <div className="w-1.5 h-1.5 rounded-full bg-zinc-600" />}
-                    </div>
-
-                    <div className="overflow-hidden">
-                      <h3 className={`text-xs sm:text-sm font-semibold truncate ${isDone ? 'line-through text-zinc-500' : 'text-white'}`}>
-                        {quest.title}
-                      </h3>
-                      <p className="text-[11px] text-zinc-500 truncate mt-0.5">
-                        {quest.category} • ~{quest.estimatedMinutes} mins
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className="text-xs font-mono font-medium text-[#A3E635]">
-                      +{quest.xpReward} XP
-                    </span>
-
-                    {isDone ? (
-                      <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium">
-                        Done
-                      </span>
-                    ) : (
-                      <button
-                        onClick={() => handleClaimQuest(quest.id)}
-                        className="px-3 py-1 rounded-lg bg-white/[0.08] hover:bg-[#A3E635] hover:text-[#09090F] text-xs font-medium text-white transition"
-                      >
-                        Complete
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* TAB 2: UPCOMING EVENTS (MINIMAL CARDS) */}
+        {/* TAB 1: UPCOMING EVENTS (MINIMAL CARDS) */}
         {activeTab === 'events' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {hackathons.map((evt) => (
@@ -555,6 +474,35 @@ export const DashboardPage: React.FC = () => {
                     <span>Inspect</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* TAB 2: PROJECT FORGE */}
+        {activeTab === 'projects' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {projects.slice(0, 4).map((proj) => (
+              <div
+                key={proj.id}
+                onClick={() => navigateTo('project_detail', proj.id)}
+                className="p-4 rounded-xl bg-[#111118] border border-white/[0.06] hover:border-white/[0.12] transition space-y-2 cursor-pointer flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="text-[10px] font-mono text-zinc-400">By {proj.authorName}</span>
+                    <span className="text-[10px] font-mono text-lime-400">★ {proj.likes}</span>
+                  </div>
+                  <h3 className="text-sm font-bold text-white hover:text-lime-400 transition">{proj.title}</h3>
+                  <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed mt-1">{proj.tagline}</p>
+                </div>
+                <div className="pt-2 border-t border-white/[0.04] flex flex-wrap gap-1">
+                  {proj.techStack.slice(0, 3).map((tech: string, i: number) => (
+                    <span key={i} className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-white/[0.04] text-zinc-400">
+                      #{tech}
+                    </span>
+                  ))}
                 </div>
               </div>
             ))}
