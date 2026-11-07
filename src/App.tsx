@@ -31,6 +31,7 @@ import { ResourcesStorePage } from './pages/ResourcesStorePage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ShortcutsModal } from './components/ShortcutsModal';
 import { AppleDockNavigation } from './components/framer';
+import { PWAInstallBanner } from './components/PWAInstallBanner';
 
 export const AppContent: React.FC = () => {
   const { activePage, navigateTo } = useApp();
@@ -41,6 +42,7 @@ export const AppContent: React.FC = () => {
     return true;
   });
   const [isShortcutsOpen, setIsShortcutsOpen] = useState(false);
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
 
   // Global Keyboard Shortcuts
   React.useEffect(() => {
@@ -75,6 +77,10 @@ export const AppContent: React.FC = () => {
       <OnboardingModal />
       <GlobalSearchModal />
       <ShortcutsModal isOpen={isShortcutsOpen} onClose={() => setIsShortcutsOpen(false)} />
+      <PWAInstallBanner
+        forceShowModal={isInstallModalOpen}
+        onCloseModal={() => setIsInstallModalOpen(false)}
+      />
 
       {/* Landing Page (Full Width View) */}
       {isLanding ? (
@@ -88,12 +94,14 @@ export const AppContent: React.FC = () => {
           <Navbar
             onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
             isSidebarOpen={isSidebarOpen}
+            onOpenInstallModal={() => setIsInstallModalOpen(true)}
           />
           <div className="flex-1 flex w-full">
             {/* Desktop & Mobile Sidebar */}
             <Sidebar
               isOpen={isSidebarOpen}
               onClose={() => setIsSidebarOpen(false)}
+              onOpenInstallModal={() => setIsInstallModalOpen(true)}
             />
 
           {/* Main Body with Transitioning Margin for Sidebar */}

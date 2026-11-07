@@ -40,7 +40,6 @@ import {
   CrumpledPaperReveal,
   EmailComposer,
   GlassyButton,
-  MatrixPreload,
   BubbleClusterLoader,
   LiquidLoader,
   BloopPreloader,
@@ -977,10 +976,6 @@ V. NO LONE WOLVES IN THE HORDE: Every goblin brings a distinct craft — design,
                 <br />
                 No system access. Just a little exploration.
               </small>
-
-              <div className="mt-4 hidden lg:block">
-                <MatrixPreload width={220} height={100} label="NODE 0xCG ONLINE" />
-              </div>
             </div>
 
             <div className="desktop-terminal">

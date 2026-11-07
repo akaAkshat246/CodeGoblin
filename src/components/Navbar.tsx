@@ -15,7 +15,8 @@ import {
   Zap,
   Check,
   Globe,
-  Palette
+  Palette,
+  Download
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useApp } from '../context/AppContext';
@@ -29,9 +30,10 @@ import { THEMES } from './framer/ThemeChanger';
 interface NavbarProps {
   onToggleSidebar: () => void;
   isSidebarOpen: boolean;
+  onOpenInstallModal?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen, onOpenInstallModal }) => {
   const {
     currentUser,
     navigateTo,
@@ -558,6 +560,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, isSidebarOpen }
                           <kbd className="px-1.5 py-0.2 text-[10px] font-mono bg-white/[0.06] rounded text-zinc-400">
                             ?
                           </kbd>
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setIsProfileMenuOpen(false);
+                            onOpenInstallModal?.();
+                          }}
+                          className="w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-zinc-300 hover:text-white hover:bg-white/[0.05] transition-colors"
+                        >
+                          <span className="flex items-center gap-2">
+                            <Download className="w-3.5 h-3.5 text-lime-400" />
+                            <span>Install App</span>
+                          </span>
+                          <span className="text-[10px] font-mono text-lime-400">
+                            PWA
+                          </span>
                         </button>
 
                         <div className="my-1 border-t border-white/[0.06]" />

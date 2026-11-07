@@ -1,0 +1,57 @@
+{
+  "name": "CodeGoblins — Build Beyond Code",
+  "short_name": "CodeGoblins",
+  "description": "EdTech & student developer clan. Master vibe coding, dominate hackathons, and level up with an ambitious developer squad.",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#09090F",
+  "theme_color": "#09090F",
+  "orientation": "any",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "developer", "productivity"],
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "The Den",
+      "short_name": "Den",
+      "description": "Jump into the CodeGoblins Den",
+      "url": "/?page=dashboard",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Learning Hub",
+      "short_name": "Learn",
+      "description": "Roadmaps and masterclasses",
+      "url": "/?page=learning_hub",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Project Forge",
+      "short_name": "Forge",
+      "description": "Build and showcase projects",
+      "url": "/?page=projects",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}
